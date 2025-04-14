@@ -1,0 +1,10 @@
+# Compiled object files
+*.o
+*.obj
+
+# Local Settings
+.vscode/*
+.clangd
+
+# Build directory
+Build/*
