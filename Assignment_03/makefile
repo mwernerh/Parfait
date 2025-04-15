@@ -3,6 +3,10 @@ SPACE = $(EMPTY) $(EMPTY)
 
 # Get SFML directory, ensuring it is formatted correctly in case its directory contains spaces
 SFML_DIR ?=
+
+# Isveydi's SFML directory
+#SFML_DIR=/usr/local/opt/sfml@2/
+
 S_DIR = $(subst $(SPACE),\$(SPACE),$(SFML_DIR))
 
 # -------[[ BUILD CONFIGURATION ]]-------
