@@ -4,8 +4,11 @@ External references using during work on this assignment are listed below.
 ## Street Animals Sprites
 https://craftpix.net/freebies/free-street-animal-pixel-art-asset-pack/
 
-## City Background
+## City Backgrounds
 https://craftpix.net/freebies/free-scrolling-city-backgrounds-pixel-art/ 
+
+## Park Background
+https://craftpix.net/freebies/free-summer-pixel-art-backgrounds/
 
 ## Ambient City Noises
 https://freesound.org/people/klankbeeld/sounds/678450/
@@ -19,8 +22,23 @@ https://freesound.org/people/YellowTree/sounds/595751/
 ## Melancholy Accordion Music
 https://freesound.org/people/eyenorth/sounds/482213/
 
+## Swiping Sound (Player Attacks)
+https://freesound.org/people/Artninja/sounds/761965/
+
+## Angry Cat Sound (Player Damage)
+https://freesound.org/people/softcoresoft/sounds/327438/
+
+## Dog Barking (Enemy Attack)
+https://freesound.org/people/crazymonke9/sounds/418107/
+
+## Bird Screeching (Enemy Attack)
+https://freesound.org/people/tim.kahn/sounds/34356/
+
+## Rat Squeaking (Enemy Attack)
+https://freesound.org/people/toefur/sounds/288941/
+
 ## Font 
 https://www.dafont.com/outspace-fighter.font
 
-## Park Background
-https://craftpix.net/freebies/free-summer-pixel-art-backgrounds/
+## GNU Make Documentation
+https://www.gnu.org/software/make/manual/make.html
