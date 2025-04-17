@@ -42,3 +42,11 @@ https://www.dafont.com/outspace-fighter.font
 
 ## GNU Make Documentation
 https://www.gnu.org/software/make/manual/make.html
+
+## SFML Forums
+* https://en.sfml-dev.org/forums/index.php?topic=27344.0
+* https://en.sfml-dev.org/forums/index.php?topic=5016.0
+* https://www.sfml-dev.org/tutorials/3.0/graphics/sprite/#using-sftexture-with-opengl-code
+* https://en.sfml-dev.org/forums/index.php?topic=13534.0
+* https://stackoverflow.com/questions/43720669/lerp-with-time-deltatime
+* https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml

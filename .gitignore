@@ -1,4 +1,5 @@
 # Compiled object files
+obj/*
 *.o
 *.obj
 
@@ -7,4 +8,5 @@
 .clangd
 
 # Build directory
+bin/*
 Build/*

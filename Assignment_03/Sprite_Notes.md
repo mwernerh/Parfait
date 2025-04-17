@@ -3,36 +3,36 @@ Information on the dimensions and relative offsets of each frame on a sprite she
 
 # Cat 1
 * Attack
-    * 30 x 24
+    * 48 x 24
     * 4 frames total
 * Death
-    * 32 x 23
+    * 48 x 23
     * 4 frames total
 * Hurt
-    * 30 x 26
+    * 48 x 26
     * 2 frames total
 * Idle
-    * 28 x 23
+    * 48 x 23
     * 4 frames total
 * Walk
-    * 38 x 25
+    * 48 x 25
     * 6 frames total
 
 # Cat 2
 * Attack
-    * 30 x 22
+    * 48 x 22
     * 4 frames total
 * Death
-    * 32 x 19
+    * 48 x 19
     * 4 frames total
 * Hurt
-    * 28 x 20
+    * 48 x 20
     * 2 frames total
 * Idle
-    * 24 x 20
+    * 48 x 20
     * 4 frames total
 * Walk
-    * 32 x 20
+    * 48 x 20
     * 6 frames total
 
 # Bird 1
