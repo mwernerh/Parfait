@@ -28,7 +28,7 @@ else
 endif
 
 # Add any additional source files to here
-SRCS = Entry.cpp
+SRCS = Entry.cpp Player.cpp LevelManager.cpp MapManager.cpp ScoreManager.cpp
 
 # Prepend src/ to the source files and create list of object files
 SRCS := $(addprefix src/, $(SRCS))
@@ -58,19 +58,19 @@ all: TestCompilation $(OBJS) Assignment_03
 
 TestCompilation:
 	@mkdir -p bin
-	@echo "Testing compiler...\n"
+	@echo "\nTesting compiler...\n"
 	$(CXX) src/TestCompilation/TestCompilation.cpp $(CXX_FLAGS) -o bin/$@
-	@echo "\n\nDONE!!\n\n"
 
 Assignment_03: $(OBJS)
 	@mkdir -p bin
 	@echo "\nLinking final executable $@...\n"
 	@$(CXX) $(OBJS) $(CXX_FLAGS) -o bin/$@
 	@echo "\nInstalling symbolic link for assets to binary directory...\n"
-	@cp -r -s assets bin
+	@cp -r assets bin
+	@echo "\n\nDONE!!\n\n"
 
 $(OBJS): obj/%.o: src/%.cpp
-	@echo "\nBuilding translation unit for $<..."
+	@echo "\nBuilding translation unit for $<...\n"
 	@mkdir -p $(dir $(OBJS))
 	@$(CXX) $(CXX_FLAGS) -c $< -o $@
 
