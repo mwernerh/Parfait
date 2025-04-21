@@ -39,6 +39,7 @@ https://freesound.org/people/toefur/sounds/288941/
 
 ## Font 
 https://www.dafont.com/outspace-fighter.font
+https://www.dafont.com/akira-expanded.font
 
 ## GNU Make Documentation
 https://www.gnu.org/software/make/manual/make.html
@@ -50,3 +51,6 @@ https://www.gnu.org/software/make/manual/make.html
 * https://en.sfml-dev.org/forums/index.php?topic=13534.0
 * https://stackoverflow.com/questions/43720669/lerp-with-time-deltatime
 * https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml
+
+## Thread-Safe Singleton Initialization
+* https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton/

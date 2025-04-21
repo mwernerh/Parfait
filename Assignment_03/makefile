@@ -28,7 +28,7 @@ else
 endif
 
 # Add any additional source files to here
-SRCS = Entry.cpp Player.cpp LevelManager.cpp MapManager.cpp ScoreManager.cpp
+SRCS = Entry.cpp LevelManager.cpp MapManager.cpp ScoreManager.cpp
 
 # Prepend src/ to the source files and create list of object files
 SRCS := $(addprefix src/, $(SRCS))
@@ -54,18 +54,13 @@ $(USER_INCLUDE_DIRS)
 
 .DEFAULT_GOAL := all
 
-all: TestCompilation $(OBJS) Assignment_03
-
-TestCompilation:
-	@mkdir -p bin
-	@echo "\nTesting compiler...\n"
-	$(CXX) src/TestCompilation/TestCompilation.cpp $(CXX_FLAGS) -o bin/$@
+all: $(OBJS) Assignment_03
 
 Assignment_03: $(OBJS)
 	@mkdir -p bin
 	@echo "\nLinking final executable $@...\n"
 	@$(CXX) $(OBJS) $(CXX_FLAGS) -o bin/$@
-	@echo "\nInstalling symbolic link for assets to binary directory...\n"
+	@echo "\nInstalling assets to binary directory...\n"
 	@cp -r assets bin
 	@echo "\n\nDONE!!\n\n"
 
