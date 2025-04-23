@@ -1,5 +1,64 @@
 #include "AudioManager.h"
+#include <cstring>
 #include <iostream>
+
+namespace {
+    constexpr u32 GetHash(const std::string& string) {
+        u32 hash = 0;
+        u32 directoryLevel = 0;
+
+        // Use prime numbers for weights
+        static constexpr u32 weights[] = {1, 17, 19, 23, 29, 31, 37};
+
+        for(std::size_t i = string.length(); i > 0; i--) {
+            if(string[i - 1] == '/') {
+                directoryLevel++;
+                continue;
+            }
+
+            hash += string[i - 1] * weights[directoryLevel];
+        }
+
+        return hash;
+    }
+}
+
+const std::set<sf::Sound*>& Parfait::SoundBuffer::getAttachedSounds(void) {
+    // Hack to allow access to the private member variable m_sounds, for which no public accessor was provided!!
+    // It's silly that we can't see which sf::Sound instances are bound to a specific audio buffer...
+
+    sf::SoundBuffer* hack = std::bit_cast<sf::SoundBuffer*>(this);
+    hack += 1;
+
+    u8* hack2 = std::bit_cast<u8*>(hack);
+    hack2 -= sizeof(std::set<sf::Sound*>);
+
+    return *std::bit_cast<std::set<sf::Sound*>*>(hack2); 
+}
+
+void AudioManager::AudioManagerWrapper::LRUQueue::Enqueue(const u8 element) {
+    AudioManagerWrapper& aM = GetAudioManagerWrapper();
+
+    for(u32 i = 0; i < MAX_SOUNDS; i++) {
+        if(aM.leastRecentlyUsedQueue.array[(aM.leastRecentlyUsedQueue.front + i) % MAX_SOUNDS] == element) {
+            for(u32 j = i; j < MAX_SOUNDS - 1; j++) {
+                aM.leastRecentlyUsedQueue.array[(aM.leastRecentlyUsedQueue.front + i) % MAX_SOUNDS] = aM.leastRecentlyUsedQueue.array[(aM.leastRecentlyUsedQueue.front + i + 1) % MAX_SOUNDS];
+            }
+            break;
+        }
+    }
+
+    aM.leastRecentlyUsedQueue.array[(aM.leastRecentlyUsedQueue.front + MAX_SOUNDS - 1) % MAX_SOUNDS] = element;
+}
+
+u8 AudioManager::AudioManagerWrapper::LRUQueue::Dequeue(void) {
+    AudioManagerWrapper& aM = GetAudioManagerWrapper();
+
+    u8 element = aM.leastRecentlyUsedQueue.array[aM.leastRecentlyUsedQueue.front];
+    aM.leastRecentlyUsedQueue.front = (aM.leastRecentlyUsedQueue.front + 1) % MAX_SOUNDS;
+
+    return element;
+}
 
 AudioManager::AudioManagerWrapper& AudioManager::GetAudioManagerWrapper(void) {
     static AudioManagerWrapper aM;
@@ -10,70 +69,126 @@ void AudioManager::Initialize(void) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
     
     for(u32 i = 0; i < MAX_SOUNDS / 2; i++) {
-        aM.cameraSounds[i].setBuffer(aM.soundBuffers[i]);
         aM.cameraSounds[i].setAttenuation(0.0f);
         aM.cameraSounds[i].setRelativeToListener(true);
         aM.cameraSounds[i].setLoop(false);
 
-        aM.positionalSounds[i].setBuffer(aM.soundBuffers[(MAX_SOUNDS / 2) + i]);
         aM.positionalSounds[i].setAttenuation(0.8f);   // Not quite max attenuation
         aM.positionalSounds[i].setRelativeToListener(false);
         aM.positionalSounds[i].setLoop(false);
     }
 
     for(u32 i = 0; i < MAX_MUSIC_LAYERS; i++) {
-        aM.music[i].setLoop(true);
         aM.music[i].setAttenuation(0.0f);
         aM.music[i].setRelativeToListener(true);
+        aM.music[i].setLoop(true);
     }
+
+    for(u32 i = 0; i < MAX_SOUNDS; i++) {
+        aM.leastRecentlyUsedQueue.array[i] = i;
+    }
+
+    aM.leastRecentlyUsedQueue.front = 0;
+    aM.numCameraSounds = 0;
+    aM.numPositionalSounds = 0;
+    aM.numMusicLayers = 0;
+    aM.numLoadedSoundBuffers = 0;
 }
 
-void AudioManager::PlayCameraSound(const std::string&& sound_name, const f32 pitch) {
+void AudioManager::StartCameraSound(const std::string&& sound_name, const f32 pitch) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
 
     #ifdef DEBUG
     [[unlikely]]
     if(aM.numCameraSounds >= MAX_SOUNDS / 2) {
-        std::cerr << "Error! Attempted to enqueue camera sound " << sound_name << " when buffer queue is full!\n";
+        std::cerr << "Error! Attempted to enqueue camera sound " << sound_name << " when queue is full!\n";
         return;
     }
     #endif
 
-    for(u32 i = 0; i < aM.numCameraSounds; i++) {
-        if(aM.soundNames[i] == sound_name && aM.cameraSounds[i].getPlayingOffset().asMilliseconds() == 0)
-            return; // Sound has already been enqueued
+    sf::SoundBuffer* buffer = nullptr;
+
+    for(u32 i = 0; i < aM.numLoadedSoundBuffers; i++) {
+        // Sound buffer with this sound has already been loaded
+        if(aM.soundHashes[i] == GetHash(sound_name)) {
+            for(sf::Sound* sound : aM.soundBuffers[i].getAttachedSounds()) {
+                if(sound >= aM.cameraSounds && sound < (aM.cameraSounds + MAX_SOUNDS / 2) && sound->getPlayingOffset().asMilliseconds() == 0) {
+                    aM.leastRecentlyUsedQueue.Enqueue(i);
+                    return; // The requested sound has been enqueued previously -- don't double up
+                }
+            }
+
+            // This is a unique sound, and has an already loaded sound buffer
+            buffer = &aM.soundBuffers[i];
+        }
     }
 
-    aM.soundNames[aM.numCameraSounds] = sound_name;
-    aM.soundBuffers[aM.numCameraSounds].loadFromFile(sound_name);
+    if(buffer) {
+        // Requested sound has previously been loaded, just register the new sound's buffer as this buffer
+        aM.cameraSounds[aM.numCameraSounds].setBuffer(*buffer);
+    }
+    else {
+        // Requested sound has not been loaded -- load its buffer
+        buffer = &aM.soundBuffers[aM.leastRecentlyUsedQueue.Dequeue()];
+        aM.soundHashes[aM.numLoadedSoundBuffers] = GetHash(sound_name);
+        aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(sound_name);
+        aM.cameraSounds[aM.numCameraSounds].setBuffer(*buffer);
+        aM.numLoadedSoundBuffers += 1;
+    }
+    
     aM.cameraSounds[aM.numCameraSounds].setPitch(pitch);
-    aM.cameraSounds[aM.numCameraSounds++].play();
+    aM.cameraSounds[aM.numCameraSounds].play();
+    aM.numCameraSounds += 1;
 }
 
-void AudioManager::PlayPositionalSound(const std::string&& sound_name, const sf::Vector3f& position, const f32 pitch) {
+void AudioManager::StartPositionalSound(const std::string&& sound_name, const sf::Vector3f& position, const f32 pitch) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
 
     #ifdef DEBUG
     [[unlikely]]
     if(aM.numPositionalSounds >= MAX_SOUNDS / 2) {
-        std::cerr << "Error! Attempted to enqueue positional sound " << sound_name << " when buffer queue is full!\n";
+        std::cerr << "Error! Attempted to enqueue positional sound " << sound_name << " when queue is full!\n";
         return;
     }
     #endif
 
-    for(u32 i = 0; i < aM.numPositionalSounds; i++) {
-        if(aM.soundNames[(MAX_SOUNDS / 2) + i] == sound_name && aM.positionalSounds[i].getPlayingOffset().asMilliseconds() == 0)
-            return; // Sound has already been enqueued
+    sf::SoundBuffer* buffer = nullptr;
+
+    for(u32 i = 0; i < aM.numLoadedSoundBuffers; i++) {
+        // Sound buffer with this sound has already been loaded
+        if(aM.soundHashes[i] == GetHash(sound_name)) {
+            for(sf::Sound* sound : aM.soundBuffers[i].getAttachedSounds()) {
+                if(sound >= aM.positionalSounds && sound <= (aM.positionalSounds + MAX_SOUNDS / 2) && sound->getPlayingOffset().asMilliseconds() == 0) {
+                    aM.leastRecentlyUsedQueue.Enqueue(i);
+                    return; // The requested sound has been enqueued previously -- don't double up
+                }
+            }
+
+            // This is a unique sound, and has an already loaded sound buffer
+            buffer = &aM.soundBuffers[i];
+        }
     }
 
-    aM.soundNames[(MAX_SOUNDS / 2) + aM.numPositionalSounds] = sound_name;
-    aM.soundBuffers[(MAX_SOUNDS / 2) + aM.numPositionalSounds].loadFromFile(sound_name);
-    aM.positionalSounds[aM.numPositionalSounds].setPosition(position);
+    if(buffer) {
+        // Requested sound has previously been loaded, just register the new sound's buffer as this buffer
+        aM.positionalSounds[aM.numPositionalSounds].setBuffer(*buffer);
+    }
+    else {
+        // Requested sound has not been loaded -- load its buffer
+        buffer = &aM.soundBuffers[aM.leastRecentlyUsedQueue.Dequeue()];
+        aM.soundHashes[aM.numLoadedSoundBuffers] = GetHash(sound_name);
+        aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(sound_name);
+        aM.positionalSounds[aM.numPositionalSounds].setBuffer(*buffer);
+        aM.numLoadedSoundBuffers += 1;
+    }
+    
     aM.positionalSounds[aM.numPositionalSounds].setPitch(pitch);
-    aM.positionalSounds[aM.numPositionalSounds++].play();
+    aM.positionalSounds[aM.numPositionalSounds].setPosition(position);
+    aM.positionalSounds[aM.numPositionalSounds].play();
+    aM.numPositionalSounds += 1;
 }
 
-void AudioManager::PlayMusic(const std::string&& music_name, const f32 pitch) {
+void AudioManager::StartMusic(const std::string&& music_name, const f32 pitch) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
     
     #ifdef DEBUG
@@ -84,11 +199,11 @@ void AudioManager::PlayMusic(const std::string&& music_name, const f32 pitch) {
     #endif
 
     for(u32 i = 0; i < aM.numMusicLayers; i++) {
-        if(aM.musicNames[i] == music_name)
+        if(aM.musicHashes[i] == GetHash(music_name))
             return; // Music has already been enqueued
     }
 
-    aM.musicNames[aM.numMusicLayers] = music_name;
+    aM.musicHashes[aM.numMusicLayers] = GetHash(music_name);
     aM.music[aM.numMusicLayers].openFromFile(music_name);
     aM.music[aM.numMusicLayers].setPitch(pitch);
     aM.music[aM.numMusicLayers++].play();
@@ -98,10 +213,8 @@ void AudioManager::StopCameraSound(const std::string&& sound_name) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
 
     for(u32 i = 0; i < aM.numCameraSounds; i++) {
-        if(aM.soundNames[i] == sound_name) {
-            aM.cameraSounds[i].stop();
-            aM.soundBuffers[i].loadFromSamples(aM.soundBuffers[aM.numCameraSounds - 1].getSamples(),aM.soundBuffers[aM.numCameraSounds - 1].getSampleCount(), aM.soundBuffers[aM.numCameraSounds - 1].getChannelCount(), aM.soundBuffers[aM.numCameraSounds - 1].getSampleRate());
-            aM.soundNames[i] = aM.soundNames[aM.numCameraSounds - 1];
+        if(aM.soundHashes[i] == GetHash(sound_name)) {
+            aM.cameraSounds[i].resetBuffer();
             aM.numCameraSounds -= 1;
             return;
         }
@@ -116,10 +229,8 @@ void AudioManager::StopPositionalSound(const std::string&& sound_name) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
 
     for(u32 i = 0; i < aM.numPositionalSounds; i++) {
-        if(aM.soundNames[i] == sound_name) {
-            aM.positionalSounds[i].stop();
-            aM.soundBuffers[(MAX_SOUNDS / 2) + i].loadFromSamples(aM.soundBuffers[(MAX_SOUNDS / 2) + aM.numPositionalSounds - 1].getSamples(), aM.soundBuffers[(MAX_SOUNDS / 2) + aM.numPositionalSounds - 1].getSampleCount(), aM.soundBuffers[(MAX_SOUNDS / 2) + aM.numPositionalSounds - 1].getChannelCount(), aM.soundBuffers[(MAX_SOUNDS / 2) + aM.numPositionalSounds - 1].getSampleRate());
-            aM.soundNames[(MAX_SOUNDS / 2) + i] = aM.soundNames[(MAX_SOUNDS / 2) + aM.numPositionalSounds - 1];
+        if(aM.soundHashes[i] == GetHash(sound_name)) {
+            aM.positionalSounds[i].resetBuffer();
             aM.numPositionalSounds -= 1;
             return;
         }
@@ -134,9 +245,8 @@ void AudioManager::StopMusic(const std::string&& music_name) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
 
     for(u32 i = 0; i < aM.numMusicLayers; i++) {
-        if(aM.musicNames[i] == music_name) {
+        if(aM.musicHashes[i] == GetHash(music_name)) {
             aM.music[i].stop();
-            aM.musicNames[i] = aM.musicNames[aM.numMusicLayers - 1];
             aM.numMusicLayers -= 1;
             return;
         }
@@ -160,6 +270,7 @@ void AudioManager::ClearCameraSounds(void) {
 
     for(u32 i = 0; i < aM.numCameraSounds; i++) {
         aM.cameraSounds[i].stop();
+        aM.cameraSounds[i].resetBuffer();
     }
     aM.numCameraSounds = 0;
 }
@@ -169,6 +280,7 @@ void AudioManager::ClearPositionalSounds(void) {
 
     for(u32 i = 0; i < aM.numPositionalSounds; i++) {
         aM.positionalSounds[i].stop();
+        aM.positionalSounds[i].resetBuffer();
     }
     aM.numPositionalSounds = 0;
 }
@@ -187,12 +299,57 @@ void AudioManager::Update(void) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
 
     for(u32 i = 0; i < aM.numCameraSounds; i++) {
-        if(aM.cameraSounds[i].getStatus() == sf::Sound::Stopped)
-            StopCameraSound(std::move(aM.soundNames[i]));
+        if(aM.cameraSounds[i].getStatus() == sf::Sound::Stopped) {
+            aM.cameraSounds[i].stop();
+            aM.cameraSounds[i].resetBuffer();
+            aM.numCameraSounds -= 1;
+        }
     }
 
     for(u32 i = 0; i < aM.numPositionalSounds; i++) {
-        if(aM.positionalSounds[i].getStatus() == sf::Sound::Stopped)
-            StopPositionalSound(std::move(aM.soundNames[(MAX_SOUNDS / 2) + i]));
+        if(aM.positionalSounds[i].getStatus() == sf::Sound::Stopped) {
+            aM.positionalSounds[i].resetBuffer();
+            aM.numPositionalSounds -= 1;
+        }
+    }
+
+    u32 firstEmptyIdx = 0;
+    for(; firstEmptyIdx < MAX_SOUNDS / 2; firstEmptyIdx++) {
+        if(aM.cameraSounds[firstEmptyIdx].getBuffer() == nullptr) {
+            break;
+        }
+    }
+
+    for(u32 j = firstEmptyIdx + 1; j < MAX_SOUNDS / 2; j++) {
+        const sf::SoundBuffer* const currentBuffer = aM.cameraSounds[j].getBuffer();
+        if(currentBuffer) {
+            aM.cameraSounds[firstEmptyIdx].pause();
+            aM.cameraSounds[firstEmptyIdx].setBuffer(*currentBuffer);
+            aM.cameraSounds[firstEmptyIdx].setPlayingOffset(aM.cameraSounds[j].getPlayingOffset());
+            aM.cameraSounds[firstEmptyIdx].setPitch(aM.cameraSounds[j].getPitch());
+            aM.cameraSounds[firstEmptyIdx].play();
+            aM.cameraSounds[j].resetBuffer();
+            firstEmptyIdx = j;
+        }
+    }
+
+    for(firstEmptyIdx = 0; firstEmptyIdx < MAX_SOUNDS / 2; firstEmptyIdx++) {
+        if(aM.positionalSounds[firstEmptyIdx].getBuffer() == nullptr) {
+            break;
+        }
+    }
+
+    for(u32 j = firstEmptyIdx + 1; j < MAX_SOUNDS / 2; j++) {
+        const sf::SoundBuffer* const currentBuffer = aM.positionalSounds[j].getBuffer();
+        if(currentBuffer) {
+            aM.positionalSounds[firstEmptyIdx].pause();
+            aM.positionalSounds[firstEmptyIdx].setBuffer(*currentBuffer);
+            aM.positionalSounds[firstEmptyIdx].setPlayingOffset(aM.positionalSounds[j].getPlayingOffset());
+            aM.positionalSounds[firstEmptyIdx].setPitch(aM.cameraSounds[j].getPitch());
+            aM.positionalSounds[firstEmptyIdx].setPosition(aM.cameraSounds[j].getPosition());
+            aM.positionalSounds[firstEmptyIdx].play();
+            aM.positionalSounds[j].resetBuffer();
+            firstEmptyIdx = j;
+        }
     }
 }

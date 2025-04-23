@@ -45,12 +45,34 @@ https://www.dafont.com/akira-expanded.font
 https://www.gnu.org/software/make/manual/make.html
 
 ## SFML Forums
-* https://en.sfml-dev.org/forums/index.php?topic=27344.0
-* https://en.sfml-dev.org/forums/index.php?topic=5016.0
-* https://www.sfml-dev.org/tutorials/3.0/graphics/sprite/#using-sftexture-with-opengl-code
-* https://en.sfml-dev.org/forums/index.php?topic=13534.0
-* https://stackoverflow.com/questions/43720669/lerp-with-time-deltatime
-* https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml
+https://en.sfml-dev.org/forums/index.php?topic=27344.0
+https://en.sfml-dev.org/forums/index.php?topic=5016.0
+https://www.sfml-dev.org/tutorials/3.0/graphics/sprite/#using-sftexture-with-opengl-code
+https://en.sfml-dev.org/forums/index.php?topic=13534.0
+https://stackoverflow.com/questions/43720669/lerp-with-time-deltatime
+https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml
+
+## Hacks
+https://www.youtube.com/watch?v=AAXlmUKPn2c
+
+## LRU Algorithm
+https://www.cs.unc.edu/~porter/courses/cse306/s16/slides/16.PageReplacementAlgos.pdf
+
+## SFML Source
+https://github.com/SFML/SFML/blob/2.6.x/src/SFML/Audio/SoundBuffer.cpp
+
+## Inspiration for Audio Manager
+https://github.com/zeldaret/tp
+https://github.com/zeldaret/tp/blob/main/include/f_op/f_op_actor_mng.h#L717
+https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/include/m_Do/m_Do_audio.h#L98
+https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/Z2AudioLib/Z2SeMgr.cpp#L113
+https://github.com/zeldaret/tp/blob/main/src/Z2AudioLib/Z2SoundStarter.cpp#L17
+https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/Z2AudioLib/Z2AudioMgr.cpp#L182
+https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/Z2AudioLib/Z2SoundMgr.cpp#L113
+https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/JSystem/JAudio2/JAISeMgr.cpp#L299
+
+https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/Z2AudioLib/Z2Creature.cpp#L178
+
 
 ## Thread-Safe Singleton Initialization
-* https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton/
+https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton/
