@@ -16,8 +16,8 @@ int main(void) {
     AudioManager::Initialize();
 
     MapManager::ChangeMap(MapManager::Maps::PARK);
-    AudioManager::PlayMusic("./assets/aud/bgm_accordion.wav");
-    AudioManager::PlayMusic("./assets/aud/amb_pk.wav");
+    AudioManager::StartMusic("./assets/aud/bgm_accordion.wav");
+    AudioManager::StartMusic("./assets/aud/amb_pk.wav");
 
     while(window.isOpen()) {
 
@@ -33,7 +33,7 @@ int main(void) {
         }
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X))
-            AudioManager::PlayCameraSound("./assets/aud/e_dg_atk.wav");
+            AudioManager::StartCameraSound("./assets/aud/e_dg_atk.wav");
 
         // Check if the level should change
         //LevelManager::HandleCurrentLevel();
