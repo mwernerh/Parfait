@@ -28,7 +28,7 @@ else
 endif
 
 # Add any additional source files to here
-SRCS = Entry.cpp HitboxManager.cpp AudioManager.cpp LevelManager.cpp MapManager.cpp ScoreManager.cpp
+SRCS = Entry.cpp InputManager.cpp AudioManager.cpp ScoreManager.cpp LevelManager.cpp MapManager.cpp HitboxManager.cpp
 
 # Prepend src/ to the source files and create list of object files
 SRCS := $(addprefix src/, $(SRCS))

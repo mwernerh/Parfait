@@ -10,6 +10,8 @@ class MapManager {
 
         sf::Texture t_layers[NUM_PARALLAX_LAYERS];
         sf::Sprite s_layers[NUM_PARALLAX_LAYERS];
+
+        float intermediateTextureRectOffsets[NUM_PARALLAX_LAYERS] = {};
     };
 
     /**
