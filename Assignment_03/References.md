@@ -76,3 +76,6 @@ https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src
 
 ## Thread-Safe Singleton Initialization
 https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton/
+
+## ANSI Color Codes
+https://talyian.github.io/ansicolors/

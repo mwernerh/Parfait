@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include "HitboxManager.h"
 #include "MapManager.h"
 #include "ScoreManager.h"
 #include "AudioManager.h"
@@ -36,7 +37,10 @@ int main(void) {
             AudioManager::StartCameraSound("./assets/aud/e_dg_atk.wav");
 
         // Check if the level should change
-        //LevelManager::HandleCurrentLevel();
+        //LevelManager::Update();
+
+        // Update hitboxes
+        HitboxManager::Update();
 
         // Update the view
         cameraView.setCenter(cameraView.getCenter());

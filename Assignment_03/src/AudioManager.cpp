@@ -101,7 +101,7 @@ void AudioManager::StartCameraSound(const std::string&& sound_name, const f32 pi
     #ifdef DEBUG
     [[unlikely]]
     if(aM.numCameraSounds >= MAX_SOUNDS / 2) {
-        std::cerr << "Error! Attempted to enqueue camera sound " << sound_name << " when queue is full!\n";
+        std::cerr << "\x1b[31mError! Attempted to enqueue camera sound " << sound_name << " when queue is full!\x1b[0m\n";
         return;
     }
     #endif
@@ -131,7 +131,12 @@ void AudioManager::StartCameraSound(const std::string&& sound_name, const f32 pi
         // Requested sound has not been loaded -- load its buffer
         buffer = &aM.soundBuffers[aM.leastRecentlyUsedQueue.Dequeue()];
         aM.soundHashes[aM.numLoadedSoundBuffers] = GetHash(sound_name);
-        aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(sound_name);
+
+        if(!aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(sound_name)) {
+            std::cerr << "\x1b[31mError! Could not load sound file " << sound_name << " when preparing a SoundBuffer!\x1b[0m\n";
+            return;
+        }
+
         aM.cameraSounds[aM.numCameraSounds].setBuffer(*buffer);
         aM.numLoadedSoundBuffers += 1;
     }
@@ -147,7 +152,7 @@ void AudioManager::StartPositionalSound(const std::string&& sound_name, const sf
     #ifdef DEBUG
     [[unlikely]]
     if(aM.numPositionalSounds >= MAX_SOUNDS / 2) {
-        std::cerr << "Error! Attempted to enqueue positional sound " << sound_name << " when queue is full!\n";
+        std::cerr << "\x1b[31mError! Attempted to enqueue positional sound " << sound_name << " when queue is full!\x1b[0m\n";
         return;
     }
     #endif
@@ -177,7 +182,12 @@ void AudioManager::StartPositionalSound(const std::string&& sound_name, const sf
         // Requested sound has not been loaded -- load its buffer
         buffer = &aM.soundBuffers[aM.leastRecentlyUsedQueue.Dequeue()];
         aM.soundHashes[aM.numLoadedSoundBuffers] = GetHash(sound_name);
-        aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(sound_name);
+
+        if(!aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(sound_name)) {
+            std::cerr << "\x1b[31mError! Could not load sound file " << sound_name << " when preparing a SoundBuffer!\x1b[0m\n";
+            return;
+        }
+
         aM.positionalSounds[aM.numPositionalSounds].setBuffer(*buffer);
         aM.numLoadedSoundBuffers += 1;
     }
@@ -193,7 +203,7 @@ void AudioManager::StartMusic(const std::string&& music_name, const f32 pitch) {
     
     #ifdef DEBUG
     if(aM.numMusicLayers >= MAX_MUSIC_LAYERS) {
-        std::cerr << "Error! Attempted to enqueue music " << music_name << " when stream layers are filled!\n";
+        std::cerr << "\x1b[31mError! Attempted to enqueue music " << music_name << " when stream layers are filled!\x1b[0m\n";
         return;
     }
     #endif
@@ -204,7 +214,12 @@ void AudioManager::StartMusic(const std::string&& music_name, const f32 pitch) {
     }
 
     aM.musicHashes[aM.numMusicLayers] = GetHash(music_name);
-    aM.music[aM.numMusicLayers].openFromFile(music_name);
+
+    if(!aM.music[aM.numMusicLayers].openFromFile(music_name)) {
+        std::cerr << "\x1b[31mError! Could not load music file " << music_name << " when preparing an audio stream!\x1b[0m\n";
+        return;
+    }
+
     aM.music[aM.numMusicLayers].setPitch(pitch);
     aM.music[aM.numMusicLayers++].play();
 }

@@ -1,10 +1,13 @@
 #include "MapManager.h"
+#include "EnvironmentCollision.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <iostream>
 #include <SFML/OpenGL.hpp>
 
 void MapManager::Draw(sf::RenderWindow& window, sf::Vector2f playerPos, float playerHorizontalVelocity) {
+    // TODO: Obtain player instance to remove paramaters other than the RenderWindow
+
     // Place sprite at player position, then draw it
     for(u32 i = 0; i < ParallaxBackground::NUM_PARALLAX_LAYERS; i++) {
         GetBackground().s_layers[i].setPosition(playerPos);
@@ -15,6 +18,10 @@ void MapManager::Draw(sf::RenderWindow& window, sf::Vector2f playerPos, float pl
         }
         window.draw(GetBackground().s_layers[i]);
     }
+}
+
+void MapManager::Update(void) {
+    // Update environment collision
 }
 
 void MapManager::ChangeMap(const Maps mapIdx) {
@@ -38,7 +45,7 @@ void MapManager::ChangeMap(const Maps mapIdx) {
     glEnable(GL_TEXTURE_2D);
     for(u32 i = 0; i < ParallaxBackground::NUM_PARALLAX_LAYERS; i++) {
         if(!GetBackground().t_layers[i].loadFromFile(texBaseStr + std::to_string(i + 1) + ".png")) {
-            std::cerr << "\0x1b[m31Error! Could not load background layer " + std::to_string(i) + "'s texture!\0x1b[m0\n";
+            std::cerr << "\x1b[31mError! Could not load background layer " + std::to_string(i) + "'s texture!\x1b[0m\n";
             continue;
         }
 
@@ -61,4 +68,9 @@ void MapManager::ChangeMap(const Maps mapIdx) {
 MapManager::ParallaxBackground& MapManager::GetBackground(void) {
     static MapManager::ParallaxBackground bg;
     return bg;
+}
+
+EnvironmentCollision& MapManager::GetCollision(void) {
+    static EnvironmentCollision collision;
+    return collision;
 }

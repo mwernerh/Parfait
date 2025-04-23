@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <Literals.h>
+#include "Literals.h"
+#include "EnvironmentCollision.h"
 
 class MapManager {
     
@@ -17,7 +18,10 @@ class MapManager {
     
     public:
     enum class Maps : u8 {CITY, PARK, CITY_VAR, NUM_MAPS};
-
+    
     static void Draw(sf::RenderWindow& window, sf::Vector2f playerPos, float playerHorizontalVelocity);
+    static void Update(void);
     static void ChangeMap(const Maps);
+    
+    static EnvironmentCollision& GetCollision(void);
 };

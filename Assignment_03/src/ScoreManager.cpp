@@ -5,7 +5,7 @@ void ScoreManager::Initialize(void) {
     ScoreWrapper& scoreWrapper = GetScoreWrapper();
 
     if(!scoreWrapper.font.loadFromFile("./assets/fnt/Akira Expanded Demo.otf"))
-        std::cerr << "Error! Could not load font for score!\n";
+        std::cerr << "\x1b[31mError! Could not load font for score!\x1b[0m\n";
 
     scoreWrapper.text.setFont(scoreWrapper.font);
     scoreWrapper.text.setString("Score ");

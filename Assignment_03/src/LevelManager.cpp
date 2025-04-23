@@ -5,7 +5,7 @@
 u32 LevelManager::currentLevel = 0;
 
 [[gnu::hot]]
-void LevelManager::HandleCurrentLevel() {
+void LevelManager::Update() {
     [[unlikely]]
     if(ScoreManager::GetScore() >= (1000 * currentLevel) + 100) {
         currentLevel += 1;

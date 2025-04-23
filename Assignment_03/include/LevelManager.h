@@ -5,5 +5,5 @@ class LevelManager {
     static u32 currentLevel;
 
     public:
-    static void HandleCurrentLevel(void);
+    static void Update(void);
 };
