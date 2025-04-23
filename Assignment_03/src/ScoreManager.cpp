@@ -1,6 +1,10 @@
 #include "ScoreManager.h"
 #include <iostream>
 
+/**
+ * @author Mar Werner Hernandez
+ */
+
 void ScoreManager::Initialize(void) {
     ScoreWrapper& scoreWrapper = GetScoreWrapper();
 

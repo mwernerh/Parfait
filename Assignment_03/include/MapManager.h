@@ -12,16 +12,41 @@ class MapManager {
         sf::Sprite s_layers[NUM_PARALLAX_LAYERS];
     };
 
-    // SFML doesn't support static variable initialization for its provided types
-    // Wrap the static background variable in a function to circumvent this
+    /**
+     * @brief Gets the ParallaxBackground singleton
+     * 
+     * @return ParallaxBackground& 
+     */
     static ParallaxBackground& GetBackground(void);
     
     public:
     enum class Maps : u8 {CITY, PARK, CITY_VAR, NUM_MAPS};
     
-    static void Draw(sf::RenderWindow& window, sf::Vector2f playerPos, float playerHorizontalVelocity);
+    /**
+     * @brief Draws the parallax background and wraps the textures according to the player's position and velocity
+     * 
+     * @param window 
+     * @param player_position
+     * @param player_horizontal_velocity 
+     */
+    static void Draw(sf::RenderWindow& window, sf::Vector2f player_position, float player_horizontal_velocity);
+
+    /**
+     * @brief Currently No-Op
+     * 
+     */
     static void Update(void);
+
+    /**
+     * @brief Changes the parallax background to that associated with the desired map
+     * 
+     */
     static void ChangeMap(const Maps);
-    
+
+    /**
+     * @brief Gets the EnvironmentCollision singleton (current unused)
+     * 
+     * @return EnvironmentCollision& 
+     */
     static EnvironmentCollision& GetCollision(void);
 };

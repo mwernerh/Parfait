@@ -1,6 +1,10 @@
 #include "HitboxManager.h"
 #include "MapManager.h"
 
+/**
+ * @author Mar Werner Hernandez
+ */
+
 AttackHitbox* HitboxManager::enemyAtHitboxes[MAX_HITBOXES] = {};
 ColliderHitbox* HitboxManager::enemyCoHitboxes[MAX_HITBOXES] = {};
 u32 HitboxManager::numEnemyAtHitboxes = 0;

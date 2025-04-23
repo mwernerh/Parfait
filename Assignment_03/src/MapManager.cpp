@@ -5,6 +5,10 @@
 #include <iostream>
 #include <SFML/OpenGL.hpp>
 
+/**
+ * @author Mar Werner Hernandez
+ */
+
 void MapManager::Draw(sf::RenderWindow& window, sf::Vector2f playerPos, float playerHorizontalVelocity) {
     // TODO: Obtain player instance to remove paramaters other than the RenderWindow
 

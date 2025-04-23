@@ -2,7 +2,17 @@
 #include <cstring>
 #include <iostream>
 
+/**
+ * @author Mar Werner Hernandez
+ */
+
 namespace {
+    /**
+     * @brief Hashes the relative path to the desired audio file
+     * 
+     * @param string 
+     * @return constexpr u32 
+     */
     constexpr u32 GetHash(const std::string& string) {
         u32 hash = 0;
         u32 directoryLevel = 0;

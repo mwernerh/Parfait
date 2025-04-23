@@ -2,6 +2,10 @@
 #include "MapManager.h"
 #include "ScoreManager.h"
 
+/**
+ * @author Mar Werner Hernandez
+ */
+
 u32 LevelManager::currentLevel = 0;
 
 [[gnu::hot]]
