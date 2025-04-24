@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Player.h"
 
-Player::Player(std::string texturePath, float speed)
+Player::Player(std::string texturePath, float speed) : at(), co(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Player::takeDamage))
 {
 
 	// Load texture from file
@@ -14,22 +14,22 @@ Player::Player(std::string texturePath, float speed)
 	// set the texture to the sprite
 	sprite.setTexture(texture);
 	
-	// set texture rect based on walking sprite (Cat 1) (sprite sheet for walking animation is 6 frames, 38 x 25)
-	sprite.setTextureRect(sf::IntRect(0, 0, 32, 20));
+	// set texture rect based on idle sprite
+	sprite.setTextureRect(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
 
 	// set position of the player
-	sprite.setPosition(400,300);
+	sprite.setPosition(516, 640);
 
 	// set player center to center of sprite
-	sprite.setOrigin(16, 10);
+	sprite.setOrigin(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2);
 
-	sprite.setScale(2,2); 
+	sprite.setScale(PLAYER_SCALE, PLAYER_SCALE); 
 
 	// set player speed
 	this->speed = speed;
 	
-	// define a hitbox for the player
-	// hitbox = Hitbox({22.f, 20.f}, sf::Color(0, 255, 0, 100)); // light green color for player
+//	at.setColor();
+//	at.setPosition();
 }
 
 // get the player's potion
@@ -68,41 +68,37 @@ void Player::handleInput(float dt)
 	sf::Vector2f movement(0,0);
 
 	// movement A->left, D->right
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) // moving left
+	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::A))
 	{
 		direction = -1;
 		movement.x -= speed;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) // moving right
+	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::D)) // moving right
 	{
 		direction = 1;
 		movement.x += speed;
 	}
-
-	// actually move the player
 	sprite.move(movement * speed * dt);
-
-	// handle the animation
-	handleAnimation(direction, dt);
+	// TODO: update hitboxes
+	handleAnimation(direction, dt, NUM_FRAMES_WALK);
 }
 
-void Player::handleAnimation(int direction, float dt)
+void Player::handleAnimation(int direction, float dt, int numFrames)
 {
 	timeSinceLastFrame += dt;
 
 	if (timeSinceLastFrame > timePerFrame)
 	{
-		// 6 frames for cat 1 walk animation
-		if (currentFrame == 6)
+		if (currentFrame == numFrames)
 		{
 			currentFrame = 0;
 		}
 
 		// update texture rect to show current frame
-		sprite.setTextureRect(sf::IntRect(currentFrame * 38, 0, 38, 25));
+		sprite.setTextureRect(sf::IntRect(currentFrame * PLAYER_WIDTH, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
 			
 		// flip sprite
-		sprite.setScale(2 * direction, 2); 
+		sprite.setScale(PLAYER_SCALE * direction, PLAYER_SCALE); 
 
 		// then, update current frame
 		currentFrame++; 
@@ -120,14 +116,11 @@ int Player::getHealth() const
 }
 
 // make player take damage
-void Player::takeDamage(int amount)
+void Player::takeDamage(Player* const instance, const AttackHitbox* const attacker)
 {
-	if (canTakeDamage())
-	{
-		health -= amount;
-		std::cout << "Player took damage!" << std::endl;
-		timeSinceLastHit = 0.0f;
-	}
+	// ignore these for now just so i stop getting a warning
+ 	(void)attacker;
+	(void)instance;
 }
 
 // check if player can take damage
