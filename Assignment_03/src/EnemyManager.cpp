@@ -32,13 +32,10 @@ void EnemyManager::update(float dt, Player& player){
 	return !enemy.isAlive(); // Remove enemies that are not alive
     }), enemies.end());
 
+    // If an enemy in the middle of the vector has been erased, its collider hitbox parent pointer must be updated to its new position in the vector
     for(Enemy& enemy : enemies) {
         enemy.setColliderParent(&enemy);
     }
-
-    //std::erase_if(enemies, [](const Enemy& enemy) {
-    //    return !enemy.isAlive();
-    //});
 }
 
 //spawn logic

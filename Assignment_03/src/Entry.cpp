@@ -39,11 +39,13 @@ int main(void) {
     Player player("./assets/txr/animals/ct2/Walk.png", 20);
     HitboxManager::RegisterPlayer(&player);
 
+    // Initialize various systems
     ScoreManager::Initialize();
     AudioManager::Initialize();
     InputManager::Initialize();
     LevelManager::setupEnemies();
     
+    // Set map to the park and play its appropriate BGM and ambience
     MapManager::ChangeMap(MapManager::Maps::PARK);
     AudioManager::StartMusic("./assets/aud/bgm_accordion.wav");
     AudioManager::StartMusic("./assets/aud/amb_pk.wav");
@@ -52,7 +54,8 @@ int main(void) {
 
         // Update delta time and prepare input manager for batch of new inputs
         InputManager::Update();
-        
+    
+        // Get batch of new inputs for InputManager
         HandleWindowEvents(window);
 
         // Update enemies of current level, and check if level should change

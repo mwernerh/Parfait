@@ -33,6 +33,7 @@ void HitboxManager::Update(void) {
     }
 
     
+    // Check if player is attacking and whether their attack hitbox overlaps with the registered enemy collider hitboxes
     if(player->getAttackHitbox().isActive) {
         for(u32 i = 0; i < numEnemyCoHitboxes; i++) {
             if(enemyCoHitboxes[i]->getGlobalBounds().intersects(player->getAttackHitbox().getGlobalBounds())) {
@@ -54,6 +55,6 @@ void HitboxManager::Update(void) {
         }
     }
     */
-    
+
     numEnemyAtHitboxes = numEnemyCoHitboxes = 0;
 }

@@ -22,6 +22,7 @@ void InputManager::Update(void) {
 }
 
 void InputManager::IncrementState(void) {
+    // Switch interpretation of arrays (prevState array -> currentState array & vice-versa)
     prevStateIdx = !prevStateIdx;
     states[!prevStateIdx] = states[prevStateIdx];
 }

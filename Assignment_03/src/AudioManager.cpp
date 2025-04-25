@@ -49,6 +49,8 @@ const std::set<sf::Sound*>& Parfait::SoundBuffer::getAttachedSounds(void) {
 void AudioManager::AudioManagerWrapper::LRUQueue::Enqueue(const u8 element) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
 
+    // Place the desired element at the back of the queue
+
     for(u32 i = 0; i < MAX_SOUNDS; i++) {
         if(aM.leastRecentlyUsedQueue.array[(aM.leastRecentlyUsedQueue.front + i) % MAX_SOUNDS] == element) {
             for(u32 j = i; j < MAX_SOUNDS - 1; j++) {
@@ -63,7 +65,8 @@ void AudioManager::AudioManagerWrapper::LRUQueue::Enqueue(const u8 element) {
 
 u8 AudioManager::AudioManagerWrapper::LRUQueue::Dequeue(void) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
-
+    
+    // Get element at front of queue
     u8 element = aM.leastRecentlyUsedQueue.array[aM.leastRecentlyUsedQueue.front];
     aM.leastRecentlyUsedQueue.front = (aM.leastRecentlyUsedQueue.front + 1) % MAX_SOUNDS;
 
@@ -79,25 +82,30 @@ void AudioManager::Initialize(void) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
     
     for(u32 i = 0; i < MAX_SOUNDS / 2; i++) {
+        // Camera sounds sound the same no matter camera position, and do not loop
         aM.cameraSounds[i].setAttenuation(0.0f);
         aM.cameraSounds[i].setRelativeToListener(true);
         aM.cameraSounds[i].setLoop(false);
 
+        // Positional sounds sound differently, depending on the camera position, and do not loop
         aM.positionalSounds[i].setAttenuation(0.8f);   // Not quite max attenuation
         aM.positionalSounds[i].setRelativeToListener(false);
         aM.positionalSounds[i].setLoop(false);
     }
 
+    // Music sounds the same no matter the camera position, and loops
     for(u32 i = 0; i < MAX_MUSIC_LAYERS; i++) {
         aM.music[i].setAttenuation(0.0f);
         aM.music[i].setRelativeToListener(true);
         aM.music[i].setLoop(true);
     }
 
+    // Set LRU queue to expected values
     for(u32 i = 0; i < MAX_SOUNDS; i++) {
         aM.leastRecentlyUsedQueue.array[i] = i;
     }
 
+    // Initialize relevant member attributes
     aM.leastRecentlyUsedQueue.front = 0;
     aM.numCameraSounds = 0;
     aM.numPositionalSounds = 0;
@@ -323,6 +331,7 @@ void AudioManager::ClearMusic(void) {
 void AudioManager::Update(void) {
     AudioManagerWrapper& aM = GetAudioManagerWrapper();
 
+    // Check if any camera sounds have reached completion... if so, unbind it from any SoundBuffer
     for(u32 i = 0; i < aM.numCameraSounds; i++) {
         if(aM.cameraSounds[i].getStatus() == sf::Sound::Stopped) {
             aM.cameraSounds[i].stop();
@@ -331,6 +340,7 @@ void AudioManager::Update(void) {
         }
     }
 
+    // Check if any positional sounds have reached completion... if so, unbind it from any SoundBuffer
     for(u32 i = 0; i < aM.numPositionalSounds; i++) {
         if(aM.positionalSounds[i].getStatus() == sf::Sound::Stopped) {
             aM.positionalSounds[i].resetBuffer();
@@ -338,6 +348,7 @@ void AudioManager::Update(void) {
         }
     }
 
+    // Find the first camera sound that is unbound
     u32 firstEmptyIdx = 0;
     for(; firstEmptyIdx < MAX_SOUNDS / 2; firstEmptyIdx++) {
         if(aM.cameraSounds[firstEmptyIdx].getBuffer() == nullptr) {
@@ -345,6 +356,7 @@ void AudioManager::Update(void) {
         }
     }
 
+    // Fill the empty found index, repeating for any later found empty indices
     for(u32 j = firstEmptyIdx + 1; j < MAX_SOUNDS / 2; j++) {
         const sf::SoundBuffer* const currentBuffer = aM.cameraSounds[j].getBuffer();
         if(currentBuffer) {
