@@ -6,19 +6,28 @@
 #include "Hitboxes.h"
 #include "HitboxManager.h"
 #include "InputManager.h"
+#include "Enemy.h"
+
+/**
+ *  @author Izzy Carlson
+ * 
+ *  @brief Member variables and functions regarding the player
+ *
+ **/
 
 class Player
 {
 
 	public:
-		// constants
+		// CONSTANTS
 		const int PLAYER_SCALE = 6;
 		const int PLAYER_WIDTH = 48;
 		const int PLAYER_HEIGHT = 20;
 		const int NUM_FRAMES_IDLE = 4;
 		const int NUM_FRAMES_WALK = 6;
+		const int OFFSET = 16; // there seems to be a 16 pixel whitespace offset between frames, needed to correctly position hitbox
 
-		// constructor prototype to initialize player
+		// constructor to initialize player
 		Player(std::string texturePath, float speed);
 		
 		// method to draw player to the screen
@@ -35,20 +44,30 @@ class Player
 
 		// health management
 		int getHealth() const;
-		bool canTakeDamage() const;
 
-		//const Hitbox& hitbox const;
+		// damaging and attacking checks
+		bool canTakeDamage() const;
+		bool canAttack() const;
+
+		// retrieve hitboxes
+		AttackHitbox& getAttackHitbox();
+		ColliderHitbox& getColliderHitbox();
+
+		// function to player to attack
+		void Attack(float dt);
 
 	private:
-		// player texture (idle and walk) and sprite
+		// player texture and sprite
 		sf::Texture texture;
 		sf::Sprite sprite;
 
+		// set up hitboxes
 		AttackHitbox at;
 		ColliderHitbox co;
-
+		
+		// variables to handle animation
 		int currentFrame = 0; // current frame of the animation
-		float timePerFrame = 0.1f; // 1/5 of a second per frame
+		float timePerFrame = 0.1f; // 1/10 of a second per frame
 		float timeSinceLastFrame = 0.0f; // time since last frame of the animation
 	
 		float speed = 100.f; // speed of the player
@@ -59,10 +78,11 @@ class Player
 		float damageCooldown = 0.5f; // seconds
 		float timeSinceLastHit = 0.0f;
 
+		float attackTimer = 0.3f; 
+
 		void handleAnimation(int direction, float dt, int numFrames);
 
 		static void takeDamage(Player* const instance, const AttackHitbox* const attacker);
-		//Hitbox hitbox;
 };
 
 #endif
