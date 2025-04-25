@@ -124,7 +124,7 @@ void Enemy::handleAnimation([[maybe_unused]] int direction, float dt){
         {
             currentFrame = 0; // Reset the current frame to the first frame
         }
-        sprite.setTextureRect(sf::IntRect(currentFrame * sprite.getTextureRect().width, 0, sprite.getTextureRect().width, 29)); // Set the texture rect to the current frame
+        sprite.setTextureRect(sf::IntRect(currentFrame * sprite.getTextureRect().width, 0, sprite.getTextureRect().width, sprite.getTextureRect().height)); // Set the texture rect to the current frame
         currentFrame++; // Increment the current frame
         timeSinceLastFrame = 0.f; // Reset the elapsed time
     }
