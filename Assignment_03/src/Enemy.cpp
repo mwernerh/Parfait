@@ -8,6 +8,8 @@
 #include "ScoreManager.h"
 #include "AudioManager.h"
 
+constexpr unsigned int NUM_ANIM_FRAMES = 6;
+
 
 // ENEMY is a class that represents an enemy in the game.
 
@@ -17,7 +19,7 @@ Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed
     sprite.setTexture(*texture); // dereference shared_ptr
 
     // Set the texture rect to the single base sprite.
-    sprite.setTextureRect(sf::IntRect(0, 0, 48, 29));
+    sprite.setTextureRect(sf::IntRect(0, 0, sprite.getTextureRect().width / NUM_ANIM_FRAMES, sprite.getTextureRect().height));
     sprite.setPosition(x, y);
 
     // Set the origin of the sprite to the center of the sprite (its 64x64)
@@ -118,11 +120,11 @@ void Enemy::handleAnimation([[maybe_unused]] int direction, float dt){
 
     if (timeSinceLastFrame > timePerFrame) // If the elapsed time is greater than the time per frame
     {
-        if (currentFrame == 6) // If the current frame is the last frame of the animation
+        if (currentFrame == NUM_ANIM_FRAMES) // If the current frame is the last frame of the animation
         {
             currentFrame = 0; // Reset the current frame to the first frame
         }
-        sprite.setTextureRect(sf::IntRect(currentFrame * 48, 0, 48, 29)); // Set the texture rect to the current frame
+        sprite.setTextureRect(sf::IntRect(currentFrame * sprite.getTextureRect().width, 0, sprite.getTextureRect().width, 29)); // Set the texture rect to the current frame
         currentFrame++; // Increment the current frame
         timeSinceLastFrame = 0.f; // Reset the elapsed time
     }

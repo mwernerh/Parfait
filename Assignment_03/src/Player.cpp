@@ -69,13 +69,13 @@ void Player::Attack(float dt)
 	// check attack key (K) is pressed
 	if (InputManager::IsKeyPressed(sf::Keyboard::Scancode::K))
 	{
-			std::cout << "Player wants attack" << std::endl;
 			at.isActive = true; // set attack hitbox to active
 			isAttacking = true;
 	}
 
-	if(attackTimer < 0.3f)
+	if(attackTimer < 0.3f) {
 		at.isActive = false;
+	}
 
 	// Only decrease attack time if player is trying to attack
 	if(isAttacking)

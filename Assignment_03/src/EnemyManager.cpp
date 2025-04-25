@@ -23,7 +23,6 @@ void EnemyManager::update(float dt, Player& player){
     // Update each enemy
     for (auto& enemy : enemies){
         enemy.update(dt, playerPos); //update the enemy's position (calls the update function in the enemy class)
-//    	std::cout << std::hex << &enemy << std::endl;
     }
 
     // Remove dead enemies
@@ -31,16 +30,11 @@ void EnemyManager::update(float dt, Player& player){
 	//return !enemy.isAlive(); // Remove enemies that are not alive
     //}), enemies.end());
 
-	
-	for (auto itr = enemies.begin(); itr != enemies.end();)
-	{
-		if (!(*itr).isAlive()){
-            std::cout << "Erasing: " << std::hex << &(*itr) << std::endl;
-			itr = enemies.erase(itr);
-		} else {
-			itr++;
-		}
-	}
+    std::erase_if(enemies, [](const Enemy& enemy) {
+        if(!enemy.isAlive())
+            std::cout << "Erasing enemy: " << std::hex << &enemy << std::hex;
+        return !enemy.isAlive();
+    });
 }
 
 //spawn logic
@@ -79,6 +73,7 @@ void EnemyManager::configure(const std::string& texturePath, int maxEnemies, int
     this->spawnCooldown = cooldown; // Time between enemy spawns
     this->baseHealth = health; // Base health of each enemy
     this->enemySpeed = speed; // Speed of each enemy
+    this->enemies.reserve(maxEnemies);
 
     enemyTexture = std::make_shared<sf::Texture>(); // Create a shared pointer to the texture
     if (!enemyTexture->loadFromFile(texturePath)){ // Load the texture from the specified file
