@@ -65,4 +65,5 @@ class ColliderHitbox : public Hitbox {
     public:
     ColliderHitbox(void* parent, HitFuncGeneric on_hit_function) : Hitbox(true), parent(parent), onHitFunction(std::bit_cast<HitFuncGeneric>(on_hit_function)) {}
     void RunHitFunction(const AttackHitbox* const attacking_hitbox) { onHitFunction(parent, attacking_hitbox); }
+    void SetParent(void* parent) { this->parent = parent; }
 };

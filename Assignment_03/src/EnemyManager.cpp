@@ -26,15 +26,19 @@ void EnemyManager::update(float dt, Player& player){
     }
 
     // Remove dead enemies
-    //enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
-	//return !enemy.isAlive(); // Remove enemies that are not alive
-    //}), enemies.end());
-
-    std::erase_if(enemies, [](const Enemy& enemy) {
+    enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
         if(!enemy.isAlive())
-            std::cout << "Erasing enemy: " << std::hex << &enemy << std::hex;
-        return !enemy.isAlive();
-    });
+            std::cout << "Erasing enemy: " << std::hex << &enemy << std::endl;
+	return !enemy.isAlive(); // Remove enemies that are not alive
+    }), enemies.end());
+
+    for(Enemy& enemy : enemies) {
+        enemy.setColliderParent(&enemy);
+    }
+
+    //std::erase_if(enemies, [](const Enemy& enemy) {
+    //    return !enemy.isAlive();
+    //});
 }
 
 //spawn logic
@@ -74,6 +78,7 @@ void EnemyManager::configure(const std::string& texturePath, int maxEnemies, int
     this->baseHealth = health; // Base health of each enemy
     this->enemySpeed = speed; // Speed of each enemy
     this->enemies.reserve(maxEnemies);
+    this->enemies.clear();
 
     enemyTexture = std::make_shared<sf::Texture>(); // Create a shared pointer to the texture
     if (!enemyTexture->loadFromFile(texturePath)){ // Load the texture from the specified file

@@ -8,6 +8,7 @@ u32 LevelManager::currentLevel = 0;
 
 std::vector<std::unique_ptr<EnemyManager>>& LevelManager::GetEnemyManagers(void) {
     static std::vector<std::unique_ptr<EnemyManager>> em;
+    em.reserve(2);
     return em;
 }
 

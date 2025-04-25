@@ -55,6 +55,8 @@ class Enemy{
         }
         //x and y are the starting position
 
+        void setColliderParent(void* parent) { colliderHitbox.SetParent(parent); }
+
 
 
     private:
