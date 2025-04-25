@@ -7,6 +7,7 @@
 #include "MapManager.h"
 #include "ScoreManager.h"
 #include "AudioManager.h"
+#include "Player.h"
 
 void HandleWindowEvents(sf::WindowBase& window) {
     sf::Event event;
@@ -32,6 +33,9 @@ int main(void) {
     window.setKeyRepeatEnabled(false);
     sf::View cameraView = window.getView();
     window.setView(cameraView);
+
+    // Initialize a player
+    Player player("./assets/txr/animals/ct2/Walk.png", 20);
 
     ScoreManager::Initialize();
     AudioManager::Initialize();
@@ -66,10 +70,14 @@ int main(void) {
         // Play audio
         AudioManager::Update();
         
+	// Update Player
+	player.update(InputManager::GetDeltaTime());
+
         // Draw
         window.clear();
         MapManager::Draw(window, window.getView().getCenter(), InputManager::GetDeltaTime() * 150.0f);
         ScoreManager::Draw(window);
+	player.draw(window);
         window.display();
 
     }
