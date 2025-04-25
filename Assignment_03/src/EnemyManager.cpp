@@ -1,10 +1,11 @@
 #include "EnemyManager.h"
+#include <iostream>
 #include <cmath>
 #include <cstdlib>  // used for rand() spawn logic
 
 //ENEMYMANAGER is a class that manages the enemies in the game.
 
-EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(5), baseHealth(100), enemySpeed(.1f){
+EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(5), baseHealth(1), enemySpeed(.1f){
 }
 
 //Updates enemy based on the player position
@@ -22,13 +23,25 @@ void EnemyManager::update(float dt, Player& player){
     // Update each enemy
     for (auto& enemy : enemies){
         enemy.update(dt, playerPos); //update the enemy's position (calls the update function in the enemy class)
+//    	std::cout << std::hex << &enemy << std::endl;
     }
 
     // Remove dead enemies
     enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
-        return !enemy.isAlive(); // Remove enemies that are not alive
+	return !enemy.isAlive(); // Remove enemies that are not alive
     }), enemies.end());
 
+	/*
+	for (auto itr = enemies.begin(); itr != enemies.end();)
+	{
+		if (!(*itr).isAlive()){
+			std::cout << &(*itr) << std::endl; 
+			itr++;
+		} else {
+			itr++;
+		}
+	}
+	*/
 }
 
 //spawn logic
@@ -46,7 +59,7 @@ void EnemyManager::spawnEnemy(const sf::Vector2f& playerPos){
             break;
     }
 
-    enemies.emplace_back(Enemy(spawnPos.x, spawnPos.y - 16 * 6, enemyTexture, enemySpeed, baseHealth, baseHealth));
+    enemies.emplace_back(spawnPos.x, spawnPos.y - 16 * 6, enemyTexture, enemySpeed, baseHealth, baseHealth);
 }
 
 //draw logic

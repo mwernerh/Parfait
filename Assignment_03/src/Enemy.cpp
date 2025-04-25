@@ -28,14 +28,16 @@ Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed
 
     colliderHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the collider hitbox
     colliderHitbox.setSize(sf::Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height)); // Set the size of the collider hitbox
+
     colliderHitbox.setFillColor(sf::Color(0, 255, 0, 127)); // Set the color of the collider hitbox to green with 50% opacity
+    std::cout << "Made en hitbox: " << std::hex << colliderHitbox.parent << std::endl;
 
     attackHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the attack hitbox
     attackHitbox.setSize(sf::Vector2f(10, 10));
     attackHitbox.setOrigin(- sprite.getGlobalBounds().width, - sprite.getGlobalBounds().height /2);
     attackHitbox.setFillColor(sf::Color(255, 0, 0, 127));
 
-
+//    alive = true;
 }
 
 // UPDATE THE ENEMY
@@ -98,10 +100,11 @@ void Enemy::setHealth(int health){
 
 //TAKE DAMAGE
 int Enemy::takeDamage(Enemy* instance, const AttackHitbox* attacker){
+    std::cout << "Enemy take damage function running: " << std::hex << instance << std::endl;
     instance-> setHealth(instance-> getHealth()- 1); // Decrease health by 1
     if (instance-> getHealth() <= 0){ // If health is less than or equal to 0
         instance-> killEnemy();
-        ScoreManager::AddScore(100); // Add score to player
+        //ScoreManager::AddScore(100); // Add score to player
     }
     return instance -> getHealth(); // Return remaining health
 }

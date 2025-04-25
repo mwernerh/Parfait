@@ -1,5 +1,6 @@
 #include "HitboxManager.h"
 #include "MapManager.h"
+#include <iostream>
 
 /**
  * @author Mar Werner Hernandez
@@ -33,15 +34,15 @@ void HitboxManager::Update(void) {
         */
     }
 
-    /*
-    if(PlayerManager::GetPlayer().GetAtHitbox()->isActive) {
+    
+    if(player->getAttackHitbox().isActive) {
         for(u32 i = 0; i < numEnemyCoHitboxes; i++) {
-            if(enemyCoHitboxes[i]->getGlobalBounds().intersects(PlayerManager::GetPlayer().GetAtHitbox()->getGlobalBounds())) {
-                enemyCoHitboxes[i]->RunHitFunction(PlayerManager::GetPlayer().GetAtHitbox());
+            if(enemyCoHitboxes[i]->getGlobalBounds().intersects(player->getAttackHitbox().getGlobalBounds())) {
+                std::cout << "intersects with i: " << i << std::endl;
+		enemyCoHitboxes[i]->RunHitFunction(&player->getAttackHitbox());
             }
         }
     }
-    */
 
     /*
     if(MapManager::GetCollision().getBounds().intersects(PlayerManager::GetPlayer().GetCoHitbox()->getGlobalBounds())) {

@@ -34,10 +34,10 @@ int main(void) {
     window.setKeyRepeatEnabled(false);
     sf::View cameraView = window.getView();
     window.setView(cameraView);
-
+    LevelManager::setupEnemies(0);
     // Initialize a player
     Player player("./assets/txr/animals/ct2/Walk.png", 20);
-
+    HitboxManager::RegisterPlayer(&player);
     ScoreManager::Initialize();
     AudioManager::Initialize();
     InputManager::Initialize();
@@ -45,7 +45,6 @@ int main(void) {
     MapManager::ChangeMap(MapManager::Maps::PARK);
     AudioManager::StartMusic("./assets/aud/bgm_accordion.wav");
     AudioManager::StartMusic("./assets/aud/amb_pk.wav");
-    LevelManager::setupEnemies(0);
 
     while(window.isOpen()) {
 
@@ -56,7 +55,7 @@ int main(void) {
 
         if(InputManager::IsKeyPressed(sf::Keyboard::Scancode::X)) {
             AudioManager::StartCameraSound("./assets/aud/e_dg_atk.wav");
-            ScoreManager::AddScore(100);
+//            ScoreManager::AddScore(100);
         }
 
         // Check if the level should change

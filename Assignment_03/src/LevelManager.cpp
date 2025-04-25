@@ -31,7 +31,7 @@ void LevelManager::setupEnemies(int currentLevel) {
         case 0:{
             // setup dog enemy for the current level
             auto manager = std::make_unique<EnemyManager>();
-            manager->configure("./assets/txr/animals/dg1/Walk.png", 20, 100, 2.0f, .20f);
+            manager->configure("./assets/txr/animals/dg1/Walk.png", 20, 1, 2.0f, .20f);
             enemyManagers.push_back(std::move(manager));
         }
     };
