@@ -1,12 +1,14 @@
 #pragma once
 #include "Literals.h"
 #include "Hitboxes.h"
+#include "Player.h"
 
 /**
  * @author Mar Werner Hernandez 
  * @brief System used to manage collisions between hitboxes
  * 
  */
+class Player;
 
 class HitboxManager {
     static constexpr u32 MAX_HITBOXES = 256;
@@ -17,7 +19,11 @@ class HitboxManager {
     static u32 numEnemyAtHitboxes;
     static u32 numEnemyCoHitboxes;
 
+    static Player* player;
+
     public:
+    
+    static void RegisterPlayer(Player* player);
 
     /**
      * @brief Registers an attacking hitbox to check later (see Update()) whether it intersects with a collider hitbox. DOES NOT MODIFY THE HITBOX!

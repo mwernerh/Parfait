@@ -8,7 +8,13 @@
 AttackHitbox* HitboxManager::enemyAtHitboxes[MAX_HITBOXES] = {};
 ColliderHitbox* HitboxManager::enemyCoHitboxes[MAX_HITBOXES] = {};
 u32 HitboxManager::numEnemyAtHitboxes = 0;
-u32 HitboxManager::numEnemyCoHitboxes = 0;
+u32 HitboxManager::numEnemyCoHitboxes = 0; 
+Player* HitboxManager::player = nullptr;
+
+void HitboxManager::RegisterPlayer(Player* player)
+{
+	HitboxManager::player = player;
+}
 
 void HitboxManager::RegisterAttackHitbox(AttackHitbox* const at) {
     enemyAtHitboxes[numEnemyAtHitboxes++] = at;
