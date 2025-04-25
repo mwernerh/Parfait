@@ -17,6 +17,7 @@ void ScoreManager::Initialize(void) {
     scoreWrapper.text.setFillColor(sf::Color::White);
     scoreWrapper.text.setOutlineThickness(5.0f);
     scoreWrapper.text.setOutlineColor(sf::Color::Black);
+    scoreWrapper.score = 0;
 }
 
 ScoreManager::ScoreWrapper& ScoreManager::GetScoreWrapper(void) {

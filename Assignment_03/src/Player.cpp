@@ -65,23 +65,26 @@ ColliderHitbox& Player::getColliderHitbox()
 
 void Player::Attack(float dt)
 {
+/*
 	// TODO: Can be updated to add sound or change sprite when attacking
 	// check attack key (K) is pressed
 	if (InputManager::IsKeyPressed(sf::Keyboard::Scancode::K))
 	{
-		if (canAttack())
-		{
 			at.isActive = true; // set attack hitbox to active
+			if (attackTimer < 0.3){
+				at.isActive = false;
+			}
 			attackTimer -= dt; // decrease attack timer using delta time
 
 			// once attack timer reaches zero, disable attack hitbox and reset attack timer
-			if (attackTimer <= 0)
-			{
-				at.isActive = false;
-				attackTimer = 0.3f;
-			}
+		if (attackTimer <= 0)
+		{
+			at.isActive = false;
+			attackTimer = 0.3f;
 		}
 	}
+	*/
+	at.isActive = true;
 }
 
 void Player::draw(sf::RenderWindow& window)
@@ -113,6 +116,8 @@ void Player::update(float dt)
 		at.setPosition({sprite.getPosition().x - (PLAYER_WIDTH * PLAYER_SCALE), sprite.getPosition().y});
 	else
 		at.setPosition({sprite.getPosition().x + ((PLAYER_WIDTH - OFFSET) * PLAYER_SCALE), sprite.getPosition().y});
+	
+	Attack(dt);
 }
 
 void Player::handleInput(float dt)
