@@ -2,52 +2,48 @@
 #include <iostream>
 #include "Player.h"
 
+/** 
+ *
+ * @author Izzy Carlson
+ *
+ * Handles everything relating to the player i.e. set-up, attack, movement, etc.
+ *
+ **/
+
 Player::Player(std::string texturePath, float speed) : at(), co(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Player::takeDamage))
 {
 
-	// Load texture from file
+	// load player texture from file
 	if (!texture.loadFromFile(texturePath))
 	{
 		std::cerr << "Error loading texture!" << std::endl;
 	}
 
-	// set the texture to the sprite
-	sprite.setTexture(texture);
-	
-	// set texture rect based on idle sprite
-	sprite.setTextureRect(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
-
-	// set position of the player
-	sprite.setPosition(516, 550);
-
-	// set player center to 0,0 -- makes it easier for flipping sprite and hitboxes
-	sprite.setOrigin(0,0);
-
-	sprite.setScale(PLAYER_SCALE, PLAYER_SCALE); 
-
-	// set player speed
-	this->speed = speed;
+	sprite.setTexture(texture); // set player texture to the sprite
+	sprite.setTextureRect(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT)); // set texture rect based on player height and width
+	sprite.setPosition(516, 550); // set player position on screen
+	sprite.setOrigin(0,0); // set player origin to 0,0 for ease of flipping & flipping hitboxes
+	sprite.setScale(PLAYER_SCALE, PLAYER_SCALE); // set player scale so its an appropriate size for the screen
+	this->speed = speed; // set player speed
 	
 	// set up collider hitbox
-	co.setSize({32.f * PLAYER_SCALE, 20.f * PLAYER_SCALE});
+	co.setSize({32.f * PLAYER_SCALE, 20.f * PLAYER_SCALE}); // set-up size same as the player
 	co.setOrigin(0,0);
 	co.setPosition(516, 550); 
-	co.setFillColor(sf::Color::Red);
+	co.setFillColor(sf::Color(0, 255, 0, 127); // GREEN WITH 50% OPACITY
 
 	// set up attacker hitbox
-	at.setSize ({(float)(OFFSET * PLAYER_SCALE), 20.f * PLAYER_SCALE});
+	at.setSize ({(float)(OFFSET * PLAYER_SCALE), 20.f * PLAYER_SCALE}); // set about half the size as player, and put directly infront of the player
 	at.setOrigin(0,0);
-	at.setPosition(516 + ((PLAYER_WIDTH - OFFSET) * PLAYER_SCALE), 550); 
-	at.setFillColor(sf::Color::Green);
+	at.setPosition(516 + ((PLAYER_WIDTH - OFFSET) * PLAYER_SCALE), 550));
+	at.setFillColor(sf::Color(255, 0, 0, 127)); // RED WITH 50% OPACITY
 }
 
-// get the player's potion
 sf::Vector2f Player::getPosition()
 {
 	return sprite.getPosition();
 }
 
-// get player's global bounds
 sf::FloatRect Player::getGlobalBounds()
 {
 	return sprite.getGlobalBounds();
@@ -132,7 +128,7 @@ void Player::handleInput(float dt)
 		direction = -1;
 		movement.x -= speed;
 	}
-	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::D)) // moving right
+	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::D))
 	{
 		direction = 1;
 		movement.x += speed;
@@ -168,21 +164,18 @@ void Player::handleAnimation(int direction, float dt, int numFrames)
 	}	
 }
 
-// get player health
 int Player::getHealth() const
 {
 	return health;
 }
 
-// make player take damage
 void Player::takeDamage(Player* const instance, const AttackHitbox* const attacker)
 {
-	// ignore these for now just so i stop getting a warning
+	// player currently invincible -- can attack but not take damage. will be implemented in the continuation of this project
  	(void)attacker;
 	(void)instance;
 }
 
-// check if player can take damage
 bool Player::canTakeDamage() const
 {
 	return timeSinceLastHit >= damageCooldown;

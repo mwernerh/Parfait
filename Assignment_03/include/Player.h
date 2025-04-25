@@ -30,30 +30,81 @@ class Player
 		// constructor to initialize player
 		Player(std::string texturePath, float speed);
 		
-		// method to draw player to the screen
+		/**
+		 * @brief draws player and hitboxes in the window
+		 * 
+		 * @param window to be drawn to
+		 *
+		 **/
 		void draw(sf::RenderWindow& window);
-
+		
+		/**
+		 * @brief intended to be used to update player per frame, handles direction, etc.
+		 * 
+		 * @param delta time 
+		 *
+		 **/
 		void update(float dt);
-
-		// handle player input
+	
+		/** 
+		 * @brief handles player input for movement
+		 *
+		 * @param delta time
+		 *
+		 **/
 		void handleInput(float dt);
 		
-		// getters to get player position and global bounds
+		/**
+		 * @brief gets player position on the screen
+		 * 
+		 * @return SFML length 2 vector of player's x and y coordinates on the screen
+		 *
+		 **/
 		sf::Vector2f getPosition();
 		sf::FloatRect getGlobalBounds();
 
-		// health management
+		/**
+		 * @brief gets player's health
+		 *
+		 * @return int value of player's current health
+		 **/
 		int getHealth() const;
 
-		// damaging and attacking checks
+		/**
+ 		 * @brief checks whether player can take damage
+ 		 * 
+		 * @return true if time since last attack is a certain val, false if time since last attack is not certain val
+		 *
+		 **/
 		bool canTakeDamage() const;
+
+		/**
+		 * @brief checks whether player can attack
+		 * 
+		 * @returns currently always returns true
+		 *
+		 **/
 		bool canAttack() const;
 
-		// retrieve hitboxes
+		/**
+		 * @brief gets player's attacker hitbox
+		 * 
+		 * @returns player's attacker hitbox type AttackHitbox
+		 **/
 		AttackHitbox& getAttackHitbox();
+
+		/**
+		 * @brief gets player's colliding hitbox
+		 *
+		 * @returns player's colliding hitbox type ColliderHitbox
+		 **/
 		ColliderHitbox& getColliderHitbox();
 
-		// function to player to attack
+		/**
+		 * @brief player's attacking function, player can attack when key is pressed, activates attack hitbox
+		 * 
+		 * @param delta time
+		 **/
 		void Attack(float dt);
 
 	private:
@@ -80,9 +131,22 @@ class Player
 
 		float attackTimer = 0.3f; 
 		bool isAttacking = false;
-
+		
+		/**
+		 * @brief handles players animation by moving texture rect to show the correct frame
+		 * 
+		 * @param direction (for flipping)
+		 * @param delta time
+		 * @param number of frames in the animation
+		 **/
 		void handleAnimation(int direction, float dt, int numFrames);
 
+		/**
+		 * @brief allows player to take damage (currently does nothing will be updated in future version of project)
+		 * 
+		 * @param player instance
+		 * @param what's attacking the player
+		 **/
 		static void takeDamage(Player* const instance, const AttackHitbox* const attacker);
 };
 
