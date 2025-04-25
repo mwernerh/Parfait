@@ -2,6 +2,10 @@
 #include "Literals.h"
 #include <cstring>
 
+/**
+ * @author Mar Werner Hernandez
+ */
+
 std::bitset<sf::Keyboard::Scancode::ScancodeCount> InputManager::states[2] = {};
 bool InputManager::prevStateIdx = 0;
 float InputManager::deltaTimeSeconds = 0.0f;

@@ -3,6 +3,11 @@
 #include "ScoreManager.h"
 #include "EnemyManager.h"
 
+/**
+ * @author Mar Werner Hernandez
+ * @author Isveydi
+ */
+
 
 u32 LevelManager::currentLevel = 0;
 
