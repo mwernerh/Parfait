@@ -4,68 +4,81 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include "HitboxManager.h"
+#include "ScoreManager.h"
 
 
 // ENEMY is a class that represents an enemy in the game.
 
 // Enemy constructor
-Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth){
+Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth): attackHitbox(), colliderHitbox(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Enemy::takeDamage)) {
     this->texture = texture;
     sprite.setTexture(*texture); // dereference shared_ptr
 
     // Set the texture rect to the single base sprite.
-    sprite.setTextureRect(sf::IntRect(0, 0, 64, 64));
+    sprite.setTextureRect(sf::IntRect(0, 0, 48, 29));
     sprite.setPosition(x, y);
 
     // Set the origin of the sprite to the center of the sprite (its 64x64)
-    sprite.setOrigin(32, 32);
+    sprite.setOrigin(0, 0);
     this->speed = speed;
     this->health = health;
     this->maxHealth = health;
-    sprite.setScale(2.f, 2.f);
+    sprite.setScale(6.f, 6.f);
+
+    colliderHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the collider hitbox
+    colliderHitbox.setSize(sf::Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height)); // Set the size of the collider hitbox
+    colliderHitbox.setFillColor(sf::Color(0, 255, 0, 127)); // Set the color of the collider hitbox to green with 50% opacity
+
+    attackHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the attack hitbox
+    attackHitbox.setSize(sf::Vector2f(10, 10));
+    attackHitbox.setOrigin(- sprite.getGlobalBounds().width, - sprite.getGlobalBounds().height /2);
+    attackHitbox.setFillColor(sf::Color(255, 0, 0, 127));
+
 
 }
 
 // UPDATE THE ENEMY
 //updates enemy movement and animation
 void Enemy::update(float dt, sf::Vector2f playerPos){
-    sf::Vector2f direction = playerPos - sprite.getPosition(); // Get the direction the enemy should move in
+    float direction = playerPos.x - sprite.getPosition().x; // Get the direction the enemy should move in
 
-    float temp = sqrt(direction.x * direction.x + direction.y * direction.y); // Calculate the length of the direction vector
-    if (temp > 0) // If the length is greater than 0
-    {
-        direction /= temp; // Normalize the direction
-        sprite.move(direction * speed * dt); // Move the enemy in the direction of the player
-    }
+     // Calculate the length of the direction vector
+    sprite.move({direction * speed * dt, 0}); // Move the enemy in the direction of the player
+    colliderHitbox.move({direction * speed * dt, 0}); // Move the collider hitbox in the same direction
+    attackHitbox.move({direction * speed * dt, 0}); // Move the attack hitbox in the same direction
+    HitboxManager::RegisterColliderHitbox(&colliderHitbox);
+
     validDistance(playerPos); // Check if the enemy is too far away from the player
 
-    int enemyDirection = 1; // Figure out if we are moving left or right, 1 right, -1 left
-    if (sprite.getPosition().x < playerPos.x) // If the enemy is to the left of the player
-    {
-        enemyDirection = 1; // Move right
-    }
-    else
-    {
-        enemyDirection = -1; // Move left
+    if (sprite.getPosition().x < playerPos.x){ //flip the sprite
+        sprite.setScale(6.f, 6.f); // Set the scale of the sprite to 2x
+        colliderHitbox.setScale(1.f, 1.f); // Set the scale of the collider hitbox to 1x
+        attackHitbox.setScale(1.f, 1.f); // Set the scale of the attack hitbox to 1x
+    } else {
+        sprite.setScale(-6.f, 6.f); // Set the scale of the sprite to -2x
+        colliderHitbox.setScale(-1.f, 1.f); // Set the scale of the collider hitbox to -1x
+        attackHitbox.setScale(-1.f, 1.f); // Set the scale of the attack hitbox to -1x
     }
 
+    handleAnimation(direction, dt);
 }
 
 //draw
 //updates graphics and animation of the enemy in the game
 void Enemy::draw(sf::RenderWindow& window){ //renders enemy to the window
     window.draw(sprite);
+    window.draw(colliderHitbox); // Draw the collider hitbox
+    window.draw(attackHitbox); // Draw the attack hitbox
 }
 
 //valid distance
 // checks how far nemy is from the player
 void Enemy::validDistance(sf::Vector2f playerPos){
+    float distance = std:: abs(playerPos.x - sprite.getPosition().x); // Get distance from player
 
-    float distance = playerPos.x - sprite.getPosition().x; //get distance from player
-    float length = sqrt(distance.x * distance.x + distance.y * distance.y); //calculate length of the distance vector
-    
-    if (length > 1000.f){ //if the distance is greater than 1000
-        killEnemy(); //kill the enemy
+    if (distance > 1000.f) { // If the distance is greater than 1000
+        killEnemy(); // Kill the enemy
     }
 }   
 
@@ -84,13 +97,13 @@ void Enemy::setHealth(int health){
 }
 
 //TAKE DAMAGE
-
-int Enemy::takeDamage(){
-    health -=1; // Decrease health by 1
-    if (health <= 0){ // If health is less than or equal to 0
-        killEnemy();
+int Enemy::takeDamage(Enemy* instance, const AttackHitbox* attacker){
+    instance-> setHealth(instance-> getHealth()- 1); // Decrease health by 1
+    if (instance-> getHealth() <= 0){ // If health is less than or equal to 0
+        instance-> killEnemy();
+        ScoreManager::AddScore(100); // Add score to player
     }
-    return health; // Return remaining health
+    return instance -> getHealth(); // Return remaining health
 }
 
 
@@ -105,7 +118,7 @@ void Enemy::handleAnimation(int direction, float dt){
         {
             currentFrame = 0; // Reset the current frame to the first frame
         }
-        sprite.setTextureRect(sf::IntRect(currentFrame * 64, 0, 64, 64)); // Set the texture rect to the current frame
+        sprite.setTextureRect(sf::IntRect(currentFrame * 48, 0, 48, 29)); // Set the texture rect to the current frame
         currentFrame++; // Increment the current frame
         timeSinceLastFrame = 0.f; // Reset the elapsed time
     }

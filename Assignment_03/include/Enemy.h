@@ -1,11 +1,11 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <memory>
+#include "Hitboxes.h"
 
 class Enemy{
     public:
@@ -18,6 +18,11 @@ class Enemy{
 
         //updates enemy movement and animation
         void draw(sf::RenderWindow& window);
+
+        //HITBOX
+        //get the hitbox of the enemy
+        
+
 
         //CHECKING DISTANCE
         //check if the enemy is too far away from the player
@@ -32,7 +37,7 @@ class Enemy{
         //set the health of the enemy
         void setHealth(int health);
         //take damage (returns remaining health)
-        int takeDamage();
+        static int takeDamage(Enemy* instance, const AttackHitbox* attacker);
 
         //ANIMATION
         //handle animation
@@ -50,9 +55,6 @@ class Enemy{
         }
         //x and y are the starting position
 
-        //HITBOX
-        //get the hitbox of the enemy
-
 
 
     private:
@@ -63,11 +65,14 @@ class Enemy{
         int health;
         int maxHealth;
 
+
         //Enemy Animation attributes
         int currentFrame = 0; // The current frame of the animation
         float timePerFrame = 0.2f; // Time per frame
         float timeSinceLastFrame = 0.0f; // Time since the last frame of the animation
-        bool alive = true; // Is the enemy alive?   
+        bool alive = true; // Is the enemy alive? 
+        AttackHitbox attackHitbox;
+        ColliderHitbox colliderHitbox;
 
 };
 
