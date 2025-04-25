@@ -30,12 +30,12 @@ Player::Player(std::string texturePath, float speed) : at(), co(this, std::bit_c
 	co.setSize({32.f * PLAYER_SCALE, 20.f * PLAYER_SCALE}); // set-up size same as the player
 	co.setOrigin(0,0);
 	co.setPosition(516, 550); 
-	co.setFillColor(sf::Color(0, 255, 0, 127); // GREEN WITH 50% OPACITY
+	co.setFillColor(sf::Color(0, 255, 0, 127)); // GREEN WITH 50% OPACITY
 
 	// set up attacker hitbox
 	at.setSize ({(float)(OFFSET * PLAYER_SCALE), 20.f * PLAYER_SCALE}); // set about half the size as player, and put directly infront of the player
 	at.setOrigin(0,0);
-	at.setPosition(516 + ((PLAYER_WIDTH - OFFSET) * PLAYER_SCALE), 550));
+	at.setPosition(516 + ((PLAYER_WIDTH - OFFSET) * PLAYER_SCALE), 550);
 	at.setFillColor(sf::Color(255, 0, 0, 127)); // RED WITH 50% OPACITY
 }
 
