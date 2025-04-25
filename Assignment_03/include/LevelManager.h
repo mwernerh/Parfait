@@ -12,13 +12,14 @@ class EnemyManager;
 
 class LevelManager {
     static u32 currentLevel;
-    static std::vector<std::unique_ptr<EnemyManager>> enemyManagers;
+
+    static std::vector<std::unique_ptr<EnemyManager>>& GetEnemyManagers(void);
 
     public:
     LevelManager();
     static void Update(Player& player);
 
-    static void setupEnemies(int currentLevel);
+    static void setupEnemies();
 
     static void draw(sf::RenderWindow& window);
     

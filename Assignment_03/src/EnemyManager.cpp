@@ -27,21 +27,20 @@ void EnemyManager::update(float dt, Player& player){
     }
 
     // Remove dead enemies
-    enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
-	return !enemy.isAlive(); // Remove enemies that are not alive
-    }), enemies.end());
+    //enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
+	//return !enemy.isAlive(); // Remove enemies that are not alive
+    //}), enemies.end());
 
-	/*
+	
 	for (auto itr = enemies.begin(); itr != enemies.end();)
 	{
 		if (!(*itr).isAlive()){
-			std::cout << &(*itr) << std::endl; 
-			itr++;
+            std::cout << "Erasing: " << std::hex << &(*itr) << std::endl;
+			itr = enemies.erase(itr);
 		} else {
 			itr++;
 		}
 	}
-	*/
 }
 
 //spawn logic

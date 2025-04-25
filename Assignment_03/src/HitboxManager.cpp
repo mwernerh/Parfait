@@ -1,6 +1,5 @@
 #include "HitboxManager.h"
-#include "MapManager.h"
-#include <iostream>
+#include <cstring>
 
 /**
  * @author Mar Werner Hernandez
@@ -26,7 +25,6 @@ void HitboxManager::RegisterColliderHitbox(ColliderHitbox* const co) {
 }
 
 void HitboxManager::Update(void) {
-    // TODO: Implement method of obtaining the player instance
     for(u32 i = 0; i < numEnemyAtHitboxes; i++) {
         /*
         if(enemyAtHitboxes[i]->isActive && enemyAtHitboxes[i]->getGlobalBounds().intersects(PlayerManager::GetPlayer().GetCoHitbox()->getGlobalBounds()))
@@ -38,8 +36,7 @@ void HitboxManager::Update(void) {
     if(player->getAttackHitbox().isActive) {
         for(u32 i = 0; i < numEnemyCoHitboxes; i++) {
             if(enemyCoHitboxes[i]->getGlobalBounds().intersects(player->getAttackHitbox().getGlobalBounds())) {
-                std::cout << "intersects with i: " << i << std::endl;
-		enemyCoHitboxes[i]->RunHitFunction(&player->getAttackHitbox());
+		        enemyCoHitboxes[i]->RunHitFunction(&player->getAttackHitbox());
             }
         }
     }
@@ -57,6 +54,6 @@ void HitboxManager::Update(void) {
         }
     }
     */
-
+    
     numEnemyAtHitboxes = numEnemyCoHitboxes = 0;
 }

@@ -79,6 +79,7 @@ class Player
 		float timeSinceLastHit = 0.0f;
 
 		float attackTimer = 0.3f; 
+		bool isAttacking = false;
 
 		void handleAnimation(int direction, float dt, int numFrames);
 

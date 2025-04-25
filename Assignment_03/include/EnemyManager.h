@@ -17,7 +17,7 @@ class EnemyManager{
     private:
         float spawnTimer = 0.f;
         float spawnCooldown = 2.f;
-        int maxEnemies = 5;
+        std::size_t maxEnemies = 5;
         float maxDistance = 1000.f;
 
         void spawnEnemy(const sf::Vector2f& playerPos);
