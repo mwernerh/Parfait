@@ -7,6 +7,7 @@
 #include "MapManager.h"
 #include "ScoreManager.h"
 #include "AudioManager.h"
+#include "LevelManager.h"
 #include "Player.h"
 
 void HandleWindowEvents(sf::WindowBase& window) {
@@ -44,6 +45,7 @@ int main(void) {
     MapManager::ChangeMap(MapManager::Maps::PARK);
     AudioManager::StartMusic("./assets/aud/bgm_accordion.wav");
     AudioManager::StartMusic("./assets/aud/amb_pk.wav");
+    LevelManager::setupEnemies(0);
 
     while(window.isOpen()) {
 
@@ -58,7 +60,7 @@ int main(void) {
         }
 
         // Check if the level should change
-        //LevelManager::Update();
+        LevelManager::Update(player);
 
         // Update Player
 	    player.update(InputManager::GetDeltaTime());
@@ -78,6 +80,7 @@ int main(void) {
         // Draw
         window.clear();
         MapManager::Draw(window);
+        LevelManager::draw(window);
 	    player.draw(window);
         ScoreManager::Draw(window);
         window.display();
