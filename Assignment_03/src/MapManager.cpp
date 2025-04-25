@@ -9,27 +9,34 @@
  * @author Mar Werner Hernandez
  */
 
-void MapManager::Draw(sf::RenderWindow& window, sf::Vector2f playerPos, float playerHorizontalVelocity) {
+void MapManager::Draw(sf::RenderWindow& window) {
     // TODO: Obtain player instance to remove paramaters other than the RenderWindow
     ParallaxBackground& bg = GetBackground();
 
+    const sf::Vector2f& viewSize = window.getView().getSize();
+    const sf::Vector2f& cameraPos = window.getView().getCenter();
+
+    constexpr f32 backgroundSlowdownFraction = 1.0f/2.5f;
+
     // Place sprite at player position, then draw it
     for(u32 i = 0; i < ParallaxBackground::NUM_PARALLAX_LAYERS; i++) {
-        bg.s_layers[i].setPosition(playerPos);
+        bg.s_layers[i].setPosition(cameraPos);
 
 
         // Texture coordinates are integers, but player movement is fractional -- store fractional offset just in case player movement yields a change in offset between 0 & 1
         sf::IntRect texRect = GetBackground().s_layers[i].getTextureRect();
-        bg.intermediateTextureRectOffsets[i] = static_cast<float>(texRect.left) + (playerHorizontalVelocity * (static_cast<float>(i + 1)/static_cast<float>(ParallaxBackground::NUM_PARALLAX_LAYERS)));
 
-        // Keep the texture offset between [0, TEXTURE_WIDTH)
-        if(bg.intermediateTextureRectOffsets[i] >= static_cast<float>(texRect.width))
-            bg.intermediateTextureRectOffsets[i] -= static_cast<float>(texRect.width);
-        else if(bg.intermediateTextureRectOffsets[i] < 0.0f) 
-            bg.intermediateTextureRectOffsets[i] += static_cast<float>(texRect.width);
+        const f32 backgroundFraction = (static_cast<float>(i + 1)/static_cast<float>(ParallaxBackground::NUM_PARALLAX_LAYERS));
+
+        f32 textureRectangleHorizontalOffset = (cameraPos.x * backgroundFraction * backgroundSlowdownFraction) - (viewSize.x / 2.0f);
+
+        if(textureRectangleHorizontalOffset * (i / 4.0f) >= static_cast<float>(texRect.width))
+            textureRectangleHorizontalOffset -= static_cast<float>(texRect.width) * std::floor((textureRectangleHorizontalOffset * backgroundFraction) / texRect.width);
+        else if(textureRectangleHorizontalOffset * (i / 4.0f) < 0.0f)
+            textureRectangleHorizontalOffset += static_cast<float>(texRect.width) * std::floor(std::abs(textureRectangleHorizontalOffset * backgroundFraction) / texRect.width);
 
         // Truncate intermediate offset to integer for texture coordinates
-        texRect.left = static_cast<int>(bg.intermediateTextureRectOffsets[i]);
+        texRect.left = static_cast<int>(textureRectangleHorizontalOffset);
         bg.s_layers[i].setTextureRect(texRect);
         window.draw(GetBackground().s_layers[i]);
     }

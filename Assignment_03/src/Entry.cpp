@@ -60,24 +60,26 @@ int main(void) {
         // Check if the level should change
         //LevelManager::Update();
 
+        // Update Player
+	    player.update(InputManager::GetDeltaTime());
+
         // Update hitboxes
         HitboxManager::Update();
 
         // Update the camera
-        cameraView.setCenter(cameraView.getCenter()); // TODO: Set camera center's horizontal position to be at the player's horizontal position
+        sf::Vector2f cameraPos = player.getPosition();
+        cameraPos.y = cameraView.getCenter().y;
+        cameraView.setCenter(cameraPos);
         window.setView(cameraView);
 
         // Play audio
         AudioManager::Update();
-        
-	// Update Player
-	player.update(InputManager::GetDeltaTime());
 
         // Draw
         window.clear();
-        MapManager::Draw(window, window.getView().getCenter(), InputManager::GetDeltaTime() * 150.0f);
+        MapManager::Draw(window);
+	    player.draw(window);
         ScoreManager::Draw(window);
-	player.draw(window);
         window.display();
 
     }

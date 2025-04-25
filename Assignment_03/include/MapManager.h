@@ -25,13 +25,11 @@ class MapManager {
     enum class Maps : u8 {CITY, PARK, CITY_VAR, NUM_MAPS};
     
     /**
-     * @brief Draws the parallax background and wraps the textures according to the player's position and velocity
+     * @brief Draws the parallax background and wraps the textures according to the camera's position
      * 
      * @param window 
-     * @param player_position
-     * @param player_horizontal_velocity 
      */
-    static void Draw(sf::RenderWindow& window, sf::Vector2f player_position, float player_horizontal_velocity);
+    static void Draw(sf::RenderWindow& window);
 
     /**
      * @brief Currently No-Op
