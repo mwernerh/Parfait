@@ -4,16 +4,9 @@
 #include "EnemyManager.h"
 
 /**
-<<<<<<< Updated upstream
- * @author Mar Werner Hernandez
- * @author Isveydi
- */
-
-=======
  * @author Isveydi Moreno
- * 
+ * @author Mar Werner Hernandez
  */
->>>>>>> Stashed changes
 
 u32 LevelManager::currentLevel = 0; // Current level of the game
 
