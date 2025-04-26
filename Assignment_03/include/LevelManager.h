@@ -8,6 +8,11 @@
 #include "Player.h"
 #include "Literals.h"
 
+/**
+ * @author Isveydi Moreno
+ * 
+ */
+
 class EnemyManager;
 
 class LevelManager {

@@ -5,24 +5,29 @@
 #include <vector>
 #include "Enemy.h"
 #include "Player.h"
+
+/**
+ * @author Isveydi Moreno
+ * 
+ */
 class EnemyManager{
     public:
         // Constructor
         EnemyManager();
 
-        void update(float dt, Player& player);
-        void draw(sf::RenderWindow& window);
-        void configure(const std::string& texturePath,int maxEnemies, int health, float cooldown, float speed);
-
+        //ENEMY MANAGER IN GAME FUNCTIONS
+        void update(float dt, Player& player); //Update Enemies
+        void draw(sf::RenderWindow& window); //Draw Enemies
+        void configure(const std::string& texturePath,int maxEnemies, int health, float cooldown, float speed); //Configure Enemies
     private:
+        // Enemy Spawn Logic
         float spawnTimer = 0.f;
         float spawnCooldown = 2.f;
         std::size_t maxEnemies = 5;
         float maxDistance = 1000.f;
 
-        void spawnEnemy(const sf::Vector2f& playerPos);
+        void spawnEnemy(const sf::Vector2f& playerPos); // Spawn enemies
 
-        // add handleSpellCollisions and handlePlayerCollisions
         // Member Variables
         int baseHealth; // Base health of each enemy
         float enemySpeed; // Speed of the enemies
