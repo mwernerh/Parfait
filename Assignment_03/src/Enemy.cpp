@@ -8,6 +8,11 @@
 #include "ScoreManager.h"
 #include "AudioManager.h"
 
+/**
+ * @author Isveydi Moreno
+ * 
+ */
+
 constexpr unsigned int NUM_ANIM_FRAMES = 6;
 
 

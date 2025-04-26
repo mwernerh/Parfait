@@ -4,16 +4,22 @@
 #include "EnemyManager.h"
 
 /**
+<<<<<<< Updated upstream
  * @author Mar Werner Hernandez
  * @author Isveydi
  */
 
+=======
+ * @author Isveydi Moreno
+ * 
+ */
+>>>>>>> Stashed changes
 
-u32 LevelManager::currentLevel = 0;
+u32 LevelManager::currentLevel = 0; // Current level of the game
 
-std::vector<std::unique_ptr<EnemyManager>>& LevelManager::GetEnemyManagers(void) {
-    static std::vector<std::unique_ptr<EnemyManager>> em;
-    em.reserve(2);
+std::vector<std::unique_ptr<EnemyManager>>& LevelManager::GetEnemyManagers(void) { // Get the enemy managers
+    static std::vector<std::unique_ptr<EnemyManager>> em; // Create a static vector of unique pointers to EnemyManager
+    em.reserve(2); // Reserve space for 2 enemy managers
     return em;
 }
 
@@ -35,22 +41,24 @@ void LevelManager::Update(Player& player) {
     }
 }
 
+// LEVEL MANAGER SETUP ENEMIES
+// This function sets up the enemies for the current level
 void LevelManager::setupEnemies() {
     std::vector<std::unique_ptr<EnemyManager>>& enemyManagers = GetEnemyManagers();
-    //look at bee game to set the position from side to side
-    //Have the enemies spawn from the left side of the screen and move to the right
-    enemyManagers.clear();
 
+    enemyManagers.clear(); // Clear the existing enemy managers
+
+    // Create new enemy managers for the current level
     auto manager1 = std::make_unique<EnemyManager>();
     auto manager2 = std::make_unique<EnemyManager>();
 
     switch (currentLevel){
         case 0:
-            // setup dog enemy for the current level
-            manager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
+            // setup dog 1 enemy for the current level
+            manager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f); //dog 1 texture
             enemyManagers.push_back(std::move(manager1));
             break;
-        default:
+        default: // setup dog 1 and 2 enemy as default
             manager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
             enemyManagers.push_back(std::move(manager1));
 
@@ -61,9 +69,11 @@ void LevelManager::setupEnemies() {
 
 }
 
+//LEVEL MANAGER DRAW
+// This function draws the enemies to the window
 void LevelManager::draw(sf::RenderWindow& window){
-    std::vector<std::unique_ptr<EnemyManager>>& enemyManagers = GetEnemyManagers();
-    for (auto& EnemyManager: enemyManagers){
-        EnemyManager->draw(window);
+    std::vector<std::unique_ptr<EnemyManager>>& enemyManagers = GetEnemyManagers(); // Get the enemy managers
+    for (auto& EnemyManager: enemyManagers){ // Loop through each enemy manager
+        EnemyManager->draw(window); // Draw the enemie to the window
     }
 }

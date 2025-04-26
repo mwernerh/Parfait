@@ -7,6 +7,11 @@
 #include <memory>
 #include "Hitboxes.h"
 
+/**
+ * @author Isveydi Moreno
+ * 
+ */
+
 class Enemy{
     public:
     // Constructor
@@ -53,8 +58,8 @@ class Enemy{
         int getMaxHealth() const {
             return maxHealth; 
         }
-        //x and y are the starting position
 
+        //set parent of the collider hitbox
         void setColliderParent(void* parent) { colliderHitbox.SetParent(parent); }
 
 
@@ -72,7 +77,7 @@ class Enemy{
         int currentFrame = 0; // The current frame of the animation
         float timePerFrame = 0.2f; // Time per frame
         float timeSinceLastFrame = 0.0f; // Time since the last frame of the animation
-        bool alive = true; // Is the enemy alive? 
+        bool alive = true; // checks if enemy is alive
         AttackHitbox attackHitbox;
         ColliderHitbox colliderHitbox;
 
