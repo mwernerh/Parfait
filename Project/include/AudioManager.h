@@ -23,6 +23,7 @@ namespace Parfait {
 class AudioManager {
     static constexpr inline u32 MAX_SOUNDS = 100;
     static constexpr inline u32 MAX_MUSIC_LAYERS = 3;
+    static constexpr std::string AUDIO_DIRECTORY = "./assets/aud/";
 
     struct AudioManagerWrapper {
         u32 numCameraSounds;

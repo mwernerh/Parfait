@@ -41,6 +41,9 @@ https://freesound.org/people/toefur/sounds/288941/
 https://www.dafont.com/outspace-fighter.font
 https://www.dafont.com/akira-expanded.font
 
+## Enemy Approaching Chime
+https://freesound.org/people/Timbre/sounds/92904/
+
 ## GNU Make Documentation
 https://www.gnu.org/software/make/manual/make.html
 

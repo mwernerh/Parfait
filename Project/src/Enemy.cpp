@@ -112,7 +112,7 @@ int Enemy::takeDamage(Enemy* instance, [[maybe_unused]] const AttackHitbox* atta
     if (instance-> getHealth() <= 0){ // If health is less than or equal to 0
         instance-> killEnemy();
         ScoreManager::AddScore(100); // Add score to player
-        AudioManager::StartCameraSound("./assets/aud/e_dg_atk.wav");
+        AudioManager::StartCameraSound("e_dg_atk");
     }
     return instance -> getHealth(); // Return remaining health
 }

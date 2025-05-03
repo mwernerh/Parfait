@@ -11,6 +11,8 @@
 class Player;
 
 class HitboxManager {
+    static inline constexpr f32 ENEMY_APPROACH_SFX_TIMER_MAX = 0.3f;
+
     static constexpr u32 MAX_HITBOXES = 256;
 
     static AttackHitbox* enemyAtHitboxes[MAX_HITBOXES];
@@ -20,6 +22,8 @@ class HitboxManager {
     static u32 numEnemyCoHitboxes;
 
     static Player* player;
+
+    static f32 enemyApproachSFXTimer;
 
     public:
     

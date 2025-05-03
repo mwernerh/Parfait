@@ -1,5 +1,5 @@
 #include "ScoreManager.h"
-#include <iostream>
+#include "FontManager.h"
 
 /**
  * @author Mar Werner Hernandez
@@ -8,10 +8,7 @@
 void ScoreManager::Initialize(void) {
     ScoreWrapper& scoreWrapper = GetScoreWrapper();
 
-    if(!scoreWrapper.font.loadFromFile("./assets/fnt/Akira Expanded Demo.otf"))
-        std::cerr << "\x1b[31mError! Could not load font for score!\x1b[0m\n";
-
-    scoreWrapper.text.setFont(scoreWrapper.font);
+    scoreWrapper.text.setFont(FontManager::GetFont("Akira Expanded Demo"));
     scoreWrapper.text.setString("Score ");
     scoreWrapper.text.setCharacterSize(24);
     scoreWrapper.text.setFillColor(sf::Color::White);

@@ -22,7 +22,7 @@ class TextureManager {
             void Enqueue(const u8 element);
 
             /**
-             * @brief Gets the index of the Texture in the textyres array which has been used the least as of recent
+             * @brief Gets the index of the Texture in the textures array which has been used the least as of recent
              * 
              * @return u8 
              */

@@ -7,7 +7,6 @@
 class ScoreManager {
     struct ScoreWrapper {
         u32 score;
-        sf::Font font;
         sf::Text text;
     };
 

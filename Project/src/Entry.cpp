@@ -1,6 +1,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <SFML/Audio.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include "AnimationManager.h"
 #include "HitboxManager.h"
@@ -52,8 +53,8 @@ int main(void) {
     
     // Set map to the park and play its appropriate BGM and ambience
     MapManager::ChangeMap(MapManager::Maps::PARK);
-    AudioManager::StartMusic("./assets/aud/bgm_accordion.wav");
-    AudioManager::StartMusic("./assets/aud/amb_pk.wav");
+    AudioManager::StartMusic("bgm_accordion");
+    AudioManager::StartMusic("amb_pk");
 
     AnimatedCatSprite1 bd;
     bd.setPosition({100, 100});
@@ -86,6 +87,7 @@ int main(void) {
         cameraPos.y = cameraView.getCenter().y;
         cameraView.setCenter(cameraPos);
         window.setView(cameraView);
+        sf::Listener::setPosition(player.getPosition().x, player.getPosition().y, 0.0f);
 
         // Play audio
         AudioManager::Update();

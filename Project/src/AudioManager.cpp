@@ -88,9 +88,11 @@ void AudioManager::Initialize(void) {
         aM.cameraSounds[i].setLoop(false);
 
         // Positional sounds sound differently, depending on the camera position, and do not loop
-        aM.positionalSounds[i].setAttenuation(0.8f);   // Not quite max attenuation
+        aM.positionalSounds[i].setAttenuation(0.5f);   // Not quite max attenuation
         aM.positionalSounds[i].setRelativeToListener(false);
+        aM.positionalSounds[i].setMinDistance(550.0f);
         aM.positionalSounds[i].setLoop(false);
+
     }
 
     // Music sounds the same no matter the camera position, and loops
@@ -150,7 +152,7 @@ void AudioManager::StartCameraSound(const std::string&& sound_name, const f32 pi
         buffer = &aM.soundBuffers[aM.leastRecentlyUsedQueue.Dequeue()];
         aM.soundHashes[aM.numLoadedSoundBuffers] = GetHash(sound_name);
 
-        if(!aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(sound_name)) {
+        if(!aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(AUDIO_DIRECTORY + sound_name + std::string(".wav"))) {
             std::cerr << "\x1b[31mError! Could not load sound file " << sound_name << " when preparing a SoundBuffer!\x1b[0m\n";
             return;
         }
@@ -201,7 +203,7 @@ void AudioManager::StartPositionalSound(const std::string&& sound_name, const sf
         buffer = &aM.soundBuffers[aM.leastRecentlyUsedQueue.Dequeue()];
         aM.soundHashes[aM.numLoadedSoundBuffers] = GetHash(sound_name);
 
-        if(!aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(sound_name)) {
+        if(!aM.soundBuffers[aM.numLoadedSoundBuffers].loadFromFile(AUDIO_DIRECTORY + sound_name + std::string(".wav"))) {
             std::cerr << "\x1b[31mError! Could not load sound file " << sound_name << " when preparing a SoundBuffer!\x1b[0m\n";
             return;
         }
@@ -233,7 +235,7 @@ void AudioManager::StartMusic(const std::string&& music_name, const f32 pitch) {
 
     aM.musicHashes[aM.numMusicLayers] = GetHash(music_name);
 
-    if(!aM.music[aM.numMusicLayers].openFromFile(music_name)) {
+    if(!aM.music[aM.numMusicLayers].openFromFile(AUDIO_DIRECTORY + music_name + std::string(".wav"))) {
         std::cerr << "\x1b[31mError! Could not load music file " << music_name << " when preparing an audio stream!\x1b[0m\n";
         return;
     }
