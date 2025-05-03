@@ -91,7 +91,4 @@ void EnemyManager::configure(const std::string& texturePath, int maxEnemies, int
     if (!enemyTexture->loadFromFile(texturePath)){ // Load the texture from the specified file
         std::cerr << "Failed to load enemy texture: " << texturePath << std::endl;
     }
-    else{
-        std::cout << "Enemy texture loaded successfully: " << texturePath << std::endl;
-    }
 }

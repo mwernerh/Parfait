@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include "AnimationManager.h"
 #include "HitboxManager.h"
 #include "InputManager.h"
 #include "MapManager.h"
@@ -9,6 +10,8 @@
 #include "AudioManager.h"
 #include "LevelManager.h"
 #include "Player.h"
+#include "AnimatedSprite.h"
+#include "TextureManager.h"
 
 void HandleWindowEvents(sf::WindowBase& window) {
     sf::Event event;
@@ -40,9 +43,11 @@ int main(void) {
     HitboxManager::RegisterPlayer(&player);
 
     // Initialize various systems
-    ScoreManager::Initialize();
-    AudioManager::Initialize();
     InputManager::Initialize();
+    AudioManager::Initialize();
+    TextureManager::Initialize();
+    AnimationManager::Initialize();
+    ScoreManager::Initialize();
     LevelManager::setupEnemies();
     
     // Set map to the park and play its appropriate BGM and ambience
@@ -50,10 +55,18 @@ int main(void) {
     AudioManager::StartMusic("./assets/aud/bgm_accordion.wav");
     AudioManager::StartMusic("./assets/aud/amb_pk.wav");
 
+    AnimatedCatSprite1 bd;
+    bd.setPosition({100, 100});
+    bd.setScale({6.0f, 6.0f});
+    bd.SetAnimation<"Walk">();
+
     while(window.isOpen()) {
 
         // Update delta time and prepare input manager for batch of new inputs
         InputManager::Update();
+        
+        // Update animation manager to see whether sprite animations should update in the current frame
+        AnimationManager::Update();
     
         // Get batch of new inputs for InputManager
         HandleWindowEvents(window);
@@ -63,6 +76,7 @@ int main(void) {
 
         // Update Player
 	    player.update(InputManager::GetDeltaTime());
+        bd.setPosition(player.getPosition());
 
         // Update hitboxes
         HitboxManager::Update();
@@ -81,6 +95,11 @@ int main(void) {
         MapManager::Draw(window);
         LevelManager::draw(window);
 	    player.draw(window);
+
+        // Update the animated sprite and draw it
+        bd.Update();
+        window.draw(bd);
+
         ScoreManager::Draw(window);
         window.display();
 

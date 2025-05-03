@@ -70,12 +70,16 @@ https://github.com/zeldaret/tp/blob/main/src/Z2AudioLib/Z2SoundStarter.cpp#L17
 https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/Z2AudioLib/Z2AudioMgr.cpp#L182
 https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/Z2AudioLib/Z2SoundMgr.cpp#L113
 https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/JSystem/JAudio2/JAISeMgr.cpp#L299
-
 https://github.com/zeldaret/tp/blob/d3bf501777536ade7d6cfac2744a5fd28089812d/src/Z2AudioLib/Z2Creature.cpp#L178
 
+## Non-Type String Literals as Template Parameters
+https://ctrpeach.io/posts/cpp20-string-literal-template-parameters/
 
 ## Thread-Safe Singleton Initialization
 https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton/
 
 ## ANSI Color Codes
 https://talyian.github.io/ansicolors/
+
+# Non-Type Template Pack Expression Folding
+https://stackoverflow.com/a/70002143
