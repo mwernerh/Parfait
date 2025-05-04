@@ -12,7 +12,7 @@
 
 class EnemyManager;
 
-class LevelManager : public StaticInitializableGamestateOperator, public StaticUpdatableGamestateOperator {
+class LevelManager : public StaticInitializableGamestateOperator, public StaticUpdatableGamestateOperator, public StaticDrawableGamestateOperator {
     static u32 currentLevel;
 
     static std::vector<std::unique_ptr<EnemyManager>>& GetEnemyManagers(void);
