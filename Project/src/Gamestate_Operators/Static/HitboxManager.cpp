@@ -6,7 +6,6 @@
 #include <cmath>
 #include <cstring>
 #include <limits>
-#include <iostream>
 
 /**
  * @author Mar Werner Hernandez

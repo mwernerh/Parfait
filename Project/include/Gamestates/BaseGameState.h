@@ -2,7 +2,6 @@
 #include "Literals.h"
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 #include <type_traits>
-#include <iostream>
 
 struct BaseGameState {
     using InitializeGamestateOperatorFunctionSignature = void (*)(void);

@@ -20,8 +20,7 @@ Player::Player(std::string texturePath, float speed) : at(), co(this, std::bit_c
 		std::cerr << "Error loading texture!" << std::endl;
 	}
 
-	sprite.setTexture(texture); // set player texture to the sprite
-	sprite.setTextureRect(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT)); // set texture rect based on player height and width
+	sprite.SetAnimation<"Walk">();
 	sprite.setPosition(516, 550); // set player position on screen
 	sprite.setOrigin(0,0); // set player origin to 0,0 for ease of flipping & flipping hitboxes
 	sprite.setScale(PLAYER_SCALE, PLAYER_SCALE); // set player scale so its an appropriate size for the screen
@@ -135,7 +134,10 @@ void Player::handleInput(float dt)
 		movement.x += speed;
 	}
 	sprite.move(movement * speed * dt);
-	handleAnimation(direction, dt, NUM_FRAMES_WALK);
+
+	sprite.setScale(PLAYER_SCALE * direction, PLAYER_SCALE); 
+	sprite.Update();
+	//handleAnimation(direction, dt, NUM_FRAMES_WALK);
 }
 
 void Player::handleAnimation(int direction, float dt, int numFrames)

@@ -11,7 +11,7 @@
 class Player;
 
 class HitboxManager : public StaticUpdatableGamestateOperator {
-    static inline constexpr f32 ENEMY_APPROACH_SFX_TIMER_MAX = 0.3f;
+    static inline constexpr f32 ENEMY_APPROACH_SFX_TIMER_MAX = 1.0f;
 
     static constexpr u32 MAX_HITBOXES = 256;
 

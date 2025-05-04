@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "AnimatedSprite.h"
 #include "Hitboxes.h"
 #include "Gamestate_Operators/Static/HitboxManager.h"
 
@@ -106,7 +107,7 @@ class Player
 	private:
 		// player texture and sprite
 		sf::Texture texture;
-		sf::Sprite sprite;
+		AnimatedCatSprite2 sprite;
 
 		// set up hitboxes
 		AttackHitbox at;

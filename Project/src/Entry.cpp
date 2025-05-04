@@ -43,26 +43,8 @@ int main(void) {
     AnimationManager::Initialize();
     FontManager::Initialize();
 
-    /*
-    InputManager::Initialize();
-    AudioManager::Initialize();
-    TextureManager::Initialize();
-    AnimationManager::Initialize();
-    PlayerManager::Initialize();
-    ScoreManager::Initialize();
-    MapManager::Initialize();
-    LevelManager::Initialize();
-    */
-
     GamestateManager::SwitchToStaticGamestate<PlayMainGameState>();
     GamestateManager::InitializeOperators();
-
-    /*
-    AnimatedCatSprite1 bd;
-    bd.setPosition({100, 100});
-    bd.setScale({6.0f, 6.0f});
-    bd.SetAnimation<"Walk">();
-    */
 
     while(window.isOpen()) {
 
@@ -75,19 +57,7 @@ int main(void) {
         // Get batch of new inputs for InputManager
         HandleWindowEvents(window);
 
-        /*
-        // Update enemies of current level, and check if level should change
-        LevelManager::Update();
-
-        // Update Player
-	    PlayerManager::Update();
-        //bd.setPosition(PlayerManager::GetPlayer().getPosition());
-
-        // Update hitboxes
-        HitboxManager::Update();
-
-        */
-
+        // Update current gamestate
         GamestateManager::UpdateOperators();
 
         // Play audio
@@ -96,19 +66,8 @@ int main(void) {
         // Draw
         window.clear();
 
+        // Draw current gamestate
         GamestateManager::DrawOperators(window);
-
-        /*
-        MapManager::Draw(window);
-        LevelManager::Draw(window);
-	    PlayerManager::Draw(window);
-
-        // Update the animated sprite and draw it
-        bd.Update();
-        window.draw(bd);
-
-        ScoreManager::Draw(window);
-        */
 
         window.display();
 

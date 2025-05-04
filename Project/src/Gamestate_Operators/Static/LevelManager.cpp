@@ -1,4 +1,5 @@
 #include "Gamestate_Operators/Static/LevelManager.h"
+#include "Framework_Managers/GamestateManager.h"
 #include "Gamestate_Operators/Static/MapManager.h"
 #include "Gamestate_Operators/Static/ScoreManager.h"
 #include "EnemyManager.h"
@@ -26,9 +27,17 @@ void LevelManager::Update() {
     [[unlikely]]
     if(ScoreManager::GetScore() >= (1000 * currentLevel) + 1000) {
         currentLevel += 1;
+
+        // Reached last level and passed it
+        if(currentLevel == 3) {
+            // MAR_TODO: Switch gamestate to ending gamestate
+            // GamestateManager::SwitchToInstancedGamestate<EndingCutsceneGameState>();
+            // return;
+        }
+
+        // MAR_TODO: Implement sound for notifying level change
         MapManager::ChangeMap(static_cast<MapManager::Maps>(currentLevel % static_cast<decltype(currentLevel)>(MapManager::Maps::NUM_MAPS)));
         setupEnemies();
-        
     }
 }
 
