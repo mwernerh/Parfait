@@ -4,9 +4,9 @@
 #include <string>
 #include <memory>
 #include <cmath>
-#include "HitboxManager.h"
-#include "ScoreManager.h"
-#include "AudioManager.h"
+#include "Gamestate_Operators/Static/HitboxManager.h"
+#include "Gamestate_Operators/Static/ScoreManager.h"
+#include "Framework_Managers/AudioManager.h"
 
 /**
  * @author Isveydi Moreno

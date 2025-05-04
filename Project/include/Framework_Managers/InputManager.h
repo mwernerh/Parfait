@@ -2,6 +2,11 @@
 #include <SFML/Window.hpp>
 #include <bitset>
 
+/**
+ * @brief Provides access to current user input, and the frame delta time
+ * @note This is NOT a gamestate operator, its update function MUST be run before that of any gamestate operator
+ * 
+ */
 class InputManager {
     static std::bitset<sf::Keyboard::Scancode::ScancodeCount> states[2];
     static bool prevStateIdx;

@@ -1,7 +1,7 @@
 #pragma once
+#include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "Literals.h"
 #include "Hitboxes.h"
-#include "Player.h"
 
 /**
  * @author Mar Werner Hernandez 
@@ -10,7 +10,7 @@
  */
 class Player;
 
-class HitboxManager {
+class HitboxManager : public StaticUpdatableGamestateOperator {
     static inline constexpr f32 ENEMY_APPROACH_SFX_TIMER_MAX = 0.3f;
 
     static constexpr u32 MAX_HITBOXES = 256;
@@ -21,13 +21,9 @@ class HitboxManager {
     static u32 numEnemyAtHitboxes;
     static u32 numEnemyCoHitboxes;
 
-    static Player* player;
-
     static f32 enemyApproachSFXTimer;
 
     public:
-    
-    static void RegisterPlayer(Player* player);
 
     /**
      * @brief Registers an attacking hitbox to check later (see Update()) whether it intersects with a collider hitbox. DOES NOT MODIFY THE HITBOX!

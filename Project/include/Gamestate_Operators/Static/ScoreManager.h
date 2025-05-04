@@ -4,7 +4,9 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-class ScoreManager {
+#include "Gamestate_Operators/BaseGameStateOperators.h"
+
+class ScoreManager : public StaticInitializableGamestateOperator, public StaticDrawableGamestateOperator {
     struct ScoreWrapper {
         u32 score;
         sf::Text text;

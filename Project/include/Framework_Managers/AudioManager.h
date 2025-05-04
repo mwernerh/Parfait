@@ -4,11 +4,11 @@
 #include "SFML/Audio/Music.hpp"
 #include "SFML/Audio/SoundBuffer.hpp" 
 
+
 /**
  * @author Mar Werner Hernandez
- * @brief System used to manager audio playback
+ * @brief Custom extension to sf::SoundBuffer that allows one to see what sf::Sound instanced are attached to an sf::SoundBuffer instance
  */
-
 namespace Parfait {
     struct SoundBuffer : public sf::SoundBuffer {
         /**
@@ -20,6 +20,11 @@ namespace Parfait {
     };
 }
 
+/**
+ * @author Mar Werner Hernandez
+ * @brief System used to manager audio playback
+ * @note This is NOT a gamestate operator, its update function MUST be run after that of all gamestate operators
+ */
 class AudioManager {
     static constexpr inline u32 MAX_SOUNDS = 100;
     static constexpr inline u32 MAX_MUSIC_LAYERS = 3;

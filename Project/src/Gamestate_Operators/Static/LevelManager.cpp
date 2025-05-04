@@ -1,6 +1,6 @@
-#include "LevelManager.h"
-#include "MapManager.h"
-#include "ScoreManager.h"
+#include "Gamestate_Operators/Static/LevelManager.h"
+#include "Gamestate_Operators/Static/MapManager.h"
+#include "Gamestate_Operators/Static/ScoreManager.h"
 #include "EnemyManager.h"
 
 /**
@@ -17,21 +17,24 @@ std::vector<std::unique_ptr<EnemyManager>>& LevelManager::GetEnemyManagers(void)
 }
 
 [[gnu::hot]]
-void LevelManager::Update(Player& player) {
+void LevelManager::Update() {
     std::vector<std::unique_ptr<EnemyManager>>& enemyManagers = GetEnemyManagers();
     for (auto& enemyManager : enemyManagers) {
-        enemyManager->update(InputManager::GetDeltaTime(), player);
+        enemyManager->update();
     }
 
     [[unlikely]]
     if(ScoreManager::GetScore() >= (1000 * currentLevel) + 1000) {
-        if(currentLevel <= 0) {
-            currentLevel += 1;
-            setupEnemies();
-        }
-        //MapManager::ChangeMap(static_cast<MapManager::Maps>(currentLevel % static_cast<decltype(currentLevel)>(MapManager::Maps::NUM_MAPS)));
+        currentLevel += 1;
+        MapManager::ChangeMap(static_cast<MapManager::Maps>(currentLevel % static_cast<decltype(currentLevel)>(MapManager::Maps::NUM_MAPS)));
+        setupEnemies();
         
     }
+}
+
+void LevelManager::Initialize() {
+    std::cout << "Initializing LevelManager!\n";
+    setupEnemies();
 }
 
 // LEVEL MANAGER SETUP ENEMIES
@@ -64,7 +67,7 @@ void LevelManager::setupEnemies() {
 
 //LEVEL MANAGER DRAW
 // This function draws the enemies to the window
-void LevelManager::draw(sf::RenderWindow& window){
+void LevelManager::Draw(sf::RenderWindow& window){
     std::vector<std::unique_ptr<EnemyManager>>& enemyManagers = GetEnemyManagers(); // Get the enemy managers
     for (auto& EnemyManager: enemyManagers){ // Loop through each enemy manager
         EnemyManager->draw(window); // Draw the enemie to the window

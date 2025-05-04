@@ -1,12 +1,8 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "Hitboxes.h"
-#include "HitboxManager.h"
-#include "InputManager.h"
-#include "Enemy.h"
+#include "Gamestate_Operators/Static/HitboxManager.h"
 
 /**
  *  @author Izzy Carlson
@@ -60,8 +56,8 @@ class Player
 		 * @return SFML length 2 vector of player's x and y coordinates on the screen
 		 *
 		 **/
-		sf::Vector2f getPosition();
-		sf::FloatRect getGlobalBounds();
+		sf::Vector2f getPosition() const;
+		sf::FloatRect getGlobalBounds() const;
 
 		/**
 		 * @brief gets player's health
@@ -91,14 +87,14 @@ class Player
 		 * 
 		 * @returns player's attacker hitbox type AttackHitbox
 		 **/
-		AttackHitbox& getAttackHitbox();
+		const AttackHitbox& getAttackHitbox() const;
 
 		/**
 		 * @brief gets player's colliding hitbox
 		 *
 		 * @returns player's colliding hitbox type ColliderHitbox
 		 **/
-		ColliderHitbox& getColliderHitbox();
+		const ColliderHitbox& getColliderHitbox() const;
 
 		/**
 		 * @brief player's attacking function, player can attack when key is pressed, activates attack hitbox
@@ -149,5 +145,3 @@ class Player
 		 **/
 		static void takeDamage(Player* const instance, const AttackHitbox* const attacker);
 };
-
-#endif

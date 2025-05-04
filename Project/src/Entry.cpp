@@ -3,16 +3,13 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include "AnimationManager.h"
-#include "HitboxManager.h"
-#include "InputManager.h"
-#include "MapManager.h"
-#include "ScoreManager.h"
-#include "AudioManager.h"
-#include "LevelManager.h"
-#include "Player.h"
-#include "AnimatedSprite.h"
-#include "TextureManager.h"
+#include "Framework_Managers/AnimationManager.h"
+#include "Framework_Managers/GamestateManager.h"
+#include "Framework_Managers/TextureManager.h"
+#include "Framework_Managers/InputManager.h"
+#include "Framework_Managers/AudioManager.h"
+#include "Framework_Managers/FontManager.h"
+#include "Gamestates/PlayMainGameState.h"
 
 void HandleWindowEvents(sf::WindowBase& window) {
     sf::Event event;
@@ -39,27 +36,33 @@ int main(void) {
     sf::View cameraView = window.getView();
     window.setView(cameraView);
 
-    // Initialize a player
-    Player player("./assets/txr/animals/ct2/Walk.png", 20);
-    HitboxManager::RegisterPlayer(&player);
-
-    // Initialize various systems
+    // Initialize various framework systems used by the gamestates
     InputManager::Initialize();
     AudioManager::Initialize();
     TextureManager::Initialize();
     AnimationManager::Initialize();
-    ScoreManager::Initialize();
-    LevelManager::setupEnemies();
-    
-    // Set map to the park and play its appropriate BGM and ambience
-    MapManager::ChangeMap(MapManager::Maps::PARK);
-    AudioManager::StartMusic("bgm_accordion");
-    AudioManager::StartMusic("amb_pk");
+    FontManager::Initialize();
 
+    /*
+    InputManager::Initialize();
+    AudioManager::Initialize();
+    TextureManager::Initialize();
+    AnimationManager::Initialize();
+    PlayerManager::Initialize();
+    ScoreManager::Initialize();
+    MapManager::Initialize();
+    LevelManager::Initialize();
+    */
+
+    GamestateManager::SwitchToStaticGamestate<PlayMainGameState>();
+    GamestateManager::InitializeOperators();
+
+    /*
     AnimatedCatSprite1 bd;
     bd.setPosition({100, 100});
     bd.setScale({6.0f, 6.0f});
     bd.SetAnimation<"Walk">();
+    */
 
     while(window.isOpen()) {
 
@@ -72,37 +75,41 @@ int main(void) {
         // Get batch of new inputs for InputManager
         HandleWindowEvents(window);
 
+        /*
         // Update enemies of current level, and check if level should change
-        LevelManager::Update(player);
+        LevelManager::Update();
 
         // Update Player
-	    player.update(InputManager::GetDeltaTime());
-        bd.setPosition(player.getPosition());
+	    PlayerManager::Update();
+        //bd.setPosition(PlayerManager::GetPlayer().getPosition());
 
         // Update hitboxes
         HitboxManager::Update();
 
-        // Update the camera
-        sf::Vector2f cameraPos = player.getPosition();
-        cameraPos.y = cameraView.getCenter().y;
-        cameraView.setCenter(cameraPos);
-        window.setView(cameraView);
-        sf::Listener::setPosition(player.getPosition().x, player.getPosition().y, 0.0f);
+        */
+
+        GamestateManager::UpdateOperators();
 
         // Play audio
         AudioManager::Update();
 
         // Draw
         window.clear();
+
+        GamestateManager::DrawOperators(window);
+
+        /*
         MapManager::Draw(window);
-        LevelManager::draw(window);
-	    player.draw(window);
+        LevelManager::Draw(window);
+	    PlayerManager::Draw(window);
 
         // Update the animated sprite and draw it
         bd.Update();
         window.draw(bd);
 
         ScoreManager::Draw(window);
+        */
+
         window.display();
 
     }

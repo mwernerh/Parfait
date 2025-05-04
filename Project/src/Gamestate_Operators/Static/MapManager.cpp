@@ -1,5 +1,5 @@
-#include "MapManager.h"
-#include "EnvironmentCollision.h"
+#include "Gamestate_Operators/Static/MapManager.h"
+#include "Framework_Managers/AudioManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <iostream>
@@ -8,6 +8,11 @@
 /**
  * @author Mar Werner Hernandez
  */
+
+void MapManager::Initialize(void) {
+    std::cout << "Initializing MapManager!\n";
+    ChangeMap(Maps::CITY);
+}
 
 void MapManager::Draw(sf::RenderWindow& window) {
     // TODO: Obtain player instance to remove paramaters other than the RenderWindow
@@ -89,14 +94,25 @@ void MapManager::ChangeMap(const Maps mapIdx) {
         bg.s_layers[i].setPosition({1280.0f / 2.0f, 720.0f / 2.0f});
         bg.s_layers[i].setScale(1280.0f / currentTexSize.x, 720.0f / currentTexSize.y);
     }
+
+    AudioManager::ClearMusic();
+    switch(mapIdx) {
+        case Maps::CITY:
+            AudioManager::StartMusic("amb_ct");
+            AudioManager::StartMusic("bgm_lofi");
+            break;
+        case Maps::PARK:
+            AudioManager::StartMusic("amb_pk");
+            AudioManager::StartMusic("bgm_accordion");
+            break;
+        case Maps::CITY_VAR:
+            break;
+        default:
+            break;
+    }
 }
 
 MapManager::ParallaxBackground& MapManager::GetBackground(void) {
     static MapManager::ParallaxBackground bg;
     return bg;
-}
-
-EnvironmentCollision& MapManager::GetCollision(void) {
-    static EnvironmentCollision collision;
-    return collision;
 }

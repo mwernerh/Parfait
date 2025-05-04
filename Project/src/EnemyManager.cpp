@@ -1,4 +1,6 @@
 #include "EnemyManager.h"
+#include "Gamestate_Operators/Static/PlayerManager.h"
+#include "Framework_Managers/InputManager.h"
 #include <iostream>
 #include <cmath>
 #include <cstdlib>  // used for rand() spawn logic
@@ -16,9 +18,9 @@ EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(5),
 
 //ENEMY MANAGER UPDATE
 //Updates enemy based on the player position
-void EnemyManager::update(float dt, Player& player){
-    sf::Vector2f playerPos = player.getPosition(); // Get the player's position
-    spawnTimer += dt; // Increment the spawn timer
+void EnemyManager::update(){
+    sf::Vector2f playerPos = PlayerManager::GetPlayer().getPosition(); // Get the player's position
+    spawnTimer += InputManager::GetDeltaTime(); // Increment the spawn timer
 
     //Spawn enemies if the spawn timer has reached the cooldown and the number of enemies is less than the maximum
     if (spawnTimer >= spawnCooldown && enemies.size() < maxEnemies){
@@ -29,7 +31,7 @@ void EnemyManager::update(float dt, Player& player){
 
     // Update each enemy
     for (auto& enemy : enemies){
-        enemy.update(dt, playerPos); //update the enemy's position
+        enemy.update(InputManager::GetDeltaTime(), playerPos); //update the enemy's position
     }
 
     // Remove dead enemies

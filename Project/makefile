@@ -28,7 +28,10 @@ else
 endif
 
 # Add any additional source files to here
-SRCS = Entry.cpp InputManager.cpp AudioManager.cpp TextureManager.cpp FontManager.cpp ScoreManager.cpp LevelManager.cpp MapManager.cpp HitboxManager.cpp Player.cpp Enemy.cpp EnemyManager.cpp
+SRCS =	Framework_Managers/AudioManager.cpp Framework_Managers/FontManager.cpp Framework_Managers/InputManager.cpp Framework_Managers/TextureManager.cpp \
+		Gamestate_Operators/Static/HitboxManager.cpp Gamestate_Operators/Static/LevelManager.cpp Gamestate_Operators/Static/MapManager.cpp Gamestate_Operators/Static/PlayerManager.cpp Gamestate_Operators/Static/ScoreManager.cpp \
+		Enemy.cpp EnemyManager.cpp Player.cpp \
+		Entry.cpp
 
 # Prepend src/ to the source files and create list of object files
 SRCS := $(addprefix src/, $(SRCS))

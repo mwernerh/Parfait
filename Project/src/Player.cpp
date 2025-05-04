@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Player.h"
+#include "Framework_Managers/InputManager.h"
 
 /** 
  *
@@ -39,22 +40,22 @@ Player::Player(std::string texturePath, float speed) : at(), co(this, std::bit_c
 	at.setFillColor(sf::Color(255, 0, 0, 127)); // RED WITH 50% OPACITY
 }
 
-sf::Vector2f Player::getPosition()
+sf::Vector2f Player::getPosition() const
 {
 	return sprite.getPosition();
 }
 
-sf::FloatRect Player::getGlobalBounds()
+sf::FloatRect Player::getGlobalBounds() const
 {
 	return sprite.getGlobalBounds();
 }
 
-AttackHitbox& Player::getAttackHitbox()
+const AttackHitbox& Player::getAttackHitbox() const
 {
 	return at;
 }
 
-ColliderHitbox& Player::getColliderHitbox()
+const ColliderHitbox& Player::getColliderHitbox() const
 {
 	return co;
 }

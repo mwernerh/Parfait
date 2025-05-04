@@ -1,9 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "Literals.h"
-#include "EnvironmentCollision.h"
 
-class MapManager {
+class MapManager : public StaticInitializableGamestateOperator, public StaticUpdatableGamestateOperator, public StaticDrawableGamestateOperator {
     
     struct ParallaxBackground {
         static inline constexpr u32 NUM_PARALLAX_LAYERS = 5;
@@ -23,6 +23,8 @@ class MapManager {
     
     public:
     enum class Maps : u8 {CITY, PARK, CITY_VAR, NUM_MAPS};
+
+    static void Initialize(void);
     
     /**
      * @brief Draws the parallax background and wraps the textures according to the camera's position
@@ -42,11 +44,4 @@ class MapManager {
      * 
      */
     static void ChangeMap(const Maps);
-
-    /**
-     * @brief Gets the EnvironmentCollision singleton (current unused)
-     * 
-     * @return EnvironmentCollision& 
-     */
-    static EnvironmentCollision& GetCollision(void);
 };

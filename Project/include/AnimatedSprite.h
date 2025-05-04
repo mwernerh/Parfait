@@ -2,8 +2,8 @@
 #include <string>
 #include <SFML/Graphics/Sprite.hpp>
 #include "Literals.h"
-#include "TextureManager.h"
-#include "AnimationManager.h"
+#include "Framework_Managers/TextureManager.h"
+#include "Framework_Managers/AnimationManager.h"
 
 template <const std::size_t LENGTH>
 struct __StrLit {
