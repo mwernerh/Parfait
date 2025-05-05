@@ -1,5 +1,4 @@
 #include "Gamestate_Operators/Static/LevelManager.h"
-#include "Framework_Managers/GamestateManager.h"
 #include "Gamestate_Operators/Static/MapManager.h"
 #include "Gamestate_Operators/Static/ScoreManager.h"
 #include "EnemyManager.h"
@@ -42,7 +41,6 @@ void LevelManager::Update() {
 }
 
 void LevelManager::Initialize() {
-    std::cout << "Initializing LevelManager!\n";
     setupEnemies();
 }
 

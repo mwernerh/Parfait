@@ -1,4 +1,8 @@
 #include "Gamestates/PlayMainGameState.h"
+#include "Framework_Managers/GamestateManager.h"
+#include "Framework_Managers/InputManager.h"
+#include "Gamestates/PauseGameState.h"
+#include "SFML/Window/Keyboard.hpp"
 
 void PlayMainGameState::Initialize(void) {
     // Nothing additional needs to be done other than initializing the operators
@@ -8,6 +12,10 @@ void PlayMainGameState::Initialize(void) {
 void PlayMainGameState::Update(void) {
     // Nothing additional needs to be done other than updating the operators
     //   which is handled automatically by GamestateManager
+
+    if(InputManager::IsKeyPressed(sf::Keyboard::Scan::Space)) {
+        GamestateManager::SwitchToInstancedGamestate<PauseGameState>();
+    }
 }
 
 void PlayMainGameState::Draw(sf::RenderWindow& window) {

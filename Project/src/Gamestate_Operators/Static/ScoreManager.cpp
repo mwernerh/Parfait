@@ -1,14 +1,11 @@
 #include "Gamestate_Operators/Static/ScoreManager.h"
 #include "Framework_Managers/FontManager.h"
-#include <iostream>
 
 /**
  * @author Mar Werner Hernandez
  */
 
 void ScoreManager::Initialize(void) {
-    std::cout << "Initializing ScoreManager!\n";
-
     ScoreWrapper& scoreWrapper = GetScoreWrapper();
 
     scoreWrapper.text.setFont(FontManager::GetFont("Akira Expanded Demo"));

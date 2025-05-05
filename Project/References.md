@@ -84,5 +84,8 @@ https://www.modernescpp.com/index.php/thread-safe-initialization-of-a-singleton/
 ## ANSI Color Codes
 https://talyian.github.io/ansicolors/
 
-# Non-Type Template Pack Expression Folding
+## Non-Type Template Pack Expression Folding
 https://stackoverflow.com/a/70002143
+
+## Storing Destructors
+https://wp.me/peb5Y-IO

@@ -30,8 +30,9 @@ endif
 # Add any additional source files to here
 SRCS =	Framework_Managers/AudioManager.cpp Framework_Managers/FontManager.cpp Framework_Managers/InputManager.cpp Framework_Managers/TextureManager.cpp \
 		Gamestate_Operators/Static/HitboxManager.cpp Gamestate_Operators/Static/LevelManager.cpp Gamestate_Operators/Static/MapManager.cpp Gamestate_Operators/Static/PlayerManager.cpp Gamestate_Operators/Static/ScoreManager.cpp \
+		Gamestate_Operators/Instanced/PauseMenuOperator.cpp \
 		Enemy.cpp EnemyManager.cpp Player.cpp \
-		Gamestates/PlayMainGameState.cpp \
+		Gamestates/PlayMainGameState.cpp Gamestates/PauseGameState.cpp \
 		Entry.cpp
 
 # Prepend src/ to the source files and create list of object files
@@ -41,7 +42,7 @@ OBJS = $(SRCS:src/%.cpp=obj/%.o)
 
 # -------[[ BUILD FLAGS ]]-------
 
-ifeq ($(DEBUG), 1)
+ifeq ($(DEBUG), TRUE)
 	CXX_FLAGS_BASE = -Wall -Wextra -Werror -g -Og -std=c++23 -DDEBUG
 else
 	CXX_FLAGS_BASE = -Wall -Wextra -Werror -O3 -std=c++23 -DNDEBUG

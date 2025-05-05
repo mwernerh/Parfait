@@ -36,8 +36,6 @@ void EnemyManager::update(){
 
     // Remove dead enemies
     enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
-        if(!enemy.isAlive())
-            std::cout << "Erasing enemy: " << std::hex << &enemy << std::endl;
 	return !enemy.isAlive(); // Remove enemies that are not alive
     }), enemies.end());
 

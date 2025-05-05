@@ -1,6 +1,7 @@
 #pragma once
 #include "Literals.h"
 #include "Gamestate_Operators/BaseGameStateOperators.h"
+#include <iostream>
 #include <type_traits>
 
 struct BaseGameState {
@@ -9,58 +10,117 @@ struct BaseGameState {
     using DrawGamestateOperatorFunctionSignature = void (*)(sf::RenderWindow&);
 };
 
-template <class... INSTANCED_GAME_STATE_OPERATORS>
+template <class Derived, class... INSTANCED_GAME_STATE_OPERATORS>
 requires (sizeof...(INSTANCED_GAME_STATE_OPERATORS) > 0 && (std::is_base_of_v<BaseInstancedGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> && ...))
 class InstancedGameState : public BaseGameState {
     // Workaround to make gamestate take stack space instead of heap space
     static inline constexpr u32 STACK_SIZE = (sizeof(INSTANCED_GAME_STATE_OPERATORS) + ...);
+    uintptr_t initializationStackOffset;
+    uintptr_t operatorStackPtrs[sizeof...(INSTANCED_GAME_STATE_OPERATORS)] = {};
+
     u8 OperatorStackSpace[STACK_SIZE];
 
     InstancedUpdatableGamestateOperator* updatables[(std::is_base_of_v<InstancedUpdatableGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> + ...) == 0 ? 1 : (std::is_base_of_v<InstancedUpdatableGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> + ...)];
-    InstancedDrawableGamestateOperator* drawables[(std::is_base_of_v<InstancedDrawableGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> + ...) == 0 ? 1 : (std::is_base_of_v<InstancedDrawableGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> + ...)];
+    u32 updatablesOffset;
+
+    template<class INSTANCED_GAME_STATE_OPERATOR>
+    void PlacementNew(void) {
+        BaseInstancedGamestateOperator* op = std::bit_cast<BaseInstancedGamestateOperator*>(new (std::bit_cast<void*>(std::bit_cast<uintptr_t>(&OperatorStackSpace[0]) + initializationStackOffset)) INSTANCED_GAME_STATE_OPERATOR);
+
+        if constexpr(std::is_base_of_v<InstancedUpdatableGamestateOperator, INSTANCED_GAME_STATE_OPERATOR>) {
+            #ifdef DEBUG
+            std::cout << "Registered updatable instanced gamestate operator " << typeid(INSTANCED_GAME_STATE_OPERATOR).name() << "\n";
+            #endif
+            updatables[updatablesOffset++] = std::bit_cast<INSTANCED_GAME_STATE_OPERATOR*>(op);
+        }
+
+        initializationStackOffset += sizeof(INSTANCED_GAME_STATE_OPERATOR);
+
+        u32 emptyIdx;
+        for(emptyIdx = 0; operatorStackPtrs[emptyIdx] != 0; emptyIdx++) ;
+
+        operatorStackPtrs[emptyIdx] = std::bit_cast<uintptr_t>(op);
+    }
+
+    template<class INSTANCED_GAME_STATE_OPERATOR>
+    requires(((std::is_same_v<INSTANCED_GAME_STATE_OPERATOR, INSTANCED_GAME_STATE_OPERATORS>) || ...))
+    u32 GetOperatorStackPtrIdx(void) {
+        bool foundIdx = false;
+        s32 idx = -1;
+        ((!foundIdx ? idx += std::is_same_v<INSTANCED_GAME_STATE_OPERATOR, INSTANCED_GAME_STATE_OPERATORS> : (s32) 0),...);
+
+        return static_cast<u32>(idx);
+    }
+
+    protected:
+    template<class INSTANCED_GAME_STATE_OPERATOR>
+    requires(((std::is_same_v<INSTANCED_GAME_STATE_OPERATOR, INSTANCED_GAME_STATE_OPERATORS>) || ...))
+    INSTANCED_GAME_STATE_OPERATOR& GetInstancedOperator(void) {
+        u32 idx = GetOperatorStackPtrIdx<INSTANCED_GAME_STATE_OPERATOR>();
+
+        return *std::bit_cast<INSTANCED_GAME_STATE_OPERATOR*>(operatorStackPtrs[idx]);
+    }
 
     public:
-    InstancedGameState();
-    virtual void RunUpdatables(void) = 0;
-    virtual void RunDrawables(void) = 0;
+    InstancedGameState() {
+        initializationStackOffset = 0;
+        updatablesOffset = 0;
+
+        // Construct the operators
+        ((PlacementNew<INSTANCED_GAME_STATE_OPERATORS>(),...));
+    }
+
+    virtual void Update(void) = 0;
+    virtual void Draw(sf::RenderWindow&) = 0;
+
+    void __Update(void) {
+        // First call the operator updates...
+        for(InstancedUpdatableGamestateOperator* updatable : updatables) {
+            if(updatable)
+                updatable->Update();
+        }
+
+        // Then run the gamestate update
+        static_cast<Derived*>(this)->Update();
+    }
+
+    void __Draw(sf::RenderWindow& window) {
+        // Run the gamestate draw
+        static_cast<Derived*>(this)->Draw(window);
+    }
+
+    ~InstancedGameState() {
+        u32 currentOperator = 0;
+        ((std::bit_cast<INSTANCED_GAME_STATE_OPERATORS*>(operatorStackPtrs[currentOperator++])->~INSTANCED_GAME_STATE_OPERATORS()),...);
+    }
+
+    static consteval std::size_t GetSize(void) {
+        std::size_t size = 0;
+        ((size += sizeof(INSTANCED_GAME_STATE_OPERATORS)),...);
+        return size;
+    }
 };
 
 template <class Derived, class... STATIC_GAME_STATE_OPERATORS>
 requires (sizeof...(STATIC_GAME_STATE_OPERATORS) > 0 && (std::is_base_of_v<BaseStaticGamestateOperator, STATIC_GAME_STATE_OPERATORS> && ...))
 class StaticGameState : public BaseGameState {
-    /*
-    protected:
-
-    static inline InitializeGamestateOperatorFunctionSignature initializables[(std::is_base_of<StaticInitializableGamestateOperator, STATIC_GAME_STATE_OPERATORS>::value + ...) == 0 ? 1 : (std::is_base_of<StaticInitializableGamestateOperator, STATIC_GAME_STATE_OPERATORS>::value + ...)] = 
-    static inline UpdateGamestateOperatorFunctionSignature updatables[(std::is_base_of<StaticUpdatableGamestateOperator, STATIC_GAME_STATE_OPERATORS>::value + ...) == 0 ? 1 : (std::is_base_of<StaticUpdatableGamestateOperator, STATIC_GAME_STATE_OPERATORS>::value + ...)] = 
-                    {(&STATIC_GAME_STATE_OPERATORS::Update)...};
-    static inline DrawGamestateOperatorFunctionSignature drawables[(std::is_base_of<StaticDrawableGamestateOperator, STATIC_GAME_STATE_OPERATORS>::value + ...) == 0 ? 1 : (std::is_base_of<StaticDrawableGamestateOperator, STATIC_GAME_STATE_OPERATORS>::value + ...)] =
-                    {(&STATIC_GAME_STATE_OPERATORS::Draw)...};
-    */
-
     static inline bool isInitialized = false;
 
     template<class STATIC_GAME_STATE_OPERATOR>
     static void CallOperatorInitialize(void) {
         if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticInitializableGamestateOperator>) {
+            #ifdef DEBUG
+            std::cout << "Initializing static gamestate operator " << typeid(STATIC_GAME_STATE_OPERATOR).name() << "\n";
+            #endif
             STATIC_GAME_STATE_OPERATOR::Initialize();
         }
     }
 
     template<class STATIC_GAME_STATE_OPERATOR>
     static void CallOperatorUpdate(void) {
-        if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticUpdatableGamestateOperator>) {
+        if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticUpdatableGamestateOperator>)     
             STATIC_GAME_STATE_OPERATOR::Update();
-        }
     }
-
-    public:
-
-    static auto GetInitFunc(void) { return &__Initialize; }
-    static auto GetUpdateFunc(void) { return &__Update; }
-    static auto GetDrawFunc(void) { return &__Draw; }
-
-    //using StaticGameStateBase = StaticGameState<Derived, STATIC_GAME_STATE_OPERATORS...>;
 
     protected:
 
@@ -68,24 +128,31 @@ class StaticGameState : public BaseGameState {
     static void __Initialize(void) {
 
         if(!isInitialized) {
-            //((std::derived_from<STATIC_GAME_STATE_OPERATORS, StaticInitializableGamestateOperator> ? STATIC_GAME_STATE_OPERATORS::StaticGameStateBase::Initialize() : (void) 0),...);
-
+            // First call initialize for the individual operators...
             ((CallOperatorInitialize<STATIC_GAME_STATE_OPERATORS>(),...));
 
+            // Then run initialize from the gamestate
             Derived::Initialize();
             isInitialized = true;
         }
     }
 
     static void __Update(void) {
-        //((std::is_base_of_v<StaticUpdatableGamestateOperator, STATIC_GAME_STATE_OPERATORS> ? STATIC_GAME_STATE_OPERATORS::StaticGameStateBase::Update() : (void) 0),...);
-
+        // First call update for the individual operators...
         ((CallOperatorUpdate<STATIC_GAME_STATE_OPERATORS>(),...));
 
+        // Then run update from the gamestate
         Derived::Update();
     }
 
     static void __Draw(sf::RenderWindow& window) {
+        // Call draw from the gamestate
         Derived::Draw(window);
     }
+
+    public:
+
+    static auto GetInitFunc(void) { return &__Initialize; }
+    static auto GetUpdateFunc(void) { return &__Update; }
+    static auto GetDrawFunc(void) { return &__Draw; }
 };

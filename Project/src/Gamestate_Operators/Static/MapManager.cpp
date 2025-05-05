@@ -10,7 +10,6 @@
  */
 
 void MapManager::Initialize(void) {
-    std::cout << "Initializing MapManager!\n";
     ChangeMap(Maps::CITY);
 }
 

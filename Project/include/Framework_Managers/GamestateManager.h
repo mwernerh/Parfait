@@ -1,10 +1,8 @@
 #pragma once
+#include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "Literals.h"
 #include "Gamestates/BaseGameState.h"
-
-struct __DTOR {
-    ~__DTOR(void);
-};
+#include <iostream>
 
 class GamestateManager {
     static inline constexpr u32 KIBIBYTE = 1024;
@@ -15,6 +13,12 @@ class GamestateManager {
 
     static inline u8 instancedStackSpace[INSTANCED_STACK_SPACE_SIZE] = {};
 
+    using InstancedUpdateFuncType = decltype(&InstancedGameState<BaseGameState, BaseInstancedGamestateOperator>::__Update);
+    using InstancedDrawFuncType = decltype(&InstancedGameState<BaseGameState, BaseInstancedGamestateOperator>::__Draw);
+
+    static inline InstancedUpdateFuncType instanceUpdate = nullptr;
+    static inline InstancedDrawFuncType instanceDraw = nullptr;
+    static inline void (*instanceDestructor)(void) = nullptr;
 
     static inline BaseGameState::InitializeGamestateOperatorFunctionSignature staticInit = nullptr;
     static inline BaseGameState::UpdateGamestateOperatorFunctionSignature staticUpdate = nullptr;
@@ -23,6 +27,15 @@ class GamestateManager {
     public:
     template<class STATIC_GAMESTATE>
     static void SwitchToStaticGamestate(void) {
+        #ifdef DEBUG
+        std::cout << "Switching to static gamestate " << typeid(STATIC_GAMESTATE).name() << "\n";
+        #endif
+
+        if(instanceDestructor != nullptr) {
+            instanceDestructor();
+            instanceDestructor = nullptr;
+        }
+
         isCurrentGamestateInstanced = false;
         staticInit = STATIC_GAMESTATE::GetInitFunc();
         staticUpdate = STATIC_GAMESTATE::GetUpdateFunc();
@@ -30,9 +43,23 @@ class GamestateManager {
     }
 
     template<class INSTANCED_GAMESTATE>
+    requires(INSTANCED_GAMESTATE::GetSize() <= INSTANCED_STACK_SPACE_SIZE)
     static void SwitchToInstancedGamestate(void) {
+        #ifdef DEBUG
+        std::cout << "Switching to instanced gamestate " << typeid(INSTANCED_GAMESTATE).name() << "\n";
+        #endif
+
+        if(instanceDestructor != nullptr)
+            instanceDestructor();
+
         isCurrentGamestateInstanced = true;
         new (&instancedStackSpace[0]) INSTANCED_GAMESTATE;
+
+        instanceUpdate = std::bit_cast<InstancedUpdateFuncType>(&INSTANCED_GAMESTATE::__Update);
+        instanceDraw = std::bit_cast<InstancedDrawFuncType>(&INSTANCED_GAMESTATE::__Draw);
+        instanceDestructor = []() {
+            std::bit_cast<const INSTANCED_GAMESTATE*>(&instancedStackSpace[0])->~INSTANCED_GAMESTATE();
+        };
     }
 
     static void InitializeOperators(void) {
@@ -40,10 +67,18 @@ class GamestateManager {
     }
 
     static void UpdateOperators(void) {
-        staticUpdate();
+        if(isCurrentGamestateInstanced) {
+            (std::bit_cast<InstancedGameState<BaseGameState, BaseInstancedGamestateOperator>*>(&instancedStackSpace[0])->*instanceUpdate)();
+        }
+        else
+            staticUpdate();
     }
 
     static void DrawOperators(sf::RenderWindow& window) {
-        staticDraw(window);
+        if(isCurrentGamestateInstanced) {
+            (std::bit_cast<InstancedGameState<BaseGameState, BaseInstancedGamestateOperator>*>(&instancedStackSpace[0])->*instanceDraw)(window);
+        }
+        else
+            staticDraw(window);
     }
 };

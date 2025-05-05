@@ -1,6 +1,5 @@
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include "Framework_Managers/InputManager.h"
-#include <iostream>
 
 Player& PlayerManager::GetPlayerInternal(void) {
     static Player player("./assets/txr/animals/ct2/Walk.png", 20);
@@ -12,7 +11,6 @@ const Player& PlayerManager::GetPlayer(void) {
 }
 
 void PlayerManager::Initialize(void) {
-    std::cout << "Initializing PlayerManager\n";
     GetPlayerInternal();
 }
 

@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include "Enemy.h"
-#include <iostream>
 #include <string>
 #include <memory>
 #include <cmath>
@@ -107,7 +106,6 @@ void Enemy::setHealth(int health){
 
 //TAKE DAMAGE
 int Enemy::takeDamage(Enemy* instance, [[maybe_unused]] const AttackHitbox* attacker){
-    std::cout << "Enemy take damage function running: " << std::hex << instance << std::endl;
     instance-> setHealth(instance-> getHealth()- 1); // Decrease health by 1
     if (instance-> getHealth() <= 0){ // If health is less than or equal to 0
         instance-> killEnemy();
