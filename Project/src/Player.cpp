@@ -102,6 +102,18 @@ void Player::update(float dt)
 {
 	handleInput(dt);
 	timeSinceLastHit += dt;
+	
+	// TODO: add so that every 4 frames cat sprite changes to be hurt
+
+	// if player is poisoned by rat, health needs to slowly decrement per frame until poison timer is zero
+	if (poisonTimer > 0)
+	{
+		// decrement poison timer
+		poisonTimer -= dt;
+
+		// decrement health by 1
+		health--;
+	}
 
 	// make sure collider hitbox stays on sprite
 	if (direction == -1)
@@ -140,43 +152,50 @@ void Player::handleInput(float dt)
 	//handleAnimation(direction, dt, NUM_FRAMES_WALK);
 }
 
-void Player::handleAnimation(int direction, float dt, int numFrames)
-{
-	timeSinceLastFrame += dt;
-
-	if (timeSinceLastFrame > timePerFrame)
-	{
-		if (currentFrame == numFrames)
-		{
-			currentFrame = 0;
-		}
-
-		// update texture rect to show current frame
-		sprite.setTextureRect(sf::IntRect(currentFrame * PLAYER_WIDTH, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
-			
-		// flip sprite
-		sprite.setScale(PLAYER_SCALE * direction, PLAYER_SCALE); 
-		
-
-		// then, update current frame
-		currentFrame++; 
-		
-		// reset elapsed time
-		timeSinceLastFrame = 0;
-
-	}	
-}
-
 int Player::getHealth() const
 {
 	return health;
 }
 
+void Player::setHealth(int health)
+{
+	this->health = health;
+}
+
 void Player::takeDamage(Player* const instance, const AttackHitbox* const attacker)
 {
-	// player currently invincible -- can attack but not take damage. will be implemented in the continuation of this project
- 	(void)attacker;
-	(void)instance;
+	// ensure player can take damage first
+	if (canTakeDamage)
+	{
+		// handle changing sprite animations when player is hurt
+		//sprite.setAnimation<"Hurt">;
+		//sprite.Update();
+	
+		// player health decreases based on enemy (attacker) type
+		switch (attacker->GetAttackerType())
+		{
+			// slower dog does slightly more damage than faster dog
+			case DOG_BLACK:
+				instance->setHealth(getHealth() - 10);
+				break;
+			// faster dog does slightly less damage than slow dog
+			case DOG_YELLOW:
+				instance->setHealth(getHealth() - 8); 
+				break;
+			// bird does slightly less damage than the dogs
+			case BIRD:
+				instance->setHealth(getHealth() - 5);
+				break;
+			// poison timer is set, player health affected by poison is updated in update function
+			case RAT:
+				poisonTimer = 3.f;
+				break;
+			default:
+				break;
+		}
+		timeSinceLastHit = 0.f; // reset time since last hit
+	}
+
 }
 
 bool Player::canTakeDamage() const

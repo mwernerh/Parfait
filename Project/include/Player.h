@@ -68,6 +68,14 @@ class Player
 		int getHealth() const;
 
 		/**
+		 * @brief set's players health
+		 * 
+		 * @param amount to set health to
+		 * 
+		 **/
+		 void setHealth(int health);
+
+		/**
  		 * @brief checks whether player can take damage
  		 * 
 		 * @return true if time since last attack is a certain val, false if time since last attack is not certain val
@@ -113,30 +121,24 @@ class Player
 		AttackHitbox at;
 		ColliderHitbox co;
 		
-		// variables to handle animation
+		// animation management
 		int currentFrame = 0; // current frame of the animation
 		float timePerFrame = 0.1f; // 1/10 of a second per frame
 		float timeSinceLastFrame = 0.0f; // time since last frame of the animation
 	
 		float speed = 100.f; // speed of the player
-
-		int health = 10; // player health 
+		
+		// health management
+		int health = 100;
 
 		// damage management
 		float damageCooldown = 0.5f; // seconds
 		float timeSinceLastHit = 0.0f;
+		float poisonTimer = 0.0f; // starts at 0
 
+		// attack management
 		float attackTimer = 0.3f; 
 		bool isAttacking = false;
-		
-		/**
-		 * @brief handles players animation by moving texture rect to show the correct frame
-		 * 
-		 * @param direction (for flipping)
-		 * @param delta time
-		 * @param number of frames in the animation
-		 **/
-		void handleAnimation(int direction, float dt, int numFrames);
 
 		/**
 		 * @brief allows player to take damage (currently does nothing will be updated in future version of project)
