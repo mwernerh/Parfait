@@ -1,11 +1,13 @@
 #include <SFML/Graphics.hpp>
 #include "Enemy.h"
+#include <iostream>
 #include <string>
 #include <memory>
 #include <cmath>
-#include "Gamestate_Operators/Static/HitboxManager.h"
-#include "Gamestate_Operators/Static/ScoreManager.h"
-#include "Framework_Managers/AudioManager.h"
+#include "HitboxManager.h"
+#include "ScoreManager.h"
+#include "AudioManager.h"
+#include "Player.h"
 
 /**
  * @author Isveydi Moreno
@@ -18,7 +20,7 @@ constexpr unsigned int NUM_ANIM_FRAMES = 6;
 // ENEMY is a class that represents an enemy in the game.
 
 // Enemy constructor
-Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, [[maybe_unused]] int maxHealth): attackHitbox(), colliderHitbox(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Enemy::takeDamage)) {
+Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, [[maybe_unused]] int maxHealth, int scoreValue, float scaleX, float scaleY): attackHitbox(), colliderHitbox(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Enemy::takeDamage)) {
     this->texture = texture;
     sprite.setTexture(*texture); // dereference shared_ptr
 
@@ -27,11 +29,14 @@ Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed
     sprite.setPosition(x, y);
 
     // Set the origin of the sprite to the center of the sprite (its 64x64)
-    sprite.setOrigin(0, 0);
+    sprite.setOrigin(0, 0); 
     this->speed = speed;
     this->health = health;
     this->maxHealth = health;
-    sprite.setScale(6.f, 6.f);
+    this->scoreValue = scoreValue;
+    this->scaleX = scaleX;
+    this->scaleY = scaleY;
+    sprite.setScale(scaleX, scaleY); // NOTE: this doesnt let the sprites show up properly in the game
 
     colliderHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the collider hitbox
     colliderHitbox.setSize(sf::Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height)); // Set the size of the collider hitbox
@@ -43,7 +48,7 @@ Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed
     attackHitbox.setOrigin(- sprite.getGlobalBounds().width, - sprite.getGlobalBounds().height /2);
     attackHitbox.setFillColor(sf::Color(255, 0, 0, 127));
 
-//    alive = true;
+
 }
 
 // UPDATE THE ENEMY
@@ -58,13 +63,13 @@ void Enemy::update(float dt, sf::Vector2f playerPos){
     HitboxManager::RegisterColliderHitbox(&colliderHitbox);
 
     validDistance(playerPos); // Check if the enemy is too far away from the player
-
+    //TODO: CHANGE SCALE FOR EACH ENEMY
     if (sprite.getPosition().x < playerPos.x){ //flip the sprite
-        sprite.setScale(6.f, 6.f); // Set the scale of the sprite to 2x
+        sprite.setScale(scaleX, scaleY); // Set the scale of the sprite to 6x
         colliderHitbox.setScale(1.f, 1.f); // Set the scale of the collider hitbox to 1x
         attackHitbox.setScale(1.f, 1.f); // Set the scale of the attack hitbox to 1x
     } else {
-        sprite.setScale(-6.f, 6.f); // Set the scale of the sprite to -2x
+        sprite.setScale(-scaleX, scaleY); // Set the scale of the sprite to -6x
         colliderHitbox.setScale(-1.f, 1.f); // Set the scale of the collider hitbox to -1x
         attackHitbox.setScale(-1.f, 1.f); // Set the scale of the attack hitbox to -1x
     }
@@ -85,7 +90,7 @@ void Enemy::draw(sf::RenderWindow& window){ //renders enemy to the window
 void Enemy::validDistance(sf::Vector2f playerPos){
     float distance = std:: abs(playerPos.x - sprite.getPosition().x); // Get distance from player
 
-    if (distance > 1000.f) { // If the distance is greater than 1000
+    if (distance > 1000.f) { // If the distance is greater than 1000 // MAYBE CHANGE DISTANCE FOR RAT
         killEnemy(); // Kill the enemy
     }
 }   
@@ -106,11 +111,11 @@ void Enemy::setHealth(int health){
 
 //TAKE DAMAGE
 int Enemy::takeDamage(Enemy* instance, [[maybe_unused]] const AttackHitbox* attacker){
+    std::cout << "Enemy take damage function running: " << std::hex << instance << std::endl;
     instance-> setHealth(instance-> getHealth()- 1); // Decrease health by 1
     if (instance-> getHealth() <= 0){ // If health is less than or equal to 0
         instance-> killEnemy();
-        ScoreManager::AddScore(100); // Add score to player
-        AudioManager::StartCameraSound("e_dg_atk");
+        AudioManager::StartCameraSound("./assets/aud/e_dg_atk.wav"); //MAYBE CHANGE SOUND FOR EACH ENEMY TYPE
     }
     return instance -> getHealth(); // Return remaining health
 }
@@ -131,9 +136,20 @@ void Enemy::handleAnimation([[maybe_unused]] int direction, float dt){
         currentFrame++; // Increment the current frame
         timeSinceLastFrame = 0.f; // Reset the elapsed time
     }
+    
 }
+
+int Enemy::getScoreValue() const {
+    return scoreValue;
+}
+
 //kill enemy
 void Enemy::killEnemy(){
+    if (getHealth()<= 0){
+        ScoreManager::AddScore(this-> getScoreValue()); // Add score to player //REMOVE & ADD TO EACH ENEMY
+        std::cout<<"Score Value added"<< scoreValue <<std::endl;
+    }
+    
     alive = false; // Sets alive to false
 }
 
@@ -142,3 +158,7 @@ void Enemy::killEnemy(){
 bool Enemy::isAlive() const{ 
     return alive;
 }
+/*
+void Enemy::attackPlayer(Player& player){
+ //will call attckHitbox fucntion
+} */

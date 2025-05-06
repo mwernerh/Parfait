@@ -6,7 +6,7 @@
 #include <string>
 #include <memory>
 #include "Hitboxes.h"
-
+#include "Player.h"
 /**
  * @author Isveydi Moreno
  * 
@@ -15,14 +15,14 @@
 class Enemy{
     public:
     // Constructor
-        Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth);
-
+        Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth, int scoreValue, float scaleX, float scaleY);
+        virtual ~Enemy() = default; // Destructor
         //UPDATING
         //update the enemy
-        void update(float dt, sf::Vector2f playerPos);
+        virtual void update(float dt, sf::Vector2f playerPos);
 
         //updates enemy movement and animation
-        void draw(sf::RenderWindow& window);
+        virtual void draw(sf::RenderWindow& window);
 
         //HITBOX
         //get the hitbox of the enemy
@@ -41,12 +41,16 @@ class Enemy{
         int getHealth();
         //set the health of the enemy
         void setHealth(int health);
+        //Get Score Value of the enemy
+        int getScoreValue() const;
+
+
         //take damage (returns remaining health)
         static int takeDamage(Enemy* instance, const AttackHitbox* attacker);
 
         //ANIMATION
         //handle animation
-        void handleAnimation(int direction, float dt);
+        virtual void handleAnimation(int direction, float dt);
 
         //ALIVE AND KILL
         //kill the enemy
@@ -54,10 +58,14 @@ class Enemy{
         //check if the enemy is still alive
         bool isAlive() const;
 
+        //void attackPlayer(Player& player);
+
         //get the enemies max health
         int getMaxHealth() const {
             return maxHealth; 
         }
+
+
 
         //set parent of the collider hitbox
         void setColliderParent(void* parent) { colliderHitbox.SetParent(parent); }
@@ -67,10 +75,14 @@ class Enemy{
     private:
         std::shared_ptr<sf::Texture> texture; //Texture var for the enemy
         sf::Sprite sprite; // Sprite var for the enemy
+
         //Enemy attributes
         float speed;
         int health;
         int maxHealth;
+        int scoreValue; // Score default value for the enemy
+        float scaleX; // default scale 
+        float scaleY; // default scale
 
 
         //Enemy Animation attributes

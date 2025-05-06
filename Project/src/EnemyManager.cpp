@@ -1,6 +1,4 @@
 #include "EnemyManager.h"
-#include "Gamestate_Operators/Static/PlayerManager.h"
-#include "Framework_Managers/InputManager.h"
 #include <iostream>
 #include <cmath>
 #include <cstdlib>  // used for rand() spawn logic
@@ -13,14 +11,14 @@
 //ENEMYMANAGER is a class that manages the enemies in the game.
 
 //ENEMYMANAGER CONSTRUCTOR
-EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(5), baseHealth(1), enemySpeed(.1f){
+EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(3), baseHealth(1), enemySpeed(.1f){
 }
 
 //ENEMY MANAGER UPDATE
 //Updates enemy based on the player position
-void EnemyManager::update(){
-    sf::Vector2f playerPos = PlayerManager::GetPlayer().getPosition(); // Get the player's position
-    spawnTimer += InputManager::GetDeltaTime(); // Increment the spawn timer
+void EnemyManager::update(float dt, Player& player){
+    sf::Vector2f playerPos = player.getPosition(); // Get the player's position
+    spawnTimer += dt; // Increment the spawn timer
 
     //Spawn enemies if the spawn timer has reached the cooldown and the number of enemies is less than the maximum
     if (spawnTimer >= spawnCooldown && enemies.size() < maxEnemies){
@@ -31,11 +29,13 @@ void EnemyManager::update(){
 
     // Update each enemy
     for (auto& enemy : enemies){
-        enemy.update(InputManager::GetDeltaTime(), playerPos); //update the enemy's position
+        enemy.update(dt, playerPos); //update the enemy's position
     }
 
     // Remove dead enemies
     enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const Enemy& enemy) {
+        if(!enemy.isAlive())
+            std::cout << "Erasing enemy: " << std::hex << &enemy << std::endl;
 	return !enemy.isAlive(); // Remove enemies that are not alive
     }), enemies.end());
 
@@ -62,7 +62,7 @@ void EnemyManager::spawnEnemy(const sf::Vector2f& playerPos){
             break;
     }
 
-    enemies.emplace_back(spawnPos.x, spawnPos.y - 16 * 6, enemyTexture, enemySpeed, baseHealth, baseHealth); // Create a new enemy at the spawn position
+    enemies.emplace_back(spawnPos.x, spawnPos.y - 16 * 6, enemyTexture, enemySpeed, baseHealth, baseHealth, 100, 6.f, 6.f); // Create a new enemy at the spawn position
 }
 
 //ENEMY MANAGER DRAW
@@ -90,5 +90,8 @@ void EnemyManager::configure(const std::string& texturePath, int maxEnemies, int
     enemyTexture = std::make_shared<sf::Texture>(); // Create a shared pointer to the texture
     if (!enemyTexture->loadFromFile(texturePath)){ // Load the texture from the specified file
         std::cerr << "Failed to load enemy texture: " << texturePath << std::endl;
+    }
+    else{
+        std::cout << "Enemy texture loaded successfully: " << texturePath << std::endl;
     }
 }
