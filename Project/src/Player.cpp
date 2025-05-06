@@ -165,7 +165,7 @@ void Player::setHealth(int health)
 void Player::takeDamage(Player* const instance, const AttackHitbox* const attacker)
 {
 	// ensure player can take damage first
-	if (canTakeDamage)
+	if (instance->canTakeDamage())
 	{
 		// handle changing sprite animations when player is hurt
 		//sprite.setAnimation<"Hurt">;
@@ -175,25 +175,25 @@ void Player::takeDamage(Player* const instance, const AttackHitbox* const attack
 		switch (attacker->GetAttackerType())
 		{
 			// slower dog does slightly more damage than faster dog
-			case DOG_BLACK:
-				instance->setHealth(getHealth() - 10);
+			case AttackHitbox::AttackerType::DOG_BLACK:
+				instance->setHealth(instance->getHealth() - 10);
 				break;
 			// faster dog does slightly less damage than slow dog
-			case DOG_YELLOW:
-				instance->setHealth(getHealth() - 8); 
+			case AttackHitbox::AttackerType::DOG_YELLOW:
+				instance->setHealth(instance->getHealth() - 8); 
 				break;
 			// bird does slightly less damage than the dogs
-			case BIRD:
-				instance->setHealth(getHealth() - 5);
+			case AttackHitbox::AttackerType::BIRD:
+				instance->setHealth(instance->getHealth() - 5);
 				break;
 			// poison timer is set, player health affected by poison is updated in update function
-			case RAT:
-				poisonTimer = 3.f;
+			case AttackHitbox::AttackerType::RAT:
+				instance->poisonTimer = 3.f;
 				break;
 			default:
 				break;
 		}
-		timeSinceLastHit = 0.f; // reset time since last hit
+		instance->timeSinceLastHit = 0.f; // reset time since last hit
 	}
 
 }

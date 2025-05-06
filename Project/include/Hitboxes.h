@@ -25,7 +25,7 @@ struct AttackHitbox : public Hitbox {
 
     public:
     AttackHitbox(AttackerType attackerType) : Hitbox(false), attackerType(attackerType) {}
-    const AttackerType& GetAttackerType(void) { return attackerType; }
+    const AttackerType& GetAttackerType(void) const { return attackerType; }
     void SetAttackerType(const AttackerType attackerType) { this->attackerType = attackerType; }
 };
 
