@@ -11,7 +11,7 @@
  *
  **/
 
-Player::Player(std::string texturePath, float speed) : at(), co(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Player::takeDamage))
+Player::Player(std::string texturePath, float speed) : at(AttackHitbox::AttackerType::PLAYER), co(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Player::takeDamage))
 {
 
 	// load player texture from file

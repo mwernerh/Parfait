@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics/RectangleShape.hpp"
+#include "Literals.h"
 
 /**
  * @author Mar Werner Hernandez
@@ -17,7 +18,15 @@ struct Hitbox : public sf::RectangleShape {
 };
 
 struct AttackHitbox : public Hitbox {
-    AttackHitbox() : Hitbox(false) {}
+    enum class AttackerType : u8 { DOG_BLACK, DOG_YELLOW, BIRD, RAT, PLAYER };
+
+    private:
+    AttackerType attackerType;
+
+    public:
+    AttackHitbox(AttackerType attackerType) : Hitbox(false), attackerType(attackerType) {}
+    const AttackerType& GetAttackerType(void) { return attackerType; }
+    void SetAttackerType(const AttackerType attackerType) { this->attackerType = attackerType; }
 };
 
 /**
