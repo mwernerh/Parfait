@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "Enemy.h"
+#include "Player.h"
 
 /**
  * @author Isveydi Moreno
@@ -15,7 +16,7 @@ class EnemyManager{
         EnemyManager();
 
         //ENEMY MANAGER IN GAME FUNCTIONS
-        void update(); //Update Enemies
+        void update(float dt, Player& player); //Update Enemies
         void draw(sf::RenderWindow& window); //Draw Enemies
         void configure(const std::string& texturePath,int maxEnemies, int health, float cooldown, float speed); //Configure Enemies
     private:
