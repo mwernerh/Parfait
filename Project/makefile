@@ -31,7 +31,9 @@ endif
 SRCS =	Framework_Managers/AudioManager.cpp Framework_Managers/FontManager.cpp Framework_Managers/InputManager.cpp Framework_Managers/TextureManager.cpp \
 		Gamestate_Operators/Static/HitboxManager.cpp Gamestate_Operators/Static/LevelManager.cpp Gamestate_Operators/Static/MapManager.cpp Gamestate_Operators/Static/PlayerManager.cpp Gamestate_Operators/Static/ScoreManager.cpp \
 		Gamestate_Operators/Instanced/PauseMenuOperator.cpp \
-		Enemy.cpp EnemyManager.cpp Player.cpp \
+		Enemy.cpp EnemyManager.cpp  \
+		BirdEnemy.cpp DogEnemy.cpp RatEnemy.cpp \
+		Player.cpp \
 		Gamestates/PlayMainGameState.cpp Gamestates/PauseGameState.cpp \
 		Entry.cpp
 

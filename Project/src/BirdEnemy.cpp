@@ -1,12 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "BirdEnemy.h"
-#include <iostream>
-#include <string>
 #include <memory>
 #include <cmath>
-#include "HitboxManager.h"
-#include "ScoreManager.h"
-#include "AudioManager.h"
+#include "Gamestate_Operators/Static/PlayerManager.h"
 
 /**
  * @author Isveydi Moreno
@@ -18,9 +14,9 @@
 }
 
 // Update the enemy
-void BirdEnemy::update(float dt, sf::Vector2f playerPos) {
- Enemy::update(dt, playerPos);
- validDistance(playerPos); // Check if the enemy is too far away from the player
+void BirdEnemy::update() {
+ Enemy::update();
+ validDistance(PlayerManager::GetPlayer().getPosition()); // Check if the enemy is too far away from the player
 }
 
 void BirdEnemy::handleAnimation(int direction, float dt) {

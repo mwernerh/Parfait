@@ -18,7 +18,7 @@ struct Hitbox : public sf::RectangleShape {
 };
 
 struct AttackHitbox : public Hitbox {
-    enum class AttackerType : u8 { DOG_BLACK, DOG_YELLOW, BIRD, RAT, PLAYER };
+    enum class AttackerType : u8 { UNKNOWN, DOG_BLACK, DOG_YELLOW, BIRD, RAT, PLAYER };
 
     private:
     AttackerType attackerType;

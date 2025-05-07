@@ -12,7 +12,6 @@ u32 LevelManager::currentLevel = 0; // Current level of the game
 
 std::vector<std::unique_ptr<EnemyManager>>& LevelManager::GetEnemyManagers(void) { // Get the enemy managers
     static std::vector<std::unique_ptr<EnemyManager>> em; // Create a static vector of unique pointers to EnemyManager
-    em.reserve(2); // Reserve space for 2 enemy managers
     return em;
 }
 

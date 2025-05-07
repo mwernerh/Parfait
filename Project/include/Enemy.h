@@ -1,12 +1,8 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#pragma once
 
-#include <iostream>
 #include <SFML/Graphics.hpp>
-#include <string>
 #include <memory>
 #include "Hitboxes.h"
-#include "Player.h"
 /**
  * @author Isveydi Moreno
  * 
@@ -19,7 +15,7 @@ class Enemy{
         virtual ~Enemy() = default; // Destructor
         //UPDATING
         //update the enemy
-        virtual void update(float dt, sf::Vector2f playerPos);
+        virtual void update();
 
         //updates enemy movement and animation
         virtual void draw(sf::RenderWindow& window);
@@ -94,5 +90,3 @@ class Enemy{
         ColliderHitbox colliderHitbox;
 
 };
-
-#endif

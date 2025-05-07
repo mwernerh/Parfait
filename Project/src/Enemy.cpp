@@ -1,13 +1,13 @@
 #include <SFML/Graphics.hpp>
 #include "Enemy.h"
 #include <iostream>
-#include <string>
 #include <memory>
 #include <cmath>
-#include "HitboxManager.h"
-#include "ScoreManager.h"
-#include "AudioManager.h"
-#include "Player.h"
+#include "Framework_Managers/InputManager.h"
+#include "Gamestate_Operators/Static/HitboxManager.h"
+#include "Gamestate_Operators/Static/PlayerManager.h"
+#include "Gamestate_Operators/Static/ScoreManager.h"
+#include "Framework_Managers/AudioManager.h"
 
 /**
  * @author Isveydi Moreno
@@ -20,7 +20,7 @@ constexpr unsigned int NUM_ANIM_FRAMES = 6;
 // ENEMY is a class that represents an enemy in the game.
 
 // Enemy constructor
-Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, [[maybe_unused]] int maxHealth, int scoreValue, float scaleX, float scaleY): attackHitbox(), colliderHitbox(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Enemy::takeDamage)) {
+Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth, int scoreValue, float scaleX, float scaleY): attackHitbox(AttackHitbox::AttackerType::UNKNOWN), colliderHitbox(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Enemy::takeDamage)) {
     this->texture = texture;
     sprite.setTexture(*texture); // dereference shared_ptr
 
@@ -32,7 +32,7 @@ Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed
     sprite.setOrigin(0, 0); 
     this->speed = speed;
     this->health = health;
-    this->maxHealth = health;
+    this->maxHealth = maxHealth;
     this->scoreValue = scoreValue;
     this->scaleX = scaleX;
     this->scaleY = scaleY;
@@ -47,13 +47,16 @@ Enemy::Enemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed
     attackHitbox.setSize(sf::Vector2f(10, 10));
     attackHitbox.setOrigin(- sprite.getGlobalBounds().width, - sprite.getGlobalBounds().height /2);
     attackHitbox.setFillColor(sf::Color(255, 0, 0, 127));
-
-
 }
 
 // UPDATE THE ENEMY
 //updates enemy movement and animation
-void Enemy::update(float dt, sf::Vector2f playerPos){
+void Enemy::update(){
+    colliderHitbox.SetParent(this);
+
+    const sf::Vector2f& playerPos = PlayerManager::GetPlayer().getPosition();
+    const f32 dt = InputManager::GetDeltaTime();
+
     float direction = playerPos.x - sprite.getPosition().x; // Get the direction the enemy should move in
 
      // Calculate the length of the direction vector
@@ -115,7 +118,7 @@ int Enemy::takeDamage(Enemy* instance, [[maybe_unused]] const AttackHitbox* atta
     instance-> setHealth(instance-> getHealth()- 1); // Decrease health by 1
     if (instance-> getHealth() <= 0){ // If health is less than or equal to 0
         instance-> killEnemy();
-        AudioManager::StartCameraSound("./assets/aud/e_dg_atk.wav"); //MAYBE CHANGE SOUND FOR EACH ENEMY TYPE
+        AudioManager::StartCameraSound("e_dg_atk"); //MAYBE CHANGE SOUND FOR EACH ENEMY TYPE
     }
     return instance -> getHealth(); // Return remaining health
 }
@@ -147,7 +150,6 @@ int Enemy::getScoreValue() const {
 void Enemy::killEnemy(){
     if (getHealth()<= 0){
         ScoreManager::AddScore(this-> getScoreValue()); // Add score to player //REMOVE & ADD TO EACH ENEMY
-        std::cout<<"Score Value added"<< scoreValue <<std::endl;
     }
     
     alive = false; // Sets alive to false

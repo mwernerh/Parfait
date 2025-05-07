@@ -1,4 +1,6 @@
 #include "EnemyManager.h"
+#include "Framework_Managers/InputManager.h"
+#include "Gamestate_Operators/Static/PlayerManager.h"
 #include <iostream>
 #include <cmath>
 #include <cstdlib>  // used for rand() spawn logic
@@ -16,8 +18,10 @@ EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(3),
 
 //ENEMY MANAGER UPDATE
 //Updates enemy based on the player position
-void EnemyManager::update(float dt, Player& player){
-    sf::Vector2f playerPos = player.getPosition(); // Get the player's position
+void EnemyManager::update(){
+    const sf::Vector2f& playerPos = PlayerManager::GetPlayer().getPosition(); // Get the player's position
+    const f32 dt = InputManager::GetDeltaTime();
+
     spawnTimer += dt; // Increment the spawn timer
 
     //Spawn enemies if the spawn timer has reached the cooldown and the number of enemies is less than the maximum
@@ -29,7 +33,7 @@ void EnemyManager::update(float dt, Player& player){
 
     // Update each enemy
     for (auto& enemy : enemies){
-        enemy.update(dt, playerPos); //update the enemy's position
+        enemy.update(); //update the enemy's position
     }
 
     // Remove dead enemies
@@ -38,11 +42,6 @@ void EnemyManager::update(float dt, Player& player){
             std::cout << "Erasing enemy: " << std::hex << &enemy << std::endl;
 	return !enemy.isAlive(); // Remove enemies that are not alive
     }), enemies.end());
-
-    // If an enemy in the middle of the vector has been erased, its collider hitbox parent pointer must be updated to its new position in the vector
-    for(Enemy& enemy : enemies) {
-        enemy.setColliderParent(&enemy);
-    }
 }
 
 
