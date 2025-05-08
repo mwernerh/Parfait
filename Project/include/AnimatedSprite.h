@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <SFML/Graphics/Sprite.hpp>
+#include <array>
 #include "Literals.h"
 #include "Framework_Managers/TextureManager.h"
 #include "Framework_Managers/AnimationManager.h"

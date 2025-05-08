@@ -18,7 +18,7 @@ namespace {
         u32 directoryLevel = 0;
 
         // Use prime numbers for weights
-        static constexpr u32 weights[] = {1, 17, 19, 23, 29, 31, 37};
+        constexpr u32 weights[] = {1, 17, 19, 23, 29, 31, 37};
 
         for(std::size_t i = string.length(); i > 0; i--) {
             if(string[i - 1] == '/') {

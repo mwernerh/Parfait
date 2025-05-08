@@ -45,9 +45,9 @@ OBJS = $(SRCS:src/%.cpp=obj/%.o)
 # -------[[ BUILD FLAGS ]]-------
 
 ifeq ($(DEBUG), TRUE)
-	CXX_FLAGS_BASE = -Wall -Wextra -Werror -g -Og -std=c++23 -DDEBUG
+	CXX_FLAGS_BASE = -Wall -Wextra -Werror -g -Og -std=c++20 -DDEBUG
 else
-	CXX_FLAGS_BASE = -Wall -Wextra -Werror -O3 -std=c++23 -DNDEBUG
+	CXX_FLAGS_BASE = -Wall -Wextra -Werror -O3 -std=c++20 -DNDEBUG
 endif
 
 CXX_FLAGS = $(CXX_FLAGS_BASE) \

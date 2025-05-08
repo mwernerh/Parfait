@@ -12,7 +12,7 @@
 
 class EnemyManager;
 
-class LevelManager : public StaticInitializableGamestateOperator, public StaticUpdatableGamestateOperator, public StaticDrawableGamestateOperator {
+class LevelManager : public StaticInitializableGamestateOperator<LevelManager>, public StaticUpdatableGamestateOperator<LevelManager>, public StaticDrawableGamestateOperator<LevelManager> {
     static u32 currentLevel;
 
     static std::vector<std::unique_ptr<EnemyManager>>& GetEnemyManagers(void);
@@ -20,7 +20,7 @@ class LevelManager : public StaticInitializableGamestateOperator, public StaticU
 
     public:
     static void Initialize(void);
-    static void Update();
+    static void Update(void);
 
 
     static void Draw(sf::RenderWindow& window);

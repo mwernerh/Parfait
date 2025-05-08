@@ -6,7 +6,7 @@
 
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 
-class ScoreManager : public StaticInitializableGamestateOperator, public StaticDrawableGamestateOperator {
+class ScoreManager : public StaticInitializableGamestateOperator<ScoreManager>, public StaticDrawableGamestateOperator<ScoreManager> {
     struct ScoreWrapper {
         u32 score;
         sf::Text text;

@@ -3,7 +3,7 @@
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "Player.h"
 
-class PlayerManager : public StaticInitializableGamestateOperator, public StaticUpdatableGamestateOperator, public StaticDrawableGamestateOperator {
+class PlayerManager : public StaticInitializableGamestateOperator<PlayerManager>, public StaticUpdatableGamestateOperator<PlayerManager>, public StaticDrawableGamestateOperator<PlayerManager> {
 
     static Player& GetPlayerInternal(void);
     

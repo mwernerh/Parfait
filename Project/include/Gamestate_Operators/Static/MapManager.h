@@ -3,7 +3,7 @@
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "Literals.h"
 
-class MapManager : public StaticInitializableGamestateOperator, public StaticUpdatableGamestateOperator, public StaticDrawableGamestateOperator {
+class MapManager : public StaticInitializableGamestateOperator<MapManager>, public StaticUpdatableGamestateOperator<MapManager>, public StaticDrawableGamestateOperator<MapManager> {
     
     struct ParallaxBackground {
         static inline constexpr u32 NUM_PARALLAX_LAYERS = 5;

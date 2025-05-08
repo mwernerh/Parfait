@@ -108,7 +108,7 @@ class StaticGameState : public BaseGameState {
 
     template<class STATIC_GAME_STATE_OPERATOR>
     static void CallOperatorInitialize(void) {
-        if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticInitializableGamestateOperator>) {
+        if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticInitializableGamestateOperator<STATIC_GAME_STATE_OPERATOR>>) {
             #ifdef DEBUG
             std::cout << "Initializing static gamestate operator " << typeid(STATIC_GAME_STATE_OPERATOR).name() << "\n";
             #endif
@@ -118,7 +118,7 @@ class StaticGameState : public BaseGameState {
 
     template<class STATIC_GAME_STATE_OPERATOR>
     static void CallOperatorUpdate(void) {
-        if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticUpdatableGamestateOperator>)     
+        if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticUpdatableGamestateOperator<STATIC_GAME_STATE_OPERATOR>>)     
             STATIC_GAME_STATE_OPERATOR::Update();
     }
 
