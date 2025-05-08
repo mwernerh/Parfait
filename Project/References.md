@@ -89,3 +89,6 @@ https://stackoverflow.com/a/70002143
 
 ## Storing Destructors
 https://wp.me/peb5Y-IO
+
+## Some Inspiration for NPC
+https://github.com/DevelopersGuild/SFML-RPG/blob/master/src/NPC.cpp
