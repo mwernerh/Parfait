@@ -1,7 +1,9 @@
 #include "Gamestate_Operators/Static/LevelManager.h"
+#include "Framework_Managers/GamestateManager.h"
 #include "Gamestate_Operators/Static/MapManager.h"
 #include "Gamestate_Operators/Static/ScoreManager.h"
 #include "EnemyManager.h"
+#include "Gamestates/EndingCutsceneGameState.h"
 
 /**
  * @author Isveydi Moreno
@@ -28,9 +30,8 @@ void LevelManager::Update() {
 
         // Reached last level and passed it
         if(currentLevel == 3) {
-            // MAR_TODO: Switch gamestate to ending gamestate
-            // GamestateManager::SwitchToInstancedGamestate<EndingCutsceneGameState>();
-            // return;
+            GamestateManager::SwitchToInstancedGamestate<EndingCutsceneGameState>();
+            return;
         }
 
         // MAR_TODO: Implement sound for notifying level change

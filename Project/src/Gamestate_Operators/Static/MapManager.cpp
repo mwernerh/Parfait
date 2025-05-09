@@ -62,8 +62,8 @@ void MapManager::ChangeMap(const Maps mapIdx) {
         case Maps::PARK:
             texBaseStr.append("p_pk/");
             break;
-        case Maps::CITY_VAR:
-            texBaseStr.append("p_ct/4/Day/");
+        case Maps::PLAINS:
+            texBaseStr.append("p_pl/");
             break;
         default:
             break;
@@ -104,7 +104,9 @@ void MapManager::ChangeMap(const Maps mapIdx) {
             AudioManager::StartMusic("amb_pk");
             AudioManager::StartMusic("bgm_accordion");
             break;
-        case Maps::CITY_VAR:
+        case Maps::PLAINS:
+            AudioManager::StartMusic("amb_pl");
+            AudioManager::StartMusic("bgm_piano");
             break;
         default:
             break;

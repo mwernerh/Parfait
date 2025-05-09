@@ -74,8 +74,8 @@ const sf::Texture& TextureManager::LoadTexture(const std::string& texture_dir) {
     const u32 idx = tM.leastRecentlyUsedQueue.Dequeue();
 
     [[unlikely]]
-    if(!tM.textures[idx].loadFromFile(texture_dir)) {
-        std::cerr << "\x1b[31mError! Could not load texture file " << texture_dir << " when preparing a Texture!\x1b[0m\n";
+    if(!tM.textures[idx].loadFromFile(std::string("./assets/txr/") + texture_dir)) {
+        std::cerr << "\x1b[31mError! Could not load texture file " << std::string("./assets/txr/") + texture_dir << " when preparing a Texture!\x1b[0m\n";
         return tM.textures[0];
     }
 

@@ -1,21 +1,21 @@
 #pragma once
 #include "Literals.h"
-#include <string>
 #include <filesystem>
+#include <map>
 
 class SaveManager {
     static const inline std::filesystem::path MANUAL_SAVE_FILENAME = "Manual_Save.json";
     static const inline std::filesystem::path AUTO_SAVE_FILENAME = "Auto_Save.json";
 
-    static inline u32 currentLevel = 0;
-    static inline u32 score = 0;
-    static inline u32 playerHealth = 0;
+    static struct JSONObject {
+        std::map<std::string, std::variant<JSONObject, std::string>> entries;
+    } saveData;
 
     public:
     enum class SaveType : u8 { AUTO, MANUAL };
 
     static void WriteToFile(const SaveType saveType);
-    static void ReadFromFile(std::string& filename);
+    static void ReadFromFile();
     
     static const u32& GetCurrentLevel(void);
     static void SetCurrentLevel(const u32 currentLevel);

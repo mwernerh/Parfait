@@ -9,7 +9,7 @@
 #include "Framework_Managers/InputManager.h"
 #include "Framework_Managers/AudioManager.h"
 #include "Framework_Managers/FontManager.h"
-#include "Gamestates/PlayMainGameState.h"
+#include "Gamestates/TitleScreenGameState.h"
 
 void HandleWindowEvents(sf::WindowBase& window) {
     sf::Event event;
@@ -43,8 +43,7 @@ int main(void) {
     AnimationManager::Initialize();
     FontManager::Initialize();
 
-    GamestateManager::SwitchToStaticGamestate<PlayMainGameState>();
-    GamestateManager::InitializeOperators();
+    GamestateManager::SwitchToInstancedGamestate<TitleScreenGameState>();
 
     while(window.isOpen()) {
 

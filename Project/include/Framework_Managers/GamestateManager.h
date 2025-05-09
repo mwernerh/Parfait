@@ -40,20 +40,24 @@ class GamestateManager {
         staticInit = STATIC_GAMESTATE::GetInitFunc();
         staticUpdate = STATIC_GAMESTATE::GetUpdateFunc();
         staticDraw = STATIC_GAMESTATE::GetDrawFunc();
+
+        staticInit();
     }
 
     template<class INSTANCED_GAMESTATE>
-    requires(INSTANCED_GAMESTATE::GetSize() <= INSTANCED_STACK_SPACE_SIZE)
+    requires(sizeof(INSTANCED_GAMESTATE) <= INSTANCED_STACK_SPACE_SIZE)
     static void SwitchToInstancedGamestate(void) {
         #ifdef DEBUG
         std::cout << "Switching to instanced gamestate " << typeid(INSTANCED_GAMESTATE).name() << "\n";
         #endif
 
-        if(instanceDestructor != nullptr)
+        if(instanceDestructor != nullptr) {
             instanceDestructor();
+            instanceDestructor = nullptr;
+        }
 
         isCurrentGamestateInstanced = true;
-        new (&instancedStackSpace[0]) INSTANCED_GAMESTATE;
+        new (instancedStackSpace) INSTANCED_GAMESTATE;
 
         instanceUpdate = std::bit_cast<InstancedUpdateFuncType>(&INSTANCED_GAMESTATE::__Update);
         instanceDraw = std::bit_cast<InstancedDrawFuncType>(&INSTANCED_GAMESTATE::__Draw);

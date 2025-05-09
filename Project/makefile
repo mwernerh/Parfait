@@ -31,10 +31,12 @@ endif
 SRCS =	Framework_Managers/AudioManager.cpp Framework_Managers/FontManager.cpp Framework_Managers/InputManager.cpp Framework_Managers/TextureManager.cpp \
 		Gamestate_Operators/Static/HitboxManager.cpp Gamestate_Operators/Static/LevelManager.cpp Gamestate_Operators/Static/MapManager.cpp Gamestate_Operators/Static/PlayerManager.cpp Gamestate_Operators/Static/ScoreManager.cpp \
 		Gamestate_Operators/Instanced/PauseMenuOperator.cpp \
+		Gamestate_Operators/Instanced/TitleScreenActorOperator.cpp \
+		Gamestate_Operators/Instanced/EndingCutsceneActorOperator.cpp \
 		Enemy.cpp EnemyManager.cpp  \
 		BirdEnemy.cpp DogEnemy.cpp RatEnemy.cpp \
 		Player.cpp \
-		Gamestates/PlayMainGameState.cpp Gamestates/PauseGameState.cpp \
+		Gamestates/PlayMainGameState.cpp Gamestates/PauseGameState.cpp Gamestates/TitleScreenGameState.cpp Gamestates/EndingCutsceneGameState.cpp \
 		Entry.cpp
 
 # Prepend src/ to the source files and create list of object files

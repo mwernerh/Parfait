@@ -11,7 +11,7 @@ PauseMenuOperator::PauseMenuOperator() : pauseText("Press Spacebar to unpause", 
 
 void PauseMenuOperator::Draw(sf::RenderWindow& window) {
     sf::View view = window.getView();
-    view.setCenter({window.getSize().x / 2.0f, window.getSize().y / 2.0f});
+    view.setCenter({view.getSize().x / 2.0f, view.getSize().y / 2.0f});
     window.setView(view);
 
     window.draw(pauseText);

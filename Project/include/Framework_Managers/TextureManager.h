@@ -42,8 +42,8 @@ class TextureManager {
         for(u32 i = 0; i < NUM_TEXTURES; i++) {
             currentIdx = tM.leastRecentlyUsedQueue.Dequeue();
             [[unlikely]]
-            if(!tM.textures[currentIdx].loadFromFile(directory + texture_names[i] + std::string(".png"))) {
-                std::cerr << "\x1b[31mError! Could not load texture file " << directory + texture_names[i] << " when preparing a Texture!\x1b[0m\n";
+            if(!tM.textures[currentIdx].loadFromFile(std::string("./assets/txr/") + directory + texture_names[i] + std::string(".png"))) {
+                std::cerr << "\x1b[31mError! Could not load texture file " << std::string("./assets/txr/") + directory + texture_names[i] << " when preparing a Texture!\x1b[0m\n";
                 ret[i] = nullptr;
             }
             else [[likely]] {

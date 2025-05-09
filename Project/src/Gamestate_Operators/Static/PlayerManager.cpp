@@ -2,7 +2,7 @@
 #include "Framework_Managers/InputManager.h"
 
 Player& PlayerManager::GetPlayerInternal(void) {
-    static Player player("./assets/txr/animals/ct2/Walk.png", 20);
+    static Player player;
     return player;
 }
 

@@ -77,6 +77,8 @@ class AnimatedSprite : public sf::Sprite {
                 return;
             }
 
+            f32 oldTextureHeight = getTextureRect().height;
+
             setTexture(TextureManager::GetTexture(file), true);
 
             u32 numFrames = 0;
@@ -85,6 +87,9 @@ class AnimatedSprite : public sf::Sprite {
             const s32 FRAME_WIDTH = getTextureRect().width / numFrames;
 
             setTextureRect({static_cast<int>(FRAME_WIDTH * startingFrame), 0, FRAME_WIDTH, getTextureRect().height});
+
+            // Ensure the bottom of the sprite stays aligned if the height changes
+            move(0.0f, (oldTextureHeight - getTextureRect().height) * getScale().y);
         }
 
         void Update() {
@@ -95,14 +100,14 @@ class AnimatedSprite : public sf::Sprite {
 
 #define ANIM_DESC(str, frm) {__StrLit(#str),frm}
 
-using AnimatedBirdSprite1 = AnimatedSprite<"./assets/txr/animals/bd1/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
-using AnimatedBirdSprite2 = AnimatedSprite<"./assets/txr/animals/bd2/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedBirdSprite1 = AnimatedSprite<"animals/bd1/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedBirdSprite2 = AnimatedSprite<"animals/bd2/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
 
-using AnimatedCatSprite1 = AnimatedSprite<"./assets/txr/animals/ct1/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
-using AnimatedCatSprite2 = AnimatedSprite<"./assets/txr/animals/ct2/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedCatSprite1 = AnimatedSprite<"animals/ct1/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedCatSprite2 = AnimatedSprite<"animals/ct2/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
 
-using AnimatedDogSprite1 = AnimatedSprite<"./assets/txr/animals/dg1/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
-using AnimatedDogSprite2 = AnimatedSprite<"./assets/txr/animals/dg2/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedDogSprite1 = AnimatedSprite<"animals/dg1/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedDogSprite2 = AnimatedSprite<"animals/dg2/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
 
-using AnimatedRatSprite1 = AnimatedSprite<"./assets/txr/animals/rt1/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
-using AnimatedRatSprite2 = AnimatedSprite<"./assets/txr/animals/rt2/", ANIM_DESC(Death, 2), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedRatSprite1 = AnimatedSprite<"animals/rt1/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedRatSprite2 = AnimatedSprite<"animals/rt2/", ANIM_DESC(Death, 2), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;

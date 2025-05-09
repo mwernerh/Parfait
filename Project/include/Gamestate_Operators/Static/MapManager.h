@@ -22,7 +22,7 @@ class MapManager : public StaticInitializableGamestateOperator<MapManager>, publ
     static ParallaxBackground& GetBackground(void);
     
     public:
-    enum class Maps : u8 {CITY, PARK, CITY_VAR, NUM_MAPS};
+    enum class Maps : u8 {CITY, PARK, PLAINS, NUM_MAPS};
 
     static void Initialize(void);
     

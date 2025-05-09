@@ -3,6 +3,7 @@
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 #include <iostream>
 #include <type_traits>
+#include <cstring>
 
 struct BaseGameState {
     using InitializeGamestateOperatorFunctionSignature = void (*)(void);
@@ -21,7 +22,7 @@ class InstancedGameState : public BaseGameState {
     u8 OperatorStackSpace[STACK_SIZE];
 
     InstancedUpdatableGamestateOperator* updatables[(std::is_base_of_v<InstancedUpdatableGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> + ...) == 0 ? 1 : (std::is_base_of_v<InstancedUpdatableGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> + ...)];
-    u32 updatablesOffset;
+    u32 updatablesIdx;
 
     template<class INSTANCED_GAME_STATE_OPERATOR>
     void PlacementNew(void) {
@@ -31,7 +32,7 @@ class InstancedGameState : public BaseGameState {
             #ifdef DEBUG
             std::cout << "Registered updatable instanced gamestate operator " << typeid(INSTANCED_GAME_STATE_OPERATOR).name() << "\n";
             #endif
-            updatables[updatablesOffset++] = std::bit_cast<INSTANCED_GAME_STATE_OPERATOR*>(op);
+            updatables[updatablesIdx++] = std::bit_cast<INSTANCED_GAME_STATE_OPERATOR*>(op);
         }
 
         initializationStackOffset += sizeof(INSTANCED_GAME_STATE_OPERATOR);
@@ -64,7 +65,9 @@ class InstancedGameState : public BaseGameState {
     public:
     InstancedGameState() {
         initializationStackOffset = 0;
-        updatablesOffset = 0;
+        updatablesIdx = 0;
+
+        memset(updatables, 0, sizeof(updatables));
 
         // Construct the operators
         ((PlacementNew<INSTANCED_GAME_STATE_OPERATORS>(),...));
@@ -76,8 +79,9 @@ class InstancedGameState : public BaseGameState {
     void __Update(void) {
         // First call the operator updates...
         for(InstancedUpdatableGamestateOperator* updatable : updatables) {
-            if(updatable)
+            if(updatable) {
                 updatable->Update();
+            }
         }
 
         // Then run the gamestate update
@@ -89,12 +93,12 @@ class InstancedGameState : public BaseGameState {
         static_cast<Derived*>(this)->Draw(window);
     }
 
-    ~InstancedGameState() {
+    virtual ~InstancedGameState() {
         u32 currentOperator = 0;
         ((std::bit_cast<INSTANCED_GAME_STATE_OPERATORS*>(operatorStackPtrs[currentOperator++])->~INSTANCED_GAME_STATE_OPERATORS()),...);
     }
 
-    static consteval std::size_t GetSize(void) {
+    consteval std::size_t GetSize(void) {
         std::size_t size = 0;
         ((size += sizeof(INSTANCED_GAME_STATE_OPERATORS)),...);
         return size;

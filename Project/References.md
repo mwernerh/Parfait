@@ -4,10 +4,10 @@ External references using during work on this assignment are listed below.
 ## Street Animals Sprites
 https://craftpix.net/freebies/free-street-animal-pixel-art-asset-pack/
 
-## City Backgrounds
+## City Background
 https://craftpix.net/freebies/free-scrolling-city-backgrounds-pixel-art/ 
 
-## Park Background
+## Park Background & PLains Background
 https://craftpix.net/freebies/free-summer-pixel-art-backgrounds/
 
 ## Ambient City Noises
@@ -21,6 +21,12 @@ https://freesound.org/people/YellowTree/sounds/595751/
 
 ## Melancholy Accordion Music
 https://freesound.org/people/eyenorth/sounds/482213/
+
+## Minimal Piano Grains (Plains music)
+https://freesound.org/people/GregorQuendel/sounds/698891/
+
+## Wind Blowing Ambiance
+https://freesound.org/people/felix.blume/sounds/139337/
 
 ## Swiping Sound (Player Attacks)
 https://freesound.org/people/Artninja/sounds/761965/

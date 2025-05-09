@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Player.h"
 #include "Framework_Managers/InputManager.h"
+#include "SFML/System/Vector2.hpp"
 
 /** 
  *
@@ -11,20 +12,13 @@
  *
  **/
 
-Player::Player(std::string texturePath, float speed) : at(AttackHitbox::AttackerType::PLAYER), co(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Player::takeDamage))
+Player::Player() : at(AttackHitbox::AttackerType::PLAYER), co(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Player::takeDamage))
 {
-
-	// load player texture from file
-	if (!texture.loadFromFile(texturePath))
-	{
-		std::cerr << "Error loading texture!" << std::endl;
-	}
-
 	sprite.SetAnimation<"Walk">();
 	sprite.setPosition(516, 550); // set player position on screen
 	sprite.setOrigin(0,0); // set player origin to 0,0 for ease of flipping & flipping hitboxes
 	sprite.setScale(PLAYER_SCALE, PLAYER_SCALE); // set player scale so its an appropriate size for the screen
-	this->speed = speed; // set player speed
+	this->speed = 20; // set player speed
 	
 	// set up collider hitbox
 	co.setSize({32.f * PLAYER_SCALE, 20.f * PLAYER_SCALE}); // set-up size same as the player
@@ -42,6 +36,13 @@ Player::Player(std::string texturePath, float speed) : at(AttackHitbox::Attacker
 sf::Vector2f Player::getPosition() const
 {
 	return sprite.getPosition();
+}
+
+void Player::setPosition(const sf::Vector2f& pos)
+{
+	sprite.setPosition(pos);
+	at.setPosition(pos);
+	co.setPosition(pos);
 }
 
 sf::FloatRect Player::getGlobalBounds() const

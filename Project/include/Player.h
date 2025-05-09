@@ -25,7 +25,7 @@ class Player
 		const int OFFSET = 16; // there seems to be a 16 pixel whitespace offset between frames, needed to correctly position hitbox
 
 		// constructor to initialize player
-		Player(std::string texturePath, float speed);
+		Player();
 		
 		/**
 		 * @brief draws player and hitboxes in the window
@@ -58,6 +58,8 @@ class Player
 		 *
 		 **/
 		sf::Vector2f getPosition() const;
+		void setPosition(const sf::Vector2f& pos);
+	
 		sf::FloatRect getGlobalBounds() const;
 
 		/**
