@@ -98,16 +98,16 @@ class AnimatedSprite : public sf::Sprite {
         }
 };
 
-#define ANIM_DESC(str, frm) {__StrLit(#str),frm}
+//#define ANIM_DESC(str, frm) {__StrLit(#str),frm}
 
-using AnimatedBirdSprite1 = AnimatedSprite<"animals/bd1/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
-using AnimatedBirdSprite2 = AnimatedSprite<"animals/bd2/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedBirdSprite1 = AnimatedSprite<"animals/bd1/", AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
+using AnimatedBirdSprite2 = AnimatedSprite<"animals/bd2/", AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
 
-using AnimatedCatSprite1 = AnimatedSprite<"animals/ct1/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
-using AnimatedCatSprite2 = AnimatedSprite<"animals/ct2/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedCatSprite1 = AnimatedSprite<"animals/ct1/", AnimationDescription<7>("Attack", 4), AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
+using AnimatedCatSprite2 = AnimatedSprite<"animals/ct2/", AnimationDescription<7>("Attack", 4), AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
 
-using AnimatedDogSprite1 = AnimatedSprite<"animals/dg1/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
-using AnimatedDogSprite2 = AnimatedSprite<"animals/dg2/", ANIM_DESC(Attack, 4), ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedDogSprite1 = AnimatedSprite<"animals/dg1/", AnimationDescription<7>("Attack", 4), AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
+using AnimatedDogSprite2 = AnimatedSprite<"animals/dg2/", AnimationDescription<7>("Attack", 4), AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
 
-using AnimatedRatSprite1 = AnimatedSprite<"animals/rt1/", ANIM_DESC(Death, 4), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
-using AnimatedRatSprite2 = AnimatedSprite<"animals/rt2/", ANIM_DESC(Death, 2), ANIM_DESC(Hurt, 2), ANIM_DESC(Idle, 4), ANIM_DESC(Walk, 6)>;
+using AnimatedRatSprite1 = AnimatedSprite<"animals/rt1/", AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
+using AnimatedRatSprite2 = AnimatedSprite<"animals/rt2/", AnimationDescription<6>("Death", 2), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
