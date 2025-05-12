@@ -4,11 +4,14 @@ External references using during work on this assignment are listed below.
 ## Street Animals Sprites
 https://craftpix.net/freebies/free-street-animal-pixel-art-asset-pack/
 
-## City Background
+## City Background (Level)
 https://craftpix.net/freebies/free-scrolling-city-backgrounds-pixel-art/ 
 
 ## Park Background & PLains Background
 https://craftpix.net/freebies/free-summer-pixel-art-backgrounds/
+
+## City Background (Title Screen)
+https://craftpix.net/freebies/free-city-backgrounds-pixel-art/
 
 ## Ambient City Noises
 https://freesound.org/people/klankbeeld/sounds/678450/
