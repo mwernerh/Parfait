@@ -16,7 +16,7 @@
 
 Player::Player() : at(AttackHitbox::AttackerType::PLAYER), co(this, std::bit_cast<ColliderHitbox::HitFuncGeneric>(&Player::takeDamage))
 {
-	sprite.SetAnimation<"Walk">();
+	sprite.SetAnimation<"Idle">();
 	sprite.setPosition(516, 550); // set player position on screen
 	sprite.setOrigin(0,0); // set player origin to 0,0 for ease of flipping & flipping hitboxes
 	sprite.setScale(PLAYER_SCALE, PLAYER_SCALE); // set player scale so its an appropriate size for the screen
@@ -41,7 +41,8 @@ Player::Player() : at(AttackHitbox::AttackerType::PLAYER), co(this, std::bit_cas
 	playerHealthText.setFillColor(sf::Color::White);
 	playerHealthText.setOutlineThickness(4.f);
 	playerHealthText.setOutlineColor(sf::Color::Black);
-	playerHealthText.setPosition(10, 10); // set to top left corner, slightly off center so it wont be right in the corner
+	playerHealthText.setPosition(10, 30); // set to top left corner, slightly off center so it wont be right in the corner
+//	showText = false; // initialize show text as false since we dont want text on title screen
 }
 
 sf::Vector2f Player::getPosition() const
@@ -180,14 +181,21 @@ void Player::handleInput(float dt)
 	{
 		direction = -1;
 		movement.x -= speed;
+		sprite.SetAnimation<"Walk">();
 	}
 	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::J))
 	{
 		direction = 1;
 		movement.x += speed;
+		sprite.SetAnimation<"Walk">();
 	}
 	sprite.move(movement * speed * dt);
 	playerHealthText.move(movement*speed*dt);
+
+	if (!InputManager::IsKeyHeld(sf::Keyboard::Scancode::F) && !InputManager::IsKeyHeld(sf::Keyboard::Scancode::J) && !isAttacking)
+	{
+		sprite.SetAnimation<"Idle">();
+	}
 
 	sprite.setScale(PLAYER_SCALE * direction, PLAYER_SCALE);
 	
@@ -250,3 +258,8 @@ bool Player::canAttack() const
 	// TODO: true for now (player can always attack). can be updated to have a cooldown on player attacks
 	return true;
 }
+
+/*void Player::setShowText(bool showText)
+{
+	this->showText = showText;
+}*/
