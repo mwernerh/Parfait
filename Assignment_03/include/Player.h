@@ -124,6 +124,7 @@ class Player
 		float speed = 100.f; // speed of the player
 
 		int health = 10; // player health 
+		sf::Text playerHealthText;
 
 		// damage management
 		float damageCooldown = 0.5f; // seconds

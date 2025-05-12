@@ -113,6 +113,21 @@ class Player
 		 * @param delta time
 		 **/
 		void Attack(float dt);
+		
+		// WIP: (?) maybe implement if text should be shown or not because health text should not be shown on title screen`
+		/**
+		 * @brief get whether player health text should be shown
+		 * 
+		 * @returns true - player health text should be shown, false -> player health text shouldn't be shown
+		 **/
+		 //bool getShowText();
+
+		 /**
+		  * @brief set if text should be shown
+		  * 
+		  * @param bool true - set health text to be shown, false if health text shouldn't be shown
+		  **/
+		  //void setShowText(bool showText);
 
 	private:
 		// player texture and sprite
@@ -129,21 +144,29 @@ class Player
 		float timeSinceLastFrame = 0.0f; // time since last frame of the animation
 	
 		float speed = 100.f; // speed of the player
-		
+
 		// health management
 		int health = 100;
+
+		// hit-sound effect management
+		int numHits;
+		
+		// text for player health
+		sf::Text playerHealthText;
+		//bool showText();
 
 		// damage management
 		float damageCooldown = 0.5f; // seconds
 		float timeSinceLastHit = 0.0f;
 		float poisonTimer = 0.0f; // starts at 0
+		int counter; // for keeping track of hurt animation when poisoned
 
 		// attack management
 		float attackTimer = 0.3f; 
 		bool isAttacking = false;
 
 		/**
-		 * @brief allows player to take damage (currently does nothing will be updated in future version of project)
+		 * @brief allows player to take damage based on type of enemy attacking the player
 		 * 
 		 * @param player instance
 		 * @param what's attacking the player

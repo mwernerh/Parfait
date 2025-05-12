@@ -2,12 +2,12 @@ EMPTY =
 SPACE = $(EMPTY) $(EMPTY)
 
 # Get SFML directory, ensuring it is formatted correctly in case its directory contains spaces
-SFML_DIR ?=
+SFML_DIR ?= C:\Users\straw\OneDrive\Desktop\SFML\SFML-2.6.0-windows-gcc-13.1.0-mingw-32-bit\SFML-2.6.0
 S_DIR = $(subst $(SPACE),\$(SPACE),$(SFML_DIR))
 
 # -------[[ BUILD CONFIGURATION ]]-------
 # Assume that we are building the debug build
-DEBUG ?= TRUE
+DEBUG ?= FALSE
 
 # -------[[ USED DIRECTORIES ]]-------
 
@@ -24,7 +24,8 @@ LIB_DIRS = -L$(S_DIR)/lib
 ifeq ($(DEBUG), TRUE)
 	LIBS = -lsfml-graphics-s-d -lsfml-window-s-d -lsfml-audio-s-d -lsfml-system-s-d -lGL -lX11 -lXi -lXrandr -lXcursor -lrt -lm -ludev -lopenal -lvorbis -logg -lvorbisenc -lFLAC -lvorbisfile -lfreetype
 else
-	LIBS = -lsfml-graphics-s -lsfml-window-s -lsfml-audio-s -lsfml-system-s
+	LIBS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system \
+	-lopengl32 -lwinmm -lgdi32 -lfreetype -lws2_32 -lflac -lvorbisenc -lvorbisfile
 endif
 
 # Add any additional source files to here
@@ -49,7 +50,7 @@ OBJS = $(SRCS:src/%.cpp=obj/%.o)
 ifeq ($(DEBUG), TRUE)
 	CXX_FLAGS_BASE = -Wall -Wextra -Werror -g -Og -std=c++20 -DDEBUG
 else
-	CXX_FLAGS_BASE = -Wall -Wextra -Werror -O3 -std=c++20 -DNDEBUG
+	CXX_FLAGS_BASE = -Wall -Wextra -O3 -std=c++20 -DNDEBUG
 endif
 
 CXX_FLAGS = $(CXX_FLAGS_BASE) \
