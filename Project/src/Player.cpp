@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "Framework_Managers/InputManager.h"
 #include "SFML/System/Vector2.hpp"
+#include "Framework_Managers/FontManager.h"
+#include "Framework_Managers/AudioManager.h"
 
 /** 
  *
@@ -19,7 +21,7 @@ Player::Player() : at(AttackHitbox::AttackerType::PLAYER), co(this, std::bit_cas
 	sprite.setOrigin(0,0); // set player origin to 0,0 for ease of flipping & flipping hitboxes
 	sprite.setScale(PLAYER_SCALE, PLAYER_SCALE); // set player scale so its an appropriate size for the screen
 	this->speed = 20; // set player speed
-	
+
 	// set up collider hitbox
 	co.setSize({32.f * PLAYER_SCALE, 20.f * PLAYER_SCALE}); // set-up size same as the player
 	co.setOrigin(0,0);
@@ -31,6 +33,15 @@ Player::Player() : at(AttackHitbox::AttackerType::PLAYER), co(this, std::bit_cas
 	at.setOrigin(0,0);
 	at.setPosition(516 + ((PLAYER_WIDTH - OFFSET) * PLAYER_SCALE), 550);
 	at.setFillColor(sf::Color(255, 0, 0, 127)); // RED WITH 50% OPACITY
+
+	// set up text for displaying player health
+	playerHealthText.setFont(FontManager::GetFont("Akira Expanded Demo"));
+	playerHealthText.setString("Health: " + std::to_string(health));
+	playerHealthText.setCharacterSize(18); // smaller than score text
+	playerHealthText.setFillColor(sf::Color::White);
+	playerHealthText.setOutlineThickness(4.f);
+	playerHealthText.setOutlineColor(sf::Color::Black);
+	playerHealthText.setPosition(10, 10); // set to top left corner, slightly off center so it wont be right in the corner
 }
 
 sf::Vector2f Player::getPosition() const
@@ -68,6 +79,15 @@ void Player::Attack(float dt)
 	{
 			at.isActive = true; // set attack hitbox to active
 			isAttacking = true;
+			sprite.SetAnimation<"Attack">();
+			// play a swiping sound every hit and an angry cat sound every 4th hit
+			numHits++;
+			AudioManager::StartCameraSound("p_atk1");
+			if (numHits == 4)
+			{
+				AudioManager::StartCameraSound("p_ct_atk");
+				numHits = 0;
+			}
 	}
 
 	if(attackTimer < 0.3f) {
@@ -76,13 +96,16 @@ void Player::Attack(float dt)
 
 	// Only decrease attack time if player is trying to attack
 	if(isAttacking)
+	{
 		attackTimer -= dt; // decrease attack timer using delta time
+	}
 
 	// once attack timer reaches zero, disable attack hitbox and reset attack timer
 	if (attackTimer <= 0.0f)
 	{
 		isAttacking = false;
 		attackTimer = 0.3f;
+		sprite.SetAnimation<"Idle">();
 	}
 }
 
@@ -94,6 +117,9 @@ void Player::draw(sf::RenderWindow& window)
 
 	// draw player
 	window.draw(sprite);
+
+	// draw player health text
+	window.draw(playerHealthText);
 }
 
 // direction player is facing; used to flip sprite if needed
@@ -104,8 +130,6 @@ void Player::update(float dt)
 	handleInput(dt);
 	timeSinceLastHit += dt;
 	
-	// TODO: add so that every 4 frames cat sprite changes to be hurt
-
 	// if player is poisoned by rat, health needs to slowly decrement per frame until poison timer is zero
 	if (poisonTimer > 0)
 	{
@@ -114,7 +138,24 @@ void Player::update(float dt)
 
 		// decrement health by 1
 		health--;
+
+		// increment counter
+		counter++;
+		
+		// for cat being poisoned, cat hurt animation every 4 frames
+		if (counter == 4)
+		{
+			// set sprite to hurt
+			//sprite.SetAnimation<"Hurt">();
+			//sprite.Update();
+
+			// reset counter
+			counter = 0;
+		}
 	}
+
+	// update health printed on the screen
+	playerHealthText.setString("Health: " + std::to_string(health));
 
 	// make sure collider hitbox stays on sprite
 	if (direction == -1)
@@ -127,7 +168,6 @@ void Player::update(float dt)
 		at.setPosition({sprite.getPosition().x - (PLAYER_WIDTH * PLAYER_SCALE), sprite.getPosition().y});
 	else
 		at.setPosition({sprite.getPosition().x + ((PLAYER_WIDTH - OFFSET) * PLAYER_SCALE), sprite.getPosition().y});
-	
 	Attack(dt);
 }
 
@@ -135,22 +175,23 @@ void Player::handleInput(float dt)
 {
 	sf::Vector2f movement(0,0);
 
-	// movement A->left, D->right
-	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::A))
+	// movement F->left, J->right for accessibility notches
+	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::F))
 	{
 		direction = -1;
 		movement.x -= speed;
 	}
-	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::D))
+	if (InputManager::IsKeyHeld(sf::Keyboard::Scancode::J))
 	{
 		direction = 1;
 		movement.x += speed;
 	}
 	sprite.move(movement * speed * dt);
+	playerHealthText.move(movement*speed*dt);
 
-	sprite.setScale(PLAYER_SCALE * direction, PLAYER_SCALE); 
+	sprite.setScale(PLAYER_SCALE * direction, PLAYER_SCALE);
+	
 	sprite.Update();
-	//handleAnimation(direction, dt, NUM_FRAMES_WALK);
 }
 
 int Player::getHealth() const
@@ -169,7 +210,7 @@ void Player::takeDamage(Player* const instance, const AttackHitbox* const attack
 	if (instance->canTakeDamage())
 	{
 		// handle changing sprite animations when player is hurt
-		//sprite.setAnimation<"Hurt">;
+		//sprite.SetAnimation<"Hurt">();
 		//sprite.Update();
 	
 		// player health decreases based on enemy (attacker) type
