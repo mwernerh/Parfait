@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 class TitleScreenGameState : public InstancedGameState<TitleScreenGameState, TitleScreenActorOperator> {
+    sf::Sprite background;
     sf::Text startText;
     
     public:
