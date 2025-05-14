@@ -5,7 +5,6 @@
 
 NPC::NPC()
 {	
-	std::cout << "constructor" << std::endl;
 // set up sprite
 	sprite.SetAnimation<"Idle">();
 	sprite.setPosition(200, 530); // bottom left corner (MAY NEED TO BE UPDATED);
@@ -44,7 +43,6 @@ NPC::NPC()
 
 void NPC::draw(sf::RenderWindow& window)
 {
-	std::cout << "Draw" << std::endl;
 	sprite.Update();
 	window.draw(sprite);
 	window.draw(npcNametagText);

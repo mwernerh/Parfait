@@ -10,6 +10,10 @@ const Player& PlayerManager::GetPlayer(void) {
     return GetPlayerInternal();
 }
 
+void PlayerManager::SetPlayerHealth(const s32 health) {
+    GetPlayerInternal().setHealth(health);
+}
+
 void PlayerManager::Initialize(void) {
     GetPlayerInternal().setShowText(true);
 }

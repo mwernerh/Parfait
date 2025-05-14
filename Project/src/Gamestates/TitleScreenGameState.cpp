@@ -2,6 +2,7 @@
 #include "Framework_Managers/GamestateManager.h"
 #include "Framework_Managers/InputManager.h"
 #include "Framework_Managers/FontManager.h"
+#include "Framework_Managers/SaveManager.h"
 #include "Gamestate_Operators/Instanced/TitleScreenActorOperator.h"
 #include "Gamestates/PlayMainGameState.h"
 
@@ -19,8 +20,10 @@ TitleScreenGameState::TitleScreenGameState() : InstancedGameState(), startText("
 }
 
 void TitleScreenGameState::Update() {
-    if(InputManager::IsKeyPressed(sf::Keyboard::Scancode::Space))
+    if(InputManager::IsKeyPressed(sf::Keyboard::Scancode::Space)) {
         GamestateManager::SwitchToStaticGamestate<PlayMainGameState>();
+        SaveManager::ReadFromFile();
+    }
 }
 
 void TitleScreenGameState::Draw(sf::RenderWindow& window) {

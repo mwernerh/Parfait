@@ -5,10 +5,12 @@
 #include <SFML/Window/Keyboard.hpp>
 #include "Framework_Managers/AnimationManager.h"
 #include "Framework_Managers/GamestateManager.h"
+#include "Framework_Managers/SaveManager.h"
 #include "Framework_Managers/TextureManager.h"
 #include "Framework_Managers/InputManager.h"
 #include "Framework_Managers/AudioManager.h"
 #include "Framework_Managers/FontManager.h"
+#include "Gamestate_Operators/Static/LevelManager.h"
 #include "Gamestates/TitleScreenGameState.h"
 
 void HandleWindowEvents(sf::WindowBase& window) {
@@ -16,6 +18,8 @@ void HandleWindowEvents(sf::WindowBase& window) {
     while(window.pollEvent(event)) {
         switch(event.type) {
             case sf::Event::Closed:
+                if(LevelManager::GetCurrentLevel() != 3)
+                    SaveManager::WriteToFile(SaveManager::SaveType::AUTO);
                 window.close();
                 break;
             case sf::Event::KeyPressed:

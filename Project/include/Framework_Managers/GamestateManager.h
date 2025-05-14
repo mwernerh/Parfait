@@ -32,7 +32,10 @@ class GamestateManager {
         #endif
 
         if(instanceDestructor != nullptr) {
+            // Clang automatically generates the destructor -- g++ does not
+            #ifndef __clang__
             instanceDestructor();
+            #endif
             instanceDestructor = nullptr;
         }
 
@@ -52,7 +55,10 @@ class GamestateManager {
         #endif
 
         if(instanceDestructor != nullptr) {
+            // Clang automatically generates the destructor -- g++ does not
+            #ifndef __clang__
             instanceDestructor();
+            #endif
             instanceDestructor = nullptr;
         }
 
