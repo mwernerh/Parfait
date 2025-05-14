@@ -101,3 +101,6 @@ https://wp.me/peb5Y-IO
 
 ## Some Inspiration for NPC
 https://github.com/DevelopersGuild/SFML-RPG/blob/master/src/NPC.cpp
+
+## JSON Parsing
+https://dev.to/uponthesky/c-making-a-simple-json-parser-from-scratch-250g

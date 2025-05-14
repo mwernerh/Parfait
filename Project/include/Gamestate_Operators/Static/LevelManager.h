@@ -24,6 +24,8 @@ class LevelManager : public StaticInitializableGamestateOperator<LevelManager>, 
     static void Initialize(void);
     static void Update(void);
 
+    static const u32& GetCurrentLevel(void); 
+    static void SetCurrentLevel(const u32 level);
 
     static void Draw(sf::RenderWindow& window);
 };

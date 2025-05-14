@@ -27,5 +27,5 @@ void TitleScreenActorOperator::Draw(sf::RenderWindow& window) {
     window.setView(camera);
 
     player.draw(window);
-    // npc.draw(window);
+    npc.draw(window);
 }

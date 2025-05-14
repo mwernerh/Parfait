@@ -9,6 +9,7 @@ class PlayerManager : public StaticInitializableGamestateOperator<PlayerManager>
     
     public:
     static const Player& GetPlayer(void);
+    static void SetPlayerHealth(const s32 health);
     static void Initialize(void);
     static void Update(void);
     static void Draw(sf::RenderWindow& window);

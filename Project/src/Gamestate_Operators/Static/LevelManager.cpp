@@ -1,5 +1,6 @@
 #include "Gamestate_Operators/Static/LevelManager.h"
 #include "Framework_Managers/GamestateManager.h"
+#include "Framework_Managers/SaveManager.h"
 #include "Gamestate_Operators/Static/MapManager.h"
 #include "Gamestate_Operators/Static/ScoreManager.h"
 #include "EnemyManager.h"
@@ -30,6 +31,9 @@ void LevelManager::Update() {
     [[unlikely]]
     if(ScoreManager::GetScore() >= (1000 * currentLevel) + 1000) {
         currentLevel += 1;
+
+        if(currentLevel != 3)
+            SaveManager::WriteToFile(SaveManager::SaveType::AUTO);
 
         // Reached last level and passed it
         if(currentLevel == 3) {
@@ -88,8 +92,7 @@ void LevelManager::setupEnemies() {
             //enemyManagers.push_back(std::move(manager2));
             enemyManagers.push_back(std::move(manager2));
             //manager2->update();
-            
-
+            break;
         default: // setup dog 1 and 2 enemy as default
             manager4->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
             enemyManagers.push_back(std::move(manager4));
@@ -105,6 +108,16 @@ void LevelManager::setupEnemies() {
             break;
     };
 
+}
+
+const u32& LevelManager::GetCurrentLevel(void) {
+    return currentLevel;
+}
+
+void LevelManager::SetCurrentLevel(const u32 level) {
+    currentLevel = level;
+    MapManager::ChangeMap(static_cast<MapManager::Maps>(currentLevel % static_cast<decltype(currentLevel)>(MapManager::Maps::NUM_MAPS)));
+    setupEnemies();
 }
 
 //LEVEL MANAGER DRAW

@@ -28,14 +28,14 @@ else
 endif
 
 # Add any additional source files to here
-SRCS =	Framework_Managers/AudioManager.cpp Framework_Managers/FontManager.cpp Framework_Managers/InputManager.cpp Framework_Managers/TextureManager.cpp \
+SRCS =	Framework_Managers/AudioManager.cpp Framework_Managers/FontManager.cpp Framework_Managers/InputManager.cpp Framework_Managers/TextureManager.cpp Framework_Managers/SaveManager.cpp \
 		Gamestate_Operators/Static/HitboxManager.cpp Gamestate_Operators/Static/LevelManager.cpp Gamestate_Operators/Static/MapManager.cpp Gamestate_Operators/Static/PlayerManager.cpp Gamestate_Operators/Static/ScoreManager.cpp \
 		Gamestate_Operators/Instanced/PauseMenuOperator.cpp \
 		Gamestate_Operators/Instanced/TitleScreenActorOperator.cpp \
 		Gamestate_Operators/Instanced/EndingCutsceneActorOperator.cpp \
 		Enemy.cpp EnemyManager.cpp  \
 		BirdEnemy.cpp DogEnemy.cpp RatEnemy.cpp \
-		Player.cpp \
+		Player.cpp NPC.cpp \
 		Gamestates/PlayMainGameState.cpp Gamestates/PauseGameState.cpp Gamestates/TitleScreenGameState.cpp Gamestates/EndingCutsceneGameState.cpp \
 		Entry.cpp
 

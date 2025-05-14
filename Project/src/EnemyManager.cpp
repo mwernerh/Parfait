@@ -85,7 +85,6 @@ void EnemyManager::drawHealthBar(sf::RenderWindow& window){
         healthText.setCharacterSize(24); // Set the character size
         healthText.setFillColor(sf::Color::White); // Set the text color
         healthText.setString(std::to_string(enemy.getHealth())); // Set the text to the enemy's health
-        std::to_string(enemy.getMaxHealth());
 
         sf::FloatRect bounds = enemy.getGlobalBounds(); // Get the bounds of the enemy
         healthText.setPosition(bounds.left + bounds.width / 2 - healthText.getGlobalBounds().width / 2, bounds.top - 20); // Set the position of the text above the enemy
