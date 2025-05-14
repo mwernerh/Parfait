@@ -98,7 +98,6 @@ int Enemy::takeDamage(Enemy* instance, [[maybe_unused]] const AttackHitbox* atta
     instance-> setHealth(instance-> getHealth()- 1); // Decrease health by 1
     if (instance-> getHealth() <= 0){ // If health is less than or equal to 0
         instance-> killEnemy();
-        AudioManager::StartCameraSound("e_dg_atk"); //MAYBE CHANGE SOUND FOR EACH ENEMY TYPE
     }
     return instance -> getHealth(); // Return remaining health
 }

@@ -10,7 +10,7 @@ void PauseGameState::Update(void) {
     // Check if player wants to unpause
     if(InputManager::IsKeyPressed(sf::Keyboard::Scan::Space))
         GamestateManager::SwitchToStaticGamestate<PlayMainGameState>();
-    else if(InputManager::IsKeyPressed(sf::Keyboard::Scan::Backspace)) {
+    else if(InputManager::IsKeyPressed(sf::Keyboard::Scan::K)) {
         SaveManager::WriteToFile(SaveManager::SaveType::MANUAL);
     }
 }

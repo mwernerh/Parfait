@@ -14,7 +14,8 @@
  : Enemy(x, y, texture, speed, health, maxHealth, 100, 6.f, 6.f) {
     attackHitbox.SetAttackerType(AttackHitbox::AttackerType::RAT);
 
-    sprite.setPosition(x, y);
+    scoreValue = 50;
+    sprite.setPosition(x, y+150.0f);
     sprite.setScale(scaleX, scaleY); // NOTE: this doesnt let the sprites show up properly in the game
     sprite.SetAnimation<"Walk">();
 

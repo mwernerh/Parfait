@@ -73,27 +73,27 @@ void LevelManager::setupEnemies() {
         case 0: //set up rat for level 1
             enemyManagers.birdManager = std::make_unique<EnemyManager<BirdEnemy>>();
             enemyManagers.ratManager = std::make_unique<EnemyManager<RatEnemy>>();
-            enemyManagers.ratManager->configure("./assets/txr/animals/rt1/Walk.png", 5, 3, 2.0f, .20f);
-            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
+            enemyManagers.ratManager->configure("./assets/txr/animals/rt1/Walk.png", 2, 3, 2.0f, .20f);
+            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 2, 1, 2.0f, .40f);
             break;
 
         case 1: //set up bird nd dog 2 for level 2
             enemyManagers.birdManager = std::make_unique<EnemyManager<BirdEnemy>>();
             enemyManagers.dogManager2 = std::make_unique<EnemyManager<DogEnemy2>>();
-            enemyManagers.dogManager2->configure("./assets/txr/animals/dg2/Walk.png", 5, 1, 2.0f, .40f);
-            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
+            enemyManagers.dogManager2->configure("./assets/txr/animals/dg2/Walk.png", 2, 1, 2.0f, .40f);
+            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 2, 1, 2.0f, .40f);
             break;
         case 2: //set up dog 1 and bird for level 3
             enemyManagers.birdManager = std::make_unique<EnemyManager<BirdEnemy>>();
             enemyManagers.dogManager1 = std::make_unique<EnemyManager<DogEnemy>>();
-            enemyManagers.dogManager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
-            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
+            enemyManagers.dogManager1->configure("./assets/txr/animals/dg1/Walk.png", 2, 3, 2.0f, .20f);
+            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 2, 1, 2.0f, .40f);
             break;
         default: // setup dog 1 and 2 enemy as default
             enemyManagers.dogManager1 = std::make_unique<EnemyManager<DogEnemy>>();
             enemyManagers.dogManager2 = std::make_unique<EnemyManager<DogEnemy2>>();
-            enemyManagers.dogManager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
-            enemyManagers.dogManager2->configure("./assets/txr/animals/dg2/Walk.png", 5, 1, 2.0f, .40f);
+            enemyManagers.dogManager1->configure("./assets/txr/animals/dg1/Walk.png", 2, 3, 2.0f, .20f);
+            enemyManagers.dogManager2->configure("./assets/txr/animals/dg2/Walk.png", 2, 1, 2.0f, .40f);
             break;
     };
 

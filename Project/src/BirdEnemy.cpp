@@ -67,6 +67,8 @@ void BirdEnemy::update() {
         case State::MovingDown:
             if (sprite.getPosition().y < playerPos.y) {
                 sprite.move(0.f, moveSpeed * dt); // Move down
+                attackHitbox.move(0.f, moveSpeed * dt);
+                colliderHitbox.move(0.f, moveSpeed * dt);
             } else {
                 currentState = State::Attacking; // Change to attacking state
                 timer.restart();
@@ -84,6 +86,8 @@ void BirdEnemy::update() {
         case State::MovingUp:
             if (sprite.getPosition().y > originalPosition.y) {
                 sprite.move(0.f, -moveSpeed * dt); // Move up
+                attackHitbox.move(0.f, -moveSpeed * dt);
+                colliderHitbox.move(0.f, -moveSpeed * dt);
             } else {
                 currentState = State::Idle; // Change to idle state
                 timer.restart();
@@ -109,5 +113,6 @@ void BirdEnemy::BirdAttack() {
 }
 
 void BirdEnemy::draw(sf::RenderWindow& window) {
+    Enemy::draw(window);
     window.draw(sprite);
 }
