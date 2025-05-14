@@ -20,5 +20,19 @@
         // Handle animation
         void handleAnimation(int direction, float dt) override;
 
+    private:
+        enum class State{
+            Idle,
+            MovingDown,
+            Attacking,
+            MovingUp
+        };
+        sf::Vector2f originalPosition;
+        State currentState;
+        sf::Clock timer; // Timer for state transitions
+        float moveSpeed;
+        float attackDuration;
+        
+
 
  };

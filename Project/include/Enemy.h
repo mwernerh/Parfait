@@ -27,7 +27,7 @@ class Enemy{
 
         //CHECKING DISTANCE
         //check if the enemy is too far away from the player
-        void validDistance(sf::Vector2f playerPos);
+        bool validDistance(sf::Vector2f playerPos);
 
         //get the global bounds of the enemies sprite
         sf::FloatRect getGlobalBounds();
@@ -68,7 +68,7 @@ class Enemy{
 
 
 
-    private:
+    protected:
         std::shared_ptr<sf::Texture> texture; //Texture var for the enemy
         sf::Sprite sprite; // Sprite var for the enemy
 

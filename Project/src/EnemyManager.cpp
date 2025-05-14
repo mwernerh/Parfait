@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include "Framework_Managers/InputManager.h"
+#include "Framework_Managers/FontManager.h"
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include <iostream>
 #include <cmath>
@@ -13,7 +14,7 @@
 //ENEMYMANAGER is a class that manages the enemies in the game.
 
 //ENEMYMANAGER CONSTRUCTOR
-EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(3), baseHealth(1), enemySpeed(.1f){
+EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(2), baseHealth(1), enemySpeed(.1f){
 }
 
 //ENEMY MANAGER UPDATE
@@ -73,6 +74,22 @@ void EnemyManager::draw(sf::RenderWindow& window){
         }
     } catch (const std::exception& e){
         std::cerr << "Error drawing enemy: " << e.what() << std::endl;
+    }
+}
+
+void EnemyManager::drawHealthBar(sf::RenderWindow& window){
+    for (auto& enemy : enemies){ // Iterate through the list of enemies
+        enemy.draw(window); // Draw each enemy
+        sf::Text healthText;
+        healthText.setFont(FontManager::GetFont("Akira Expanded Demo")); // Set the font for the text
+        healthText.setCharacterSize(24); // Set the character size
+        healthText.setFillColor(sf::Color::White); // Set the text color
+        healthText.setString(std::to_string(enemy.getHealth())); // Set the text to the enemy's health
+        std::to_string(enemy.getMaxHealth());
+
+        sf::FloatRect bounds = enemy.getGlobalBounds(); // Get the bounds of the enemy
+        healthText.setPosition(bounds.left + bounds.width / 2 - healthText.getGlobalBounds().width / 2, bounds.top - 20); // Set the position of the text above the enemy
+        window.draw(healthText); // Draw the health text
     }
 }
 

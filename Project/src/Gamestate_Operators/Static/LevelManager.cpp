@@ -54,6 +54,7 @@ void LevelManager::setupEnemies() {
     // Create new enemy managers for the current level
     auto manager1 = std::make_unique<EnemyManager>();
     auto manager2 = std::make_unique<EnemyManager>();
+    auto manager3 = std::make_unique<EnemyManager>();
 
     switch (currentLevel){
         case 0:
@@ -61,6 +62,11 @@ void LevelManager::setupEnemies() {
             manager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f); //dog 1 texture
             enemyManagers.push_back(std::move(manager1));
             break;
+
+        case 1:
+            manager3->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f); //dog 3 texture
+            enemyManagers.push_back(std::move(manager3));
+
         default: // setup dog 1 and 2 enemy as default
             manager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
             enemyManagers.push_back(std::move(manager1));
@@ -78,5 +84,6 @@ void LevelManager::Draw(sf::RenderWindow& window){
     std::vector<std::unique_ptr<EnemyManager>>& enemyManagers = GetEnemyManagers(); // Get the enemy managers
     for (auto& EnemyManager: enemyManagers){ // Loop through each enemy manager
         EnemyManager->draw(window); // Draw the enemie to the window
+        EnemyManager->drawHealthBar(window); // Draw the health bar for each enemy
     }
 }
