@@ -20,4 +20,10 @@
         // Handle animation
         void handleAnimation(int direction, float dt) override;
 
+        void DogAttack();
+
+    protected:
+        float attackTimer = 0.0f;
+        bool hasAttacked = false;
+
  };

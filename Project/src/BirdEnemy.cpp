@@ -11,8 +11,12 @@
 
  BirdEnemy::BirdEnemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth)
  : Enemy(x, y, texture, speed, health, maxHealth, 50, 6.f, 6.f),
-    originalPosition (x,y), currentState(State::Idle), moveSpeed(speed), attackDuration(1.0f){
+    originalPosition (x, y - 500), currentState(State::Idle), moveSpeed(speed), attackDuration(1.0f) {
         timer.restart();
+        sprite.move(0.f, -500.f);
+        attackHitbox.move(0.f, -500.f);
+        colliderHitbox.move(0.f, -500.f);
+        
     }
 
 
@@ -28,6 +32,8 @@ void BirdEnemy::update() {
     }
     
     float dt = timer.getElapsedTime().asSeconds();
+    std::cout<< "BirdEnemy position: " << sprite.getPosition().x << ", " << sprite.getPosition().y << std::endl;
+
 
     switch (currentState) {
         case State::Idle:
@@ -49,6 +55,7 @@ void BirdEnemy::update() {
         case State::Attacking:
             if (dt > attackDuration) {
                 currentState = State::MovingUp; // Change to moving up state
+                attackTimer = attackDuration;
                 timer.restart();
             }
             break;
@@ -69,6 +76,19 @@ void BirdEnemy::handleAnimation(int direction, float dt) {
     // Custom animation logic for BirdEnemy
     Enemy::handleAnimation(direction, dt);
     // use a timer to animate the sprite to move down (timer will be higher than 0) and have its vertical position change to the cat's position, have it stay there for a few seconds, then move back up. 
+}
 
+// Attack logic
+void BirdEnemy::BirdAttack() {
+    HitboxManager::RegisterAttackHitbox(&attackHitbox);
+    attackHitbox.isActive = false;
 
+    if (attackTimer < 0.5f && !hasAttacked) {
+        attackHitbox.isActive = true;
+        hasAttacked = true;
+
+    }
+    if (attackTimer <= 0.0f) {
+        hasAttacked = false;
+    }
 }

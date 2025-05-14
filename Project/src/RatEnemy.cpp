@@ -23,3 +23,18 @@ void RatEnemy::handleAnimation(int direction, float dt) {
     // Custom animation logic for RatEnemy
     Enemy::handleAnimation(direction, dt);
 }
+
+// Attack function
+void RatEnemy::RatAttack() {
+    HitboxManager::RegisterAttackHitbox(&attackHitbox);
+    attackHitbox.isActive = false;
+
+    if (attackTimer < 0.5f && !hasAttacked) {
+        attackHitbox.isActive = true;
+        hasAttacked = true;
+
+    }
+    if (attackTimer <= 0.0f) {
+        hasAttacked = false;
+    }
+}

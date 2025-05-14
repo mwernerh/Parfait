@@ -3,6 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "EnemyManager.h"
+#include "DogEnemy.h"
+#include "RatEnemy.h"
+#include "BirdEnemy.h"
 #include "Literals.h"
 
 /**
@@ -10,12 +13,11 @@
  * 
  */
 
-class EnemyManager;
 
 class LevelManager : public StaticInitializableGamestateOperator<LevelManager>, public StaticUpdatableGamestateOperator<LevelManager>, public StaticDrawableGamestateOperator<LevelManager> {
     static u32 currentLevel;
 
-    static std::vector<std::unique_ptr<EnemyManager>>& GetEnemyManagers(void);
+    static std::vector<std::unique_ptr<EnemyManager<Enemy>>>& GetEnemyManagers(void);
     static void setupEnemies();
 
     public:

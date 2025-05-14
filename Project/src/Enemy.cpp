@@ -161,7 +161,3 @@ void Enemy::killEnemy(){
 bool Enemy::isAlive() const{ 
     return alive;
 }
-/*
-void Enemy::attackPlayer(Player& player){
- //will call attckHitbox fucntion
-} */
