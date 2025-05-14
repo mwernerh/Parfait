@@ -9,6 +9,8 @@
  * @author Isveydi Moreno
  * 
  */
+
+ //note: derived classes of EnemyManager base class and create derived classes of the different types of enemies
 class EnemyManager{
     public:
         // Constructor
@@ -31,7 +33,7 @@ class EnemyManager{
         // Member Variables
         int baseHealth; // Base health of each enemy
         float enemySpeed; // Speed of the enemies
-        std::vector<Enemy> enemies; // List of enemies
+        std::vector<EnemyType> enemies; // List of enemies
         std::shared_ptr<sf::Texture> enemyTexture; // Texture for the enemies
         
 

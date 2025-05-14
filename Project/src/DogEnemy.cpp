@@ -18,3 +18,17 @@ void DogEnemy::handleAnimation(int direction, float dt) {
     // Custom animation logic for DogEnemy
     Enemy::handleAnimation(direction, dt);
 }
+
+void DogEnemy::DogAttack() {
+    HitboxManager::RegisterAttackHitbox(&attackHitbox);
+    attackHitbox.isActive = false;
+
+    if (attackTimer < 0.5f && !hasAttacked) {
+        attackHitbox.isActive = true;
+        hasAttacked = true;
+
+    }
+    if (attackTimer <= 0.0f) {
+        hasAttacked = false;
+    }
+}

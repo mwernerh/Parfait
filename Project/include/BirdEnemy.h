@@ -20,6 +20,8 @@
         // Handle animation
         void handleAnimation(int direction, float dt) override;
 
+        void BirdAttack();
+
     private:
         enum class State{
             Idle,
@@ -31,7 +33,10 @@
         State currentState;
         sf::Clock timer; // Timer for state transitions
         float moveSpeed;
+        //AttackHitbox attackHitbox;
         float attackDuration;
+        float attackTimer = 0.0f;
+        bool hasAttacked = false;
         
 
 
