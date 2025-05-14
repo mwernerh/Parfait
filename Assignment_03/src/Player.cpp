@@ -37,6 +37,15 @@ Player::Player(std::string texturePath, float speed) : at(), co(this, std::bit_c
 	at.setOrigin(0,0);
 	at.setPosition(516 + ((PLAYER_WIDTH - OFFSET) * PLAYER_SCALE), 550);
 	at.setFillColor(sf::Color(255, 0, 0, 127)); // RED WITH 50% OPACITY
+	
+	// set up text for displaying player health
+	playerHealthText.setString("Health: ");
+	playerHealthText.setCharacterSize(18); // smaller than score text
+	playerHealthText.setFillColor(sf::Color::White);
+	playerHealthText.setOutlineThickness(4.f);
+	playerHealthText.setOutlineColor(sf::Color::Black);
+	playerHealthText.setPosition(0,0);
+
 }
 
 sf::Vector2f Player::getPosition()
@@ -93,6 +102,9 @@ void Player::draw(sf::RenderWindow& window)
 
 	// draw player
 	window.draw(sprite);
+
+	// draw player health text
+	window.draw(playerHealthText);
 }
 
 // direction player is facing; used to flip sprite if needed

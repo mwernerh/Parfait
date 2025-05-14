@@ -104,3 +104,12 @@ https://github.com/DevelopersGuild/SFML-RPG/blob/master/src/NPC.cpp
 
 ## JSON Parsing
 https://dev.to/uponthesky/c-making-a-simple-json-parser-from-scratch-250g
+
+## Inspiration for NPC play sound [LOGIC, NOT CODE]
+https://forum.gamemaker.io/index.php?threads/how-do-i-make-sounds-on-collisions-play-once.8457/
+
+## Text to speech for controls audio
+https://ttsmaker.com/
+
+## Cat meowing sound effect attatched to end of TTS
+https://pixabay.com/sound-effects/search/meow/
