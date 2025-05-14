@@ -120,7 +120,8 @@ void Player::draw(sf::RenderWindow& window)
 	window.draw(sprite);
 
 	// draw player health text
-	window.draw(playerHealthText);
+	if (showText)
+		window.draw(playerHealthText);
 }
 
 // direction player is facing; used to flip sprite if needed
@@ -259,7 +260,7 @@ bool Player::canAttack() const
 	return true;
 }
 
-/*void Player::setShowText(bool showText)
+void Player::setShowText(bool showText)
 {
 	this->showText = showText;
-}*/
+}

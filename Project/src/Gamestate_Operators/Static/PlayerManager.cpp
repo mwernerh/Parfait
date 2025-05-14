@@ -11,7 +11,7 @@ const Player& PlayerManager::GetPlayer(void) {
 }
 
 void PlayerManager::Initialize(void) {
-    GetPlayerInternal();
+    GetPlayerInternal().setShowText(true);
 }
 
 void PlayerManager::Update(void) {
