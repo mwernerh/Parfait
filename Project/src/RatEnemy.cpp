@@ -40,7 +40,6 @@ void RatEnemy::update() {
 
 // Attack function
 void RatEnemy::RatAttack() {
-    HitboxManager::RegisterAttackHitbox(&attackHitbox);
     attackHitbox.isActive = false;
 
     if (attackTimer < 0.5f && !hasAttacked) {

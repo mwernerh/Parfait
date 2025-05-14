@@ -100,6 +100,7 @@ void AudioManager::Initialize(void) {
         aM.music[i].setAttenuation(0.0f);
         aM.music[i].setRelativeToListener(true);
         aM.music[i].setLoop(true);
+        aM.music[i].setVolume(15);
     }
 
     // Set LRU queue to expected values

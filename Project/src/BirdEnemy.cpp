@@ -99,7 +99,6 @@ void BirdEnemy::update() {
 
 // Attack logic
 void BirdEnemy::BirdAttack() {
-    HitboxManager::RegisterAttackHitbox(&attackHitbox);
     attackHitbox.isActive = false;
 
     if (attackTimer < 0.5f && !hasAttacked) {

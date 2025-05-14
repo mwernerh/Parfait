@@ -33,7 +33,6 @@ void DogEnemy::update() {
 }
 
 void DogEnemy::DogAttack() {
-    HitboxManager::RegisterAttackHitbox(&attackHitbox);
     attackHitbox.isActive = false;
 
     if (attackTimer < 0.5f && !hasAttacked) {

@@ -3,6 +3,7 @@
 #include "Framework_Managers/AudioManager.h"
 #include "Framework_Managers/InputManager.h"
 #include "Player.h"
+#include "SFML/System/Vector2.hpp"
 #include <cmath>
 #include <cstring>
 #include <limits>
@@ -28,31 +29,33 @@ void HitboxManager::RegisterColliderHitbox(ColliderHitbox* const co) {
 void HitboxManager::Update(void) {
     enemyApproachSFXTimer -= InputManager::GetDeltaTime();
 
+    f32 closestEnemyDistance = std::numeric_limits<f32>::infinity();
+    const AttackHitbox* closestEnemyAttackHitbox = nullptr;
+
     for(u32 i = 0; i < numEnemyAtHitboxes; i++) {
         if(enemyAtHitboxes[i]->isActive && enemyAtHitboxes[i]->getGlobalBounds().intersects(PlayerManager::GetPlayer().getColliderHitbox().getGlobalBounds()))
             PlayerManager::GetPlayer().takeDamage(const_cast<Player*>(&PlayerManager::GetPlayer()), enemyAtHitboxes[i]);
+
+        sf::Vector2f distVec = PlayerManager::GetPlayer().getPosition() - enemyAtHitboxes[i]->getPosition();
+        
+
+        const f32 distToPlayer = std::sqrt(std::pow(distVec.x, 2.0f) + std::pow(distVec.y, 2.0f));
+
+        if(closestEnemyDistance > distToPlayer) {
+            closestEnemyDistance = distToPlayer;
+            closestEnemyAttackHitbox = enemyAtHitboxes[i];
+        }
     }
-
-
-    f32 closestEnemyDistance = std::numeric_limits<f32>::infinity();
-    const ColliderHitbox* closestEnemyCollider = nullptr;
     
     for(u32 i = 0; i < numEnemyCoHitboxes; i++) {
         // Check if player is attacking and whether their attack hitbox overlaps with the registered enemy collider hitboxes
         if(PlayerManager::GetPlayer().getAttackHitbox().isActive && enemyCoHitboxes[i]->getGlobalBounds().intersects(PlayerManager::GetPlayer().getAttackHitbox().getGlobalBounds())) {
 		    enemyCoHitboxes[i]->RunHitFunction(&PlayerManager::GetPlayer().getAttackHitbox());
         }
-
-        const f32 distToPlayer = std::abs(PlayerManager::GetPlayer().getPosition().x - enemyCoHitboxes[i]->getPosition().x);
-
-        if(closestEnemyDistance > distToPlayer) {
-            closestEnemyDistance = distToPlayer;
-            closestEnemyCollider = enemyCoHitboxes[i];
-        }
     }
 
     // Check if the enemy is a certain distance from the player and alert them
-    if(enemyApproachSFXTimer < 0.0f && closestEnemyCollider && closestEnemyDistance <= 800.0f) {
+    if(enemyApproachSFXTimer < 0.0f && closestEnemyAttackHitbox && closestEnemyDistance <= 800.0f) {
         f32 pitch = 1.0f;
         if(closestEnemyDistance > 700.0f)
             pitch = 1.2f;
@@ -61,7 +64,23 @@ void HitboxManager::Update(void) {
         else
             pitch = 1.6f;
 
-        AudioManager::StartPositionalSound("e_approach", {closestEnemyCollider->getGlobalBounds().left, closestEnemyCollider->getGlobalBounds().top, 0.0f}, pitch);
+        std::cout << "Approach SFX!\n";
+
+        switch(closestEnemyAttackHitbox->GetAttackerType()) {
+            case AttackHitbox::AttackerType::DOG_BLACK:
+            case AttackHitbox::AttackerType::DOG_YELLOW:
+                AudioManager::StartPositionalSound("a_e_dg", {closestEnemyAttackHitbox->getGlobalBounds().left, closestEnemyAttackHitbox->getGlobalBounds().top, 0.0f}, pitch);
+                break;
+            case AttackHitbox::AttackerType::BIRD:
+                AudioManager::StartPositionalSound("a_e_bd", {closestEnemyAttackHitbox->getGlobalBounds().left, closestEnemyAttackHitbox->getGlobalBounds().top, 0.0f}, pitch);
+                break;
+            case AttackHitbox::AttackerType::RAT:
+                AudioManager::StartPositionalSound("a_e_rt", {closestEnemyAttackHitbox->getGlobalBounds().left, closestEnemyAttackHitbox->getGlobalBounds().top, 0.0f}, pitch);
+                break;
+            default:
+                break;
+        }
+
         enemyApproachSFXTimer = ENEMY_APPROACH_SFX_TIMER_MAX;
     }
 

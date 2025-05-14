@@ -1,4 +1,5 @@
 #include "Gamestate_Operators/Static/LevelManager.h"
+#include "Framework_Managers/AudioManager.h"
 #include "Framework_Managers/GamestateManager.h"
 #include "Framework_Managers/SaveManager.h"
 #include "Gamestate_Operators/Static/MapManager.h"
@@ -40,6 +41,8 @@ void LevelManager::Update() {
 
         if(currentLevel != 3)
             SaveManager::WriteToFile(SaveManager::SaveType::AUTO);
+
+        AudioManager::StartCameraSound("a_lv_up");
 
         // Reached last level and passed it
         if(currentLevel == 3) {

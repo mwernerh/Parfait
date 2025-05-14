@@ -33,6 +33,7 @@ Enemy::Enemy([[maybe_unused]] float x, [[maybe_unused]] float y, [[maybe_unused]
 void Enemy::update(){
     colliderHitbox.SetParent(this);
     HitboxManager::RegisterColliderHitbox(&colliderHitbox);
+    HitboxManager::RegisterAttackHitbox(&attackHitbox);
 }
 
 void Enemy::UpdateSprite(sf::Sprite* sprite) {

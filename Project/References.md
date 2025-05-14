@@ -46,6 +46,18 @@ https://freesound.org/people/tim.kahn/sounds/34356/
 ## Rat Squeaking (Enemy Attack)
 https://freesound.org/people/toefur/sounds/288941/
 
+## Level Up Alert
+https://freesound.org/people/dersuperanton/sounds/433701/
+
+## Dog Growling (Enemy Approaching)
+https://freesound.org/people/coldvet/sounds/404920/
+
+## Rat Chittering (Enemy Approaching)
+https://freesound.org/people/taure/sounds/387068/
+
+## Bird Chittering (Enemy Approaching)
+https://freesound.org/people/YleArkisto/sounds/339307/
+
 ## Font 
 https://www.dafont.com/outspace-fighter.font
 https://www.dafont.com/akira-expanded.font
