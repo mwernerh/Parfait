@@ -121,7 +121,7 @@ class Player
 		  * 
 		  * @param bool true - set health text to be shown, false if health text shouldn't be shown
 		  **/
-//		  void setShowText(bool showText);
+		  void setShowText(bool showText);
 
 	private:
 		// player texture and sprite
@@ -147,7 +147,8 @@ class Player
 		
 		// text for player health
 		sf::Text playerHealthText;
-//		bool showText = false;
+		bool showText = false;
+
 
 		// damage management
 		float damageCooldown = 0.5f; // seconds
