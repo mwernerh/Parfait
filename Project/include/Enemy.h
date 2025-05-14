@@ -44,10 +44,6 @@ class Enemy{
         //take damage (returns remaining health)
         static int takeDamage(Enemy* instance, const AttackHitbox* attacker);
 
-        //ANIMATION
-        //handle animation
-        virtual void handleAnimation(int direction, float dt);
-
         //ALIVE AND KILL
         //kill the enemy
         void killEnemy();
@@ -66,12 +62,11 @@ class Enemy{
         //set parent of the collider hitbox
         void setColliderParent(void* parent) { colliderHitbox.SetParent(parent); }
 
+        void UpdateSprite(sf::Sprite* sprite);
+
 
 
     protected:
-        std::shared_ptr<sf::Texture> texture; //Texture var for the enemy
-        sf::Sprite sprite; // Sprite var for the enemy
-
         //Enemy attributes
         float speed;
         int health;

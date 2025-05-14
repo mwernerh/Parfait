@@ -10,20 +10,20 @@
  * 
  */
 
- class RatEnemy : public Enemy {
+ class DogEnemy2 : public Enemy {
     public:
         // Constructor
-        RatEnemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth);
+        DogEnemy2(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth);
 
         // Update the enemy
         void update() override;
+        
+        void DogAttack2();
 
         void draw(sf::RenderWindow& window) override;
-
-        void RatAttack();
 
     protected:
         float attackTimer = 0.0f;
         bool hasAttacked = false;
-        AnimatedRatSprite1 sprite;
+        AnimatedDogSprite2 sprite;
  };

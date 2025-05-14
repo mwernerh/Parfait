@@ -2,7 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "AnimatedSprite.h"
 #include "Enemy.h"
+#include "SFML/Graphics/RenderWindow.hpp"
 
 /**
  * @author Isveydi Moreno
@@ -17,8 +19,7 @@
         // Update the enemy
         void update() override;
 
-        // Handle animation
-        void handleAnimation(int direction, float dt) override;
+        void draw(sf::RenderWindow& window) override;
 
         void BirdAttack();
 
@@ -37,7 +38,6 @@
         float attackDuration;
         float attackTimer = 0.0f;
         bool hasAttacked = false;
-        
-
+        AnimatedBirdSprite1 sprite;
 
  };

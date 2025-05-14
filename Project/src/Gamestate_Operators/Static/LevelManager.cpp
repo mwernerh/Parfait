@@ -5,6 +5,7 @@
 #include "Gamestate_Operators/Static/ScoreManager.h"
 #include "EnemyManager.h"
 #include "DogEnemy.h"
+#include "DogEnemy2.h"
 #include "RatEnemy.h"
 #include "BirdEnemy.h"
 #include "Gamestates/EndingCutsceneGameState.h"
@@ -16,17 +17,22 @@
 
 u32 LevelManager::currentLevel = 0; // Current level of the game
 
-std::vector<std::unique_ptr<EnemyManager<Enemy>>>& LevelManager::GetEnemyManagers(void) { // Get the enemy managers
-    static std::vector<std::unique_ptr<EnemyManager<Enemy>>> em; // Create a static vector of unique pointers to EnemyManager
+LevelManager::EnemyManagers& LevelManager::GetEnemyManagers(void) { // Get the enemy managers
+    static EnemyManagers em; // Create a static vector of unique pointers to EnemyManager
     return em;
 }
 
 [[gnu::hot]]
 void LevelManager::Update() {
-    std::vector<std::unique_ptr<EnemyManager<Enemy>>>& enemyManagers = GetEnemyManagers();
-    for (auto& enemyManager : enemyManagers) {
-        enemyManager->update();
-    }
+    EnemyManagers& enemyManagers = GetEnemyManagers();
+    if(enemyManagers.birdManager)
+        enemyManagers.birdManager->update();
+    if(enemyManagers.ratManager)
+        enemyManagers.ratManager->update();
+    if(enemyManagers.dogManager1)
+        enemyManagers.dogManager1->update();
+    if(enemyManagers.dogManager2)
+        enemyManagers.dogManager2->update();
 
     [[unlikely]]
     if(ScoreManager::GetScore() >= (1000 * currentLevel) + 1000) {
@@ -54,57 +60,40 @@ void LevelManager::Initialize() {
 // LEVEL MANAGER SETUP ENEMIES
 // This function sets up the enemies for the current level
 void LevelManager::setupEnemies() {
-    std::vector<std::unique_ptr<EnemyManager<Enemy>>>& enemyManagers = GetEnemyManagers();
+    EnemyManagers& enemyManagers = GetEnemyManagers();
 
-    enemyManagers.clear(); // Clear the existing enemy managers
-
-    // Create new enemy managers for the current level
-    std::unique_ptr<EnemyManager<Enemy>> manager1 = std::bit_cast<std::unique_ptr<EnemyManager<Enemy>>>(std::make_unique<EnemyManager<RatEnemy>>());
-    std::unique_ptr<EnemyManager<Enemy>> manager2 = std::bit_cast<std::unique_ptr<EnemyManager<Enemy>>>(std::make_unique<EnemyManager<BirdEnemy>>());
-    std::unique_ptr<EnemyManager<Enemy>> manager3 = std::bit_cast<std::unique_ptr<EnemyManager<Enemy>>>(std::make_unique<EnemyManager<DogEnemy>>());
-    std::unique_ptr<EnemyManager<Enemy>> manager4 = std::bit_cast<std::unique_ptr<EnemyManager<Enemy>>>(std::make_unique<EnemyManager<DogEnemy>>());
+    // Clear the existing enemy managers
+    enemyManagers.birdManager.reset();
+    enemyManagers.dogManager1.reset();
+    enemyManagers.dogManager2.reset();
+    enemyManagers.ratManager.reset();
 
 
     switch (currentLevel){
         case 0: //set up rat for level 1
-            manager1->configure("./assets/txr/animals/rt1/Walk.png", 5, 3, 2.0f, .20f);
-            enemyManagers.push_back(std::move(manager1));
-            //manager1->update();
-            manager2->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
-            enemyManagers.push_back(std::move(manager2));
-            //manager2->update();
+            enemyManagers.birdManager = std::make_unique<EnemyManager<BirdEnemy>>();
+            enemyManagers.ratManager = std::make_unique<EnemyManager<RatEnemy>>();
+            enemyManagers.ratManager->configure("./assets/txr/animals/rt1/Walk.png", 5, 3, 2.0f, .20f);
+            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
             break;
 
         case 1: //set up bird nd dog 2 for level 2
-            manager3->configure("./assets/txr/animals/dg2/Walk.png", 5, 1, 2.0f, .40f);
-            enemyManagers.push_back(std::move(manager3));
-            //manager3->update();
-            manager2->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
-            enemyManagers.push_back(std::move(manager2));
-            //manager2->update();
-            
-
+            enemyManagers.birdManager = std::make_unique<EnemyManager<BirdEnemy>>();
+            enemyManagers.dogManager2 = std::make_unique<EnemyManager<DogEnemy2>>();
+            enemyManagers.dogManager2->configure("./assets/txr/animals/dg2/Walk.png", 5, 1, 2.0f, .40f);
+            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
+            break;
         case 2: //set up dog 1 and bird for level 3
-            manager4->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
-            enemyManagers.push_back(std::move(manager4));
-            //manager4->update();
-            manager2->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
-            //enemyManagers.push_back(std::move(manager2));
-            enemyManagers.push_back(std::move(manager2));
-            //manager2->update();
+            enemyManagers.birdManager = std::make_unique<EnemyManager<BirdEnemy>>();
+            enemyManagers.dogManager1 = std::make_unique<EnemyManager<DogEnemy>>();
+            enemyManagers.dogManager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
+            enemyManagers.birdManager->configure("./assets/txr/animals/bd1/Walk.png", 5, 1, 2.0f, .40f);
             break;
         default: // setup dog 1 and 2 enemy as default
-            manager4->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
-            enemyManagers.push_back(std::move(manager4));
-            //enemyManagers.push_back(std::move(manager4));
-            //manager4->update();
-
-            manager3->configure("./assets/txr/animals/dg2/Walk.png", 5, 1, 2.0f, .40f);
-            enemyManagers.push_back(std::move(manager3));
-            //enemyManagers.push_back(std::move(manager3));
-            //manager3->update();
-            
-
+            enemyManagers.dogManager1 = std::make_unique<EnemyManager<DogEnemy>>();
+            enemyManagers.dogManager2 = std::make_unique<EnemyManager<DogEnemy2>>();
+            enemyManagers.dogManager1->configure("./assets/txr/animals/dg1/Walk.png", 5, 3, 2.0f, .20f);
+            enemyManagers.dogManager2->configure("./assets/txr/animals/dg2/Walk.png", 5, 1, 2.0f, .40f);
             break;
     };
 
@@ -123,9 +112,25 @@ void LevelManager::SetCurrentLevel(const u32 level) {
 //LEVEL MANAGER DRAW
 // This function draws the enemies to the window
 void LevelManager::Draw(sf::RenderWindow& window){
-    std::vector<std::unique_ptr<EnemyManager<Enemy>>>& enemyManagers = GetEnemyManagers(); // Get the enemy managers
-    for (auto& EnemyManager: enemyManagers){ // Loop through each enemy manager
-        EnemyManager->draw(window); // Draw the enemie to the window
-        EnemyManager->drawHealthBar(window); // Draw the health bar for each enemy
+    EnemyManagers& enemyManagers = GetEnemyManagers(); // Get the enemy managers
+
+    if(enemyManagers.birdManager) {
+        enemyManagers.birdManager->draw(window);
+        enemyManagers.birdManager->drawHealthBar(window);
+    }
+
+    if(enemyManagers.ratManager) {
+        enemyManagers.ratManager->draw(window);
+        enemyManagers.ratManager->drawHealthBar(window);
+    }
+
+    if(enemyManagers.dogManager1) {
+        enemyManagers.dogManager1->draw(window);
+        enemyManagers.dogManager1->drawHealthBar(window);
+    }
+
+    if(enemyManagers.dogManager2) {
+        enemyManagers.dogManager2->draw(window);
+        enemyManagers.dogManager2->drawHealthBar(window);
     }
 }

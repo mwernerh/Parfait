@@ -1,4 +1,8 @@
 #include "EnemyManager.h"
+#include "DogEnemy.h"
+#include "DogEnemy2.h"
+#include "RatEnemy.h"
+#include "BirdEnemy.h"
 #include "Framework_Managers/InputManager.h"
 #include "Framework_Managers/FontManager.h"
 #include "Gamestate_Operators/Static/PlayerManager.h"
@@ -14,12 +18,14 @@
 //ENEMYMANAGER is a class that manages the enemies in the game.
 
 //ENEMYMANAGER CONSTRUCTOR
-EnemyManager::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(2), baseHealth(1), enemySpeed(.1f){
+template<class DerivedEnemy>
+EnemyManager<DerivedEnemy>::EnemyManager():spawnTimer(0.f), spawnCooldown(2.f), maxEnemies(2), baseHealth(1), enemySpeed(.1f){
 }
 
 //ENEMY MANAGER UPDATE
 //Updates enemy based on the player position
-void EnemyManager::update(){
+template<class DerivedEnemy>
+void EnemyManager<DerivedEnemy>::update(){
     const sf::Vector2f& playerPos = PlayerManager::GetPlayer().getPosition(); // Get the player's position
     const f32 dt = InputManager::GetDeltaTime();
 
@@ -48,7 +54,8 @@ void EnemyManager::update(){
 
 //ENEMY MANAGER SPAWN ENEMIES
 // This function spawns enemies at a random side based on the player's position
-void EnemyManager::spawnEnemy(const sf::Vector2f& playerPos){
+template<class DerivedEnemy>
+void EnemyManager<DerivedEnemy>::spawnEnemy(const sf::Vector2f& playerPos){
     float buffer = 200.f;
     sf::Vector2f spawnPos;
     
@@ -62,12 +69,18 @@ void EnemyManager::spawnEnemy(const sf::Vector2f& playerPos){
             break;
     }
 
-    enemies.emplace_back(spawnPos.x, spawnPos.y - 16 * 6, enemyTexture, enemySpeed, baseHealth, baseHealth, 100, 6.f, 6.f); // Create a new enemy at the spawn position
+    if constexpr(std::is_same_v<DerivedEnemy, Enemy>) {
+        enemies.emplace_back(spawnPos.x, spawnPos.y - 16 * 6, enemyTexture, enemySpeed, baseHealth, baseHealth, 100, 6.f, 6.f); // Create a new enemy at the spawn position
+    }
+    else {
+        enemies.emplace_back(spawnPos.x, spawnPos.y - 16 * 6, enemyTexture, enemySpeed, baseHealth, baseHealth); // Create a new enemy at the spawn position
+    }
 }
 
 //ENEMY MANAGER DRAW
 //updates graphics and animation of the enemy in the game
-void EnemyManager::draw(sf::RenderWindow& window){
+template<class DerivedEnemy>
+void EnemyManager<DerivedEnemy>::draw(sf::RenderWindow& window){
     try{
         for (auto& enemy : enemies){ // Iterate through the list of enemies
             enemy.draw(window); // Draw each enemy
@@ -77,7 +90,8 @@ void EnemyManager::draw(sf::RenderWindow& window){
     }
 }
 
-void EnemyManager::drawHealthBar(sf::RenderWindow& window){
+template<class DerivedEnemy>
+void EnemyManager<DerivedEnemy>::drawHealthBar(sf::RenderWindow& window){
     for (auto& enemy : enemies){ // Iterate through the list of enemies
         enemy.draw(window); // Draw each enemy
         sf::Text healthText;
@@ -94,19 +108,18 @@ void EnemyManager::drawHealthBar(sf::RenderWindow& window){
 
 //ENEMY MANAGER CONFIGURE
 // This function configures the enemy manager with the specified parameters
-void EnemyManager::configure(const std::string& texturePath, int maxEnemies, int health, float cooldown, float speed) { 
+template<class DerivedEnemy>
+void EnemyManager<DerivedEnemy>::configure([[maybe_unused]] const std::string& texturePath, int maxEnemies, int health, float cooldown, float speed) { 
     this->maxEnemies = maxEnemies; // Maximum number of enemies
     this->spawnCooldown = cooldown; // Time between enemy spawns
     this->baseHealth = health; // Base health of each enemy
     this->enemySpeed = speed; // Speed of each enemy
     this->enemies.reserve(maxEnemies);
     this->enemies.clear();
-
-    enemyTexture = std::make_shared<sf::Texture>(); // Create a shared pointer to the texture
-    if (!enemyTexture->loadFromFile(texturePath)){ // Load the texture from the specified file
-        std::cerr << "Failed to load enemy texture: " << texturePath << std::endl;
-    }
-    else{
-        std::cout << "Enemy texture loaded successfully: " << texturePath << std::endl;
-    }
 }
+
+template class EnemyManager<RatEnemy>;
+template class EnemyManager<BirdEnemy>;
+template class EnemyManager<DogEnemy>;
+template class EnemyManager<DogEnemy2>;
+template class EnemyManager<Enemy>;

@@ -4,6 +4,7 @@
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "EnemyManager.h"
 #include "DogEnemy.h"
+#include "DogEnemy2.h"
 #include "RatEnemy.h"
 #include "BirdEnemy.h"
 #include "Literals.h"
@@ -17,7 +18,14 @@
 class LevelManager : public StaticInitializableGamestateOperator<LevelManager>, public StaticUpdatableGamestateOperator<LevelManager>, public StaticDrawableGamestateOperator<LevelManager> {
     static u32 currentLevel;
 
-    static std::vector<std::unique_ptr<EnemyManager<Enemy>>>& GetEnemyManagers(void);
+    struct EnemyManagers {
+        std::unique_ptr<EnemyManager<RatEnemy>> ratManager;
+        std::unique_ptr<EnemyManager<BirdEnemy>> birdManager;
+        std::unique_ptr<EnemyManager<DogEnemy>> dogManager1;
+        std::unique_ptr<EnemyManager<DogEnemy2>> dogManager2;
+    };
+
+    static EnemyManagers& GetEnemyManagers(void);
     static void setupEnemies();
 
     public:

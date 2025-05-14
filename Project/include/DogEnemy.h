@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "AnimatedSprite.h"
 #include "Enemy.h"
 
 /**
@@ -16,14 +17,13 @@
 
         // Update the enemy
         void update() override;
-
-        // Handle animation
-        void handleAnimation(int direction, float dt) override;
-
+        
         void DogAttack();
+
+        void draw(sf::RenderWindow& window) override;
 
     protected:
         float attackTimer = 0.0f;
         bool hasAttacked = false;
-
+        AnimatedDogSprite1 sprite;
  };

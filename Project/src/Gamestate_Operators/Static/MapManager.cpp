@@ -1,5 +1,6 @@
 #include "Gamestate_Operators/Static/MapManager.h"
 #include "Framework_Managers/AudioManager.h"
+#include "Gamestate_Operators/Static/LevelManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <iostream>
@@ -23,7 +24,8 @@ void MapManager::Draw(sf::RenderWindow& window) {
     constexpr f32 backgroundSlowdownFraction = 1.0f/2.5f;
 
     // Place sprite at player position, then draw it
-    for(u32 i = 0; i < ParallaxBackground::NUM_PARALLAX_LAYERS; i++) {
+    u32 numLayers = LevelManager::GetCurrentLevel() == static_cast<u32>(MapManager::Maps::PLAINS) ? 4 : ParallaxBackground::NUM_PARALLAX_LAYERS;
+    for(u32 i = 0; i < numLayers; i++) {
         bg.s_layers[i].setPosition(cameraPos);
 
 

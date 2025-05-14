@@ -34,7 +34,7 @@ SRCS =	Framework_Managers/AudioManager.cpp Framework_Managers/FontManager.cpp Fr
 		Gamestate_Operators/Instanced/TitleScreenActorOperator.cpp \
 		Gamestate_Operators/Instanced/EndingCutsceneActorOperator.cpp \
 		Enemy.cpp EnemyManager.cpp  \
-		BirdEnemy.cpp DogEnemy.cpp RatEnemy.cpp \
+		BirdEnemy.cpp DogEnemy.cpp DogEnemy2.cpp RatEnemy.cpp \
 		Player.cpp NPC.cpp \
 		Gamestates/PlayMainGameState.cpp Gamestates/PauseGameState.cpp Gamestates/TitleScreenGameState.cpp Gamestates/EndingCutsceneGameState.cpp \
 		Entry.cpp

@@ -3,6 +3,7 @@
 #include <memory>
 #include <cmath>
 #include "Gamestate_Operators/Static/PlayerManager.h"
+#include "SFML/Graphics/RenderWindow.hpp"
 
 /**
  * @author Isveydi Moreno
@@ -12,10 +13,27 @@
  BirdEnemy::BirdEnemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth)
  : Enemy(x, y, texture, speed, health, maxHealth, 50, 6.f, 6.f),
     originalPosition (x, y - 500), currentState(State::Idle), moveSpeed(speed), attackDuration(1.0f) {
-        timer.restart();
-        sprite.move(0.f, -500.f);
-        attackHitbox.move(0.f, -500.f);
-        colliderHitbox.move(0.f, -500.f);
+    attackHitbox.SetAttackerType(AttackHitbox::AttackerType::BIRD);
+    sprite.setPosition(x, y);
+    sprite.setScale(scaleX, scaleY); // NOTE: this doesnt let the sprites show up properly in the game
+    sprite.SetAnimation<"Walk">();
+
+    colliderHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the collider hitbox
+    colliderHitbox.setSize(sf::Vector2f(sprite.getGlobalBounds().width, sprite.getGlobalBounds().height)); // Set the size of the collider hitbox
+
+    colliderHitbox.setFillColor(sf::Color(0, 255, 0, 127)); // Set the color of the collider hitbox to green with 50% opacity
+
+    attackHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the attack hitbox
+    attackHitbox.setSize(sf::Vector2f(10, 10));
+    attackHitbox.setOrigin(- sprite.getGlobalBounds().width, - sprite.getGlobalBounds().height /2);
+    attackHitbox.setFillColor(sf::Color(255, 0, 0, 127));
+
+    timer.restart();
+    sprite.move(0.f, -500.f);
+    attackHitbox.move(0.f, -500.f);
+    colliderHitbox.move(0.f, -500.f);
+
+    attackHitbox.SetAttackerType(AttackHitbox::AttackerType::BIRD);
         
     }
 
@@ -23,6 +41,10 @@
 // Update the enemy
 void BirdEnemy::update() {
     Enemy::update();
+
+    sprite.Update();
+    UpdateSprite(&sprite);
+
     sf::Vector2f playerPos = PlayerManager::GetPlayer().getPosition();
 
     //Check if the player is within a certain distance
@@ -32,7 +54,6 @@ void BirdEnemy::update() {
     }
     
     float dt = timer.getElapsedTime().asSeconds();
-    std::cout<< "BirdEnemy position: " << sprite.getPosition().x << ", " << sprite.getPosition().y << std::endl;
 
 
     switch (currentState) {
@@ -72,12 +93,6 @@ void BirdEnemy::update() {
  
 }
 
-void BirdEnemy::handleAnimation(int direction, float dt) {
-    // Custom animation logic for BirdEnemy
-    Enemy::handleAnimation(direction, dt);
-    // use a timer to animate the sprite to move down (timer will be higher than 0) and have its vertical position change to the cat's position, have it stay there for a few seconds, then move back up. 
-}
-
 // Attack logic
 void BirdEnemy::BirdAttack() {
     HitboxManager::RegisterAttackHitbox(&attackHitbox);
@@ -91,4 +106,8 @@ void BirdEnemy::BirdAttack() {
     if (attackTimer <= 0.0f) {
         hasAttacked = false;
     }
+}
+
+void BirdEnemy::draw(sf::RenderWindow& window) {
+    window.draw(sprite);
 }

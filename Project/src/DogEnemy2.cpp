@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
-#include "DogEnemy.h"
+#include "DogEnemy2.h"
 #include <memory>
 #include <cmath>
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 
-DogEnemy::DogEnemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth)
+DogEnemy2::DogEnemy2(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth)
     : Enemy(x, y, texture, speed, health, maxHealth, 100, 6.f, 6.f) {
         attackHitbox.SetAttackerType(AttackHitbox::AttackerType::DOG_BLACK);
 
@@ -25,14 +25,14 @@ DogEnemy::DogEnemy(float x, float y, std::shared_ptr<sf::Texture> texture, float
 }
 
 // Update the enemy
-void DogEnemy::update() {
+void DogEnemy2::update() {
     Enemy::update();
     sprite.Update();
     UpdateSprite(&sprite);
     validDistance(PlayerManager::GetPlayer().getPosition()); // Check if the enemy is too far away from the player
 }
 
-void DogEnemy::DogAttack() {
+void DogEnemy2::DogAttack2() {
     HitboxManager::RegisterAttackHitbox(&attackHitbox);
     attackHitbox.isActive = false;
 
@@ -46,6 +46,6 @@ void DogEnemy::DogAttack() {
     }
 }
 
-void DogEnemy::draw(sf::RenderWindow& window) {
+void DogEnemy2::draw(sf::RenderWindow& window) {
     window.draw(sprite);
 }

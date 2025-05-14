@@ -109,5 +109,5 @@ using AnimatedCatSprite2 = AnimatedSprite<"animals/ct2/", AnimationDescription<7
 using AnimatedDogSprite1 = AnimatedSprite<"animals/dg1/", AnimationDescription<7>("Attack", 4), AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
 using AnimatedDogSprite2 = AnimatedSprite<"animals/dg2/", AnimationDescription<7>("Attack", 4), AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
 
-using AnimatedRatSprite1 = AnimatedSprite<"animals/rt1/", AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
-using AnimatedRatSprite2 = AnimatedSprite<"animals/rt2/", AnimationDescription<6>("Death", 2), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 6)>;
+using AnimatedRatSprite1 = AnimatedSprite<"animals/rt1/", AnimationDescription<6>("Death", 4), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 4)>;
+using AnimatedRatSprite2 = AnimatedSprite<"animals/rt2/", AnimationDescription<6>("Death", 2), AnimationDescription<5>("Hurt", 2), AnimationDescription<5>("Idle", 4), AnimationDescription<5>("Walk", 4)>;
