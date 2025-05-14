@@ -90,13 +90,14 @@ void Enemy::draw(sf::RenderWindow& window){ //renders enemy to the window
 
 //valid distance
 // checks how far nemy is from the player
-void Enemy::validDistance(sf::Vector2f playerPos){
+bool Enemy::validDistance(sf::Vector2f playerPos){
     float distance = std:: abs(playerPos.x - sprite.getPosition().x); // Get distance from player
 
     if (distance > 1000.f) { // If the distance is greater than 1000 // MAYBE CHANGE DISTANCE FOR RAT
         killEnemy(); // Kill the enemy
     }
-}   
+    return true;
+}
 
 //GET GLOBAL BOUNDS
 sf::FloatRect Enemy::getGlobalBounds(){
