@@ -1,9 +1,9 @@
 #include "Gamestate_Operators/Instanced/TitleScreenActorOperator.h"
 #include "Framework_Managers/InputManager.h"
+#include "Framework_Managers/AudioManager.h"
 
 void TitleScreenActorOperator::Update() {
     player.update(InputManager::GetDeltaTime());
-
     // Ensure the player doesn't move the camera
     if(std::abs(player.getPosition().x) < 200.0f) {
         player.setPosition({200.0f, player.getPosition().y});
@@ -13,12 +13,12 @@ void TitleScreenActorOperator::Update() {
     }
 
     // npc.update() // Maybe not necessary
-
-    // TODO: Add this when NPC is implemented
-    /*
     if(player.getGlobalBounds().intersects(npc.getGlobalBounds()))
+    {
         npc.startDialogue();
-    */
+    } else {
+    	npc.setShowDialogue(false);
+    }
 }
 
 void TitleScreenActorOperator::Draw(sf::RenderWindow& window) {
