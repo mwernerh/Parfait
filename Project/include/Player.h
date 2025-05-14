@@ -123,6 +123,14 @@ class Player
 		  **/
 		  void setShowText(bool showText);
 
+		  /**
+		 * @brief allows player to take damage based on type of enemy attacking the player
+		 * 
+		 * @param player instance
+		 * @param what's attacking the player
+		 **/
+		static void takeDamage(Player* const instance, const AttackHitbox* const attacker);
+
 	private:
 		// player texture and sprite
 		sf::Texture texture;
@@ -159,12 +167,4 @@ class Player
 		// attack management
 		float attackTimer = 0.3f; 
 		bool isAttacking = false;
-
-		/**
-		 * @brief allows player to take damage based on type of enemy attacking the player
-		 * 
-		 * @param player instance
-		 * @param what's attacking the player
-		 **/
-		static void takeDamage(Player* const instance, const AttackHitbox* const attacker);
 };

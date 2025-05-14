@@ -29,10 +29,8 @@ void HitboxManager::Update(void) {
     enemyApproachSFXTimer -= InputManager::GetDeltaTime();
 
     for(u32 i = 0; i < numEnemyAtHitboxes; i++) {
-        /*
-        if(enemyAtHitboxes[i]->isActive && enemyAtHitboxes[i]->getGlobalBounds().intersects(PlayerManager::GetPlayer().GetCoHitbox()->getGlobalBounds()))
-            PlayerManager::GetPlayer().OnHit();
-        */
+        if(enemyAtHitboxes[i]->isActive && enemyAtHitboxes[i]->getGlobalBounds().intersects(PlayerManager::GetPlayer().getColliderHitbox().getGlobalBounds()))
+            PlayerManager::GetPlayer().takeDamage(const_cast<Player*>(&PlayerManager::GetPlayer()), enemyAtHitboxes[i]);
     }
 
 
