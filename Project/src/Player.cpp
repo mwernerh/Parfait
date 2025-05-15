@@ -115,8 +115,8 @@ void Player::Attack(float dt)
 void Player::draw(sf::RenderWindow& window)
 {
 	// draw colliding and attacking hitboxes
-	window.draw(co);
-	window.draw(at);
+	//window.draw(co);
+	//window.draw(at);
 
 	// draw player
 	window.draw(sprite);
