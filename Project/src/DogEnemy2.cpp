@@ -4,6 +4,7 @@
 #include <cmath>
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
+#include "Framework_Managers/AudioManager.h"
 
 DogEnemy2::DogEnemy2(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth)
     : Enemy(x, y, texture, speed, health, maxHealth, 100, 6.f, 6.f) {
@@ -38,6 +39,8 @@ void DogEnemy2::DogAttack2() {
     if (attackTimer < 0.5f && !hasAttacked) {
         attackHitbox.isActive = true;
         hasAttacked = true;
+
+        AudioManager::StartCameraSound("assets/aud/a_e_dg.wav", 0.5f);
 
     }
     if (attackTimer <= 0.0f) {

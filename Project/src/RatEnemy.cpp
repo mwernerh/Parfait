@@ -4,6 +4,7 @@
 #include <cmath>
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
+#include "Framework_Managers/AudioManager.h"
 
 /**
  * @author Isveydi Moreno
@@ -45,6 +46,8 @@ void RatEnemy::RatAttack() {
     if (attackTimer < 0.5f && !hasAttacked) {
         attackHitbox.isActive = true;
         hasAttacked = true;
+
+        AudioManager::StartCameraSound("assets/aud/a_e_rt.wav", 0.5f);
 
     }
     if (attackTimer <= 0.0f) {
