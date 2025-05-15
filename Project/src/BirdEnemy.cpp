@@ -5,6 +5,8 @@
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "Framework_Managers/AudioManager.h"
+#include "Framework_Managers/InputManager.h"
+#include "Framework_Managers/InputManager.h"
 
 /**
  * @author Isveydi Moreno
@@ -82,6 +84,9 @@ void BirdEnemy::update() {
                 attackTimer = attackDuration;
                 timer.restart();
             }
+            if(std::abs(PlayerManager::GetPlayer().getPosition().x - sprite.getPosition().x) <= 500.0f) {
+                BirdAttack();
+             } 
             break;
 
         case State::MovingUp:
@@ -102,14 +107,17 @@ void BirdEnemy::update() {
 void BirdEnemy::BirdAttack() {
     attackHitbox.isActive = false;
 
+    attackTimer -= InputManager::GetDeltaTime();
+
     if (attackTimer < 0.5f && !hasAttacked) {
         attackHitbox.isActive = true;
         hasAttacked = true;
 
-        AudioManager::StartCameraSound("a_e_bd", 0.5f);
+        AudioManager::StartCameraSound("e_bd_atk", 0.5f);
 
     }
     if (attackTimer <= 0.0f) {
+        attackTimer = 1.5f;
         hasAttacked = false;
     }
 }

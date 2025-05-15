@@ -5,6 +5,8 @@
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "Framework_Managers/AudioManager.h"
+#include "Framework_Managers/InputManager.h"
+
 
 DogEnemy::DogEnemy(float x, float y, std::shared_ptr<sf::Texture> texture, float speed, int health, int maxHealth)
     : Enemy(x, y, texture, speed, health, maxHealth, 100, 6.f, 6.f) {
@@ -31,19 +33,26 @@ void DogEnemy::update() {
     sprite.Update();
     UpdateSprite(&sprite);
     validDistance(PlayerManager::GetPlayer().getPosition()); // Check if the enemy is too far away from the player
+
+    if(std::abs(PlayerManager::GetPlayer().getPosition().x - sprite.getPosition().x) <= 500.0f) {
+        DogAttack();
+     } 
 }
 
 void DogEnemy::DogAttack() {
     attackHitbox.isActive = false;
 
+    attackTimer -= InputManager::GetDeltaTime();
+
     if (attackTimer < 0.5f && !hasAttacked) {
         attackHitbox.isActive = true;
         hasAttacked = true;
 
-        AudioManager::StartCameraSound("a_e_dg", 0.5f);
+        AudioManager::StartCameraSound("e_dg_atk", 0.5f);
 
     }
     if (attackTimer <= 0.0f) {
+        attackTimer = 1.5f;
         hasAttacked = false;
     }
 }

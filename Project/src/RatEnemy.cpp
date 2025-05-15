@@ -54,7 +54,7 @@ void RatEnemy::RatAttack() {
         attackHitbox.isActive = true;
         hasAttacked = true;
 
-        AudioManager::StartCameraSound("a_e_rt", 0.5f);
+        AudioManager::StartCameraSound("e_rt_atk", 0.5f);
 
     }
     if (attackTimer <= 0.0f) {
