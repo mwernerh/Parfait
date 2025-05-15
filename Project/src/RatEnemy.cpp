@@ -5,6 +5,7 @@
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "Framework_Managers/AudioManager.h"
+#include "Framework_Managers/InputManager.h"
 
 /**
  * @author Isveydi Moreno
@@ -25,8 +26,8 @@
 
     colliderHitbox.setFillColor(sf::Color(0, 255, 0, 127)); // Set the color of the collider hitbox to green with 50% opacity
 
-    attackHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the attack hitbox
-    attackHitbox.setSize(sf::Vector2f(10, 10));
+    attackHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y - (sprite.getGlobalBounds().height / 2.0f)); // Set the position of the attack hitbox
+    attackHitbox.setSize(sf::Vector2f(100.0f, 100.0f));
     attackHitbox.setOrigin(- sprite.getGlobalBounds().width, - sprite.getGlobalBounds().height /2);
     attackHitbox.setFillColor(sf::Color(255, 0, 0, 127));
 }
@@ -37,24 +38,32 @@ void RatEnemy::update() {
  sprite.Update();
  UpdateSprite(&sprite);
  validDistance(PlayerManager::GetPlayer().getPosition()); // Check if the enemy is too far away from the player
+
+ if(std::abs(PlayerManager::GetPlayer().getPosition().x - sprite.getPosition().x) <= 500.0f) {
+    RatAttack();
+ } 
 }
 
 // Attack function
 void RatEnemy::RatAttack() {
     attackHitbox.isActive = false;
 
+    attackTimer -= InputManager::GetDeltaTime();
+
     if (attackTimer < 0.5f && !hasAttacked) {
         attackHitbox.isActive = true;
         hasAttacked = true;
 
-        AudioManager::StartCameraSound("assets/aud/a_e_rt.wav", 0.5f);
+        AudioManager::StartCameraSound("a_e_rt.wav", 0.5f);
 
     }
     if (attackTimer <= 0.0f) {
+        attackTimer = 1.5f;
         hasAttacked = false;
     }
 }
 
 void RatEnemy::draw(sf::RenderWindow& window) {
+    Enemy::draw(window);
     window.draw(sprite);
 }

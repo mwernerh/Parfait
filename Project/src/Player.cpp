@@ -1,7 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Player.h"
+#include "Framework_Managers/GamestateManager.h"
 #include "Framework_Managers/InputManager.h"
+#include "Gamestates/GameOverGameState.h"
 #include "SFML/System/Vector2.hpp"
 #include "Framework_Managers/FontManager.h"
 #include "Framework_Managers/AudioManager.h"
@@ -135,11 +137,13 @@ void Player::update(float dt)
 	// if player is poisoned by rat, health needs to slowly decrement per frame until poison timer is zero
 	if (poisonTimer > 0)
 	{
+		s32 oldpt = static_cast<s32>(poisonTimer);
 		// decrement poison timer
 		poisonTimer -= dt;
 
 		// decrement health by 1
-		health--;
+		if(static_cast<s32>(poisonTimer) != oldpt)
+			health -= 1;
 
 		// increment counter
 		counter++;
@@ -154,6 +158,12 @@ void Player::update(float dt)
 			// reset counter
 			counter = 0;
 		}
+	}
+
+	if(health <= 0) {
+		GamestateManager::SwitchToInstancedGamestate<GameOverGameState>();
+		AudioManager::ClearAudioQueues();
+		poisonTimer = 0.0f;
 	}
 
 	// update health printed on the screen

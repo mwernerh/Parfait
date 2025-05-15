@@ -23,7 +23,7 @@
         void RatAttack();
 
     protected:
-        float attackTimer = 0.0f;
+        float attackTimer = 1.5f;
         bool hasAttacked = false;
         AnimatedRatSprite1 sprite;
  };

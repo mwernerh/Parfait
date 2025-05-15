@@ -4,7 +4,7 @@
 #include <iostream>
 
 class TextureManager {
-    static constexpr u32 MAX_TEXTURES = 100;
+    static constexpr u32 MAX_TEXTURES = 50;
 
     struct TextureManagerWrapper {
         sf::Texture textures[MAX_TEXTURES];

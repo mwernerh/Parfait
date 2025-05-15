@@ -19,8 +19,8 @@ DogEnemy2::DogEnemy2(float x, float y, std::shared_ptr<sf::Texture> texture, flo
 
         colliderHitbox.setFillColor(sf::Color(0, 255, 0, 127)); // Set the color of the collider hitbox to green with 50% opacity
 
-        attackHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y); // Set the position of the attack hitbox
-        attackHitbox.setSize(sf::Vector2f(10, 10));
+        attackHitbox.setPosition(sprite.getPosition().x, sprite.getPosition().y - (sprite.getGlobalBounds().height / 2.0f)); // Set the position of the attack hitbox
+        attackHitbox.setSize(sf::Vector2f(50.0f, 50.0f));
         attackHitbox.setOrigin(- sprite.getGlobalBounds().width, - sprite.getGlobalBounds().height /2);
         attackHitbox.setFillColor(sf::Color(255, 0, 0, 127));
 }
@@ -40,7 +40,7 @@ void DogEnemy2::DogAttack2() {
         attackHitbox.isActive = true;
         hasAttacked = true;
 
-        AudioManager::StartCameraSound("assets/aud/a_e_dg.wav", 0.5f);
+        AudioManager::StartCameraSound("a_e_dg", 0.5f);
 
     }
     if (attackTimer <= 0.0f) {
