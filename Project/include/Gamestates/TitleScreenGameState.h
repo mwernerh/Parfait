@@ -5,6 +5,7 @@
 
 class TitleScreenGameState : public InstancedGameState<TitleScreenGameState, TitleScreenActorOperator> {
     sf::Sprite background;
+    sf::Text titleText;
     sf::Text startText;
     
     public:

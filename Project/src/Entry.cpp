@@ -35,7 +35,7 @@ void HandleWindowEvents(sf::WindowBase& window) {
 }
 
 int main(void) { 
-    sf::RenderWindow window(sf::VideoMode{1280, 720}, "Team Parfait");
+    sf::RenderWindow window(sf::VideoMode{1280, 720}, "Homesick");
     window.setKeyRepeatEnabled(false);
     sf::View cameraView = window.getView();
     window.setView(cameraView);
