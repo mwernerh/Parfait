@@ -40,7 +40,7 @@ void DogEnemy2::DogAttack2() {
         attackHitbox.isActive = true;
         hasAttacked = true;
 
-        AudioManager::StartCameraSound("a_e_dg", 0.5f);
+        AudioManager::StartCameraSound("e_rt_atk", 0.5f);
 
     }
     if (attackTimer <= 0.0f) {
