@@ -64,8 +64,6 @@ void HitboxManager::Update(void) {
         else
             pitch = 1.6f;
 
-        std::cout << "Approach SFX!\n";
-
         switch(closestEnemyAttackHitbox->GetAttackerType()) {
             case AttackHitbox::AttackerType::DOG_BLACK:
             case AttackHitbox::AttackerType::DOG_YELLOW:
