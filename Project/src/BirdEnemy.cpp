@@ -123,6 +123,5 @@ void BirdEnemy::BirdAttack() {
 }
 
 void BirdEnemy::draw(sf::RenderWindow& window) {
-    Enemy::draw(window);
     window.draw(sprite);
 }

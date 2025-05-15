@@ -64,6 +64,5 @@ void RatEnemy::RatAttack() {
 }
 
 void RatEnemy::draw(sf::RenderWindow& window) {
-    Enemy::draw(window);
     window.draw(sprite);
 }
