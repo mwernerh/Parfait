@@ -1,6 +1,11 @@
 #include "Framework_Managers/FontManager.h"
 #include <iostream>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
 namespace {
     /**
      * @brief Hashes the relative path to the desired font file

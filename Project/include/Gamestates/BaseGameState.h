@@ -5,25 +5,45 @@
 #include <type_traits>
 #include <cstring>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
+/**
+ * @brief Inherited from for compile-time checking 
+ * 
+ */
 struct BaseGameState {
     using InitializeGamestateOperatorFunctionSignature = void (*)(void);
     using UpdateGamestateOperatorFunctionSignature = void (*)(void);
     using DrawGamestateOperatorFunctionSignature = void (*)(sf::RenderWindow&);
 };
 
+/**
+ * @brief Inherited from to denote that a class is a gamestate that can be instantiated in stack space and destroyed
+ * 
+ * @tparam Derived - The class being defined as an instanced gamestate
+ * @tparam INSTANCED_GAME_STATE_OPERATORS - The operators that should be associated with Derived
+ */
 template <class Derived, class... INSTANCED_GAME_STATE_OPERATORS>
 requires (sizeof...(INSTANCED_GAME_STATE_OPERATORS) > 0 && (std::is_base_of_v<BaseInstancedGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> && ...))
 class InstancedGameState : public BaseGameState {
     // Workaround to make gamestate take stack space instead of heap space
     static inline constexpr u32 STACK_SIZE = (sizeof(INSTANCED_GAME_STATE_OPERATORS) + ...);
     uintptr_t initializationStackOffset;
-    uintptr_t operatorStackPtrs[sizeof...(INSTANCED_GAME_STATE_OPERATORS)] = {};
+    uintptr_t operatorStackPtrs[sizeof...(INSTANCED_GAME_STATE_OPERATORS)] = {};    // Pointers to each of the operators within the stack space
 
-    u8 OperatorStackSpace[STACK_SIZE];
+    u8 OperatorStackSpace[STACK_SIZE];  // Stack space allocated for the operators
 
     InstancedUpdatableGamestateOperator* updatables[(std::is_base_of_v<InstancedUpdatableGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> + ...) == 0 ? 1 : (std::is_base_of_v<InstancedUpdatableGamestateOperator, INSTANCED_GAME_STATE_OPERATORS> + ...)];
     u32 updatablesIdx;
 
+    /**
+     * @brief Constructs an instanced gamestate operator in the provided stack space, increments the offset into the stack for future constructor calls for the other operators
+     * 
+     * @tparam INSTANCED_GAME_STATE_OPERATOR 
+     */
     template<class INSTANCED_GAME_STATE_OPERATOR>
     void PlacementNew(void) {
         BaseInstancedGamestateOperator* op = std::bit_cast<BaseInstancedGamestateOperator*>(new (std::bit_cast<void*>(std::bit_cast<uintptr_t>(&OperatorStackSpace[0]) + initializationStackOffset)) INSTANCED_GAME_STATE_OPERATOR);
@@ -43,6 +63,12 @@ class InstancedGameState : public BaseGameState {
         operatorStackPtrs[emptyIdx] = std::bit_cast<uintptr_t>(op);
     }
 
+    /**
+     * @brief Obtains the index into the array of pointers to the stack space of the operators, for the desired operator type
+     * 
+     * @tparam INSTANCED_GAME_STATE_OPERATOR - The operator whose position in the stack is being searched for
+     * @return u32 
+     */
     template<class INSTANCED_GAME_STATE_OPERATOR>
     requires(((std::is_same_v<INSTANCED_GAME_STATE_OPERATOR, INSTANCED_GAME_STATE_OPERATORS>) || ...))
     u32 GetOperatorStackPtrIdx(void) {
@@ -54,6 +80,12 @@ class InstancedGameState : public BaseGameState {
     }
 
     protected:
+    /**
+     * @brief Obtains a reference to the instance of the desired operator, with its correct offset in the provided stack space
+     * 
+     * @tparam INSTANCED_GAME_STATE_OPERATOR
+     * @return A reference to an instanced gamestate operator
+     */
     template<class INSTANCED_GAME_STATE_OPERATOR>
     requires(((std::is_same_v<INSTANCED_GAME_STATE_OPERATOR, INSTANCED_GAME_STATE_OPERATORS>) || ...))
     INSTANCED_GAME_STATE_OPERATOR& GetInstancedOperator(void) {
@@ -63,6 +95,10 @@ class InstancedGameState : public BaseGameState {
     }
 
     public:
+    /**
+     * @brief Construct a new InstancedGameState and its operators
+     * 
+     */
     InstancedGameState() {
         initializationStackOffset = 0;
         updatablesIdx = 0;
@@ -76,6 +112,10 @@ class InstancedGameState : public BaseGameState {
     virtual void Update(void) = 0;
     virtual void Draw(sf::RenderWindow&) = 0;
 
+    /**
+     * @brief First calls all of the update functions of the operators (in the order in which they were provided) then calls the update function of the gamestate itself
+     * 
+     */
     void __Update(void) {
         // First call the operator updates...
         for(InstancedUpdatableGamestateOperator* updatable : updatables) {
@@ -88,16 +128,27 @@ class InstancedGameState : public BaseGameState {
         static_cast<Derived*>(this)->Update();
     }
 
+    /**
+     * @brief Calls the draw function of the gamestate itself, which should specify the proper draw order of the operators
+     * 
+     */
     void __Draw(sf::RenderWindow& window) {
         // Run the gamestate draw
         static_cast<Derived*>(this)->Draw(window);
     }
 
+    /**
+     * @brief Destroy the InstancedGameState and its associated operators
+     * 
+     */
     virtual ~InstancedGameState() {
         u32 currentOperator = 0;
         ((std::bit_cast<INSTANCED_GAME_STATE_OPERATORS*>(operatorStackPtrs[currentOperator++])->~INSTANCED_GAME_STATE_OPERATORS()),...);
     }
 
+    /**
+     * @brief Gets the space taken up by the operators
+     */
     consteval std::size_t GetSize(void) {
         std::size_t size = 0;
         ((size += sizeof(INSTANCED_GAME_STATE_OPERATORS)),...);
@@ -105,11 +156,22 @@ class InstancedGameState : public BaseGameState {
     }
 };
 
+/**
+ * @brief Inherited from to denote that a class is a static gamestate that will be present throughout program execution
+ * 
+ * @tparam Derived - The class being defined as a static gamestate
+ * @tparam STATIC_GAME_STATE_OPERATORS - The operators that should be associated with Derived
+ */
 template <class Derived, class... STATIC_GAME_STATE_OPERATORS>
 requires (sizeof...(STATIC_GAME_STATE_OPERATORS) > 0 && (std::is_base_of_v<BaseStaticGamestateOperator, STATIC_GAME_STATE_OPERATORS> && ...))
 class StaticGameState : public BaseGameState {
-    static inline bool isInitialized = false;
+    static inline bool isInitialized = false;   // Used to determine which gamestate should be run -- the static one currently stored, or the instanced one currently stored
 
+    /**
+     * @brief Initializes the specified operator, ensuring it is initializable
+     * 
+     * @tparam STATIC_GAME_STATE_OPERATOR 
+     */
     template<class STATIC_GAME_STATE_OPERATOR>
     static void CallOperatorInitialize(void) {
         if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticInitializableGamestateOperator<STATIC_GAME_STATE_OPERATOR>>) {
@@ -120,6 +182,11 @@ class StaticGameState : public BaseGameState {
         }
     }
 
+    /**
+     * @brief Updates the specified operator, ensuring it is updatable
+     * 
+     * @tparam STATIC_GAME_STATE_OPERATOR 
+     */
     template<class STATIC_GAME_STATE_OPERATOR>
     static void CallOperatorUpdate(void) {
         if constexpr(std::derived_from<STATIC_GAME_STATE_OPERATOR, StaticUpdatableGamestateOperator<STATIC_GAME_STATE_OPERATOR>>)     
@@ -129,6 +196,10 @@ class StaticGameState : public BaseGameState {
     protected:
 
 
+    /**
+     * @brief Initializes all of the initializable operators, then initializes the static gamestate itself
+     * 
+     */
     static void __Initialize(void) {
 
         if(!isInitialized) {
@@ -141,6 +212,10 @@ class StaticGameState : public BaseGameState {
         }
     }
 
+    /**
+     * @brief Updates all of the initializable operators, then updates the static gamestate itself
+     * 
+     */
     static void __Update(void) {
         // First call update for the individual operators...
         ((CallOperatorUpdate<STATIC_GAME_STATE_OPERATORS>(),...));
@@ -149,6 +224,10 @@ class StaticGameState : public BaseGameState {
         Derived::Update();
     }
 
+    /**
+     * @brief Draws the static gamestate, which should specify the draw order of its operators
+     * 
+     */
     static void __Draw(sf::RenderWindow& window) {
         // Call draw from the gamestate
         Derived::Draw(window);
@@ -156,7 +235,24 @@ class StaticGameState : public BaseGameState {
 
     public:
 
+    /**
+     * @brief Obtains a pointer to function that will first initialize the operators, then the static gamestate itself
+     * 
+     * @return PTMF
+     */
     static auto GetInitFunc(void) { return &__Initialize; }
+
+    /**
+     * @brief Obtains a pointer to function that will first update the operators, then the static gamestate itself
+     * 
+     * @return PTMF
+     */
     static auto GetUpdateFunc(void) { return &__Update; }
+
+    /**
+     * @brief Obtains a pointer to function that will draw the static gamestate
+     * 
+     * @return PTMF
+     */
     static auto GetDrawFunc(void) { return &__Draw; }
 };

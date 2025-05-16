@@ -1,6 +1,12 @@
 #include "Gamestate_Operators/Static/PlayerManager.h"
 #include "Framework_Managers/InputManager.h"
 
+/**
+ * @author Mar Werner Hernandez
+ * @author Izzy Carlson
+ * 
+ */
+
 Player& PlayerManager::GetPlayerInternal(void) {
     static Player player;
     return player;

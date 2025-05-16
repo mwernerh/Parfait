@@ -2,6 +2,12 @@
 #include "Framework_Managers/InputManager.h"
 #include "Framework_Managers/AudioManager.h"
 
+/**
+ * @author Mar Werner Hernandez
+ * @author Izzy Carlson
+ * 
+ */
+
 void TitleScreenActorOperator::Update() {
     player.update(InputManager::GetDeltaTime());
     // Ensure the player doesn't move the camera

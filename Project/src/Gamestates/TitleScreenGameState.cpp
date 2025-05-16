@@ -7,6 +7,12 @@
 #include "Gamestate_Operators/Instanced/TitleScreenActorOperator.h"
 #include "Gamestates/PlayMainGameState.h"
 
+/**
+ * @author Mar Werner Hernandez
+ * @author Izzy Carlson
+ * 
+ */
+
 TitleScreenGameState::TitleScreenGameState() : InstancedGameState(), startText("Press spacebar to start!", FontManager::GetFont("Outspace Fighter")) {
     // set up background
     background.setTexture(TextureManager::GetTexture("bgs/s_ct/1.png"));

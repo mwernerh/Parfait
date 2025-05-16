@@ -3,6 +3,11 @@
 #include <bitset>
 
 /**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
+/**
  * @brief Provides access to current user input, and the frame delta time
  * @note This is NOT a gamestate operator, its update function MUST be run before that of any gamestate operator
  * 

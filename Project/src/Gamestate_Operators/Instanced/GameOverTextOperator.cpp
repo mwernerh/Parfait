@@ -3,6 +3,11 @@
 #include "Framework_Managers/FontManager.h"
 #include <SFML/Window/Keyboard.hpp>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
 GameOverTextOperator::GameOverTextOperator() : gameoverText("Game Over!", FontManager::GetFont("Outspace Fighter")) {
     gameoverText.setCharacterSize(32);
     gameoverText.setFillColor(sf::Color::White);

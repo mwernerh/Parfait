@@ -7,6 +7,11 @@
 #include <iostream>
 #include <string>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
 static JSONObject saveData = {};
 
 static JSONObject ParseLiteral(const std::string& json, u32 start_idx, u32 end_idx);
@@ -113,6 +118,7 @@ static JSONObject ParseValue(const std::string& json, u32& data_idx) {
         object = ParseJsonObject(json, data_idx);
     }
     else {
+        // Value is not a JSON object, assume it to be some kind of literal
         u32 startValueIdx = data_idx;
         u32 endValueIdx = startValueIdx;
 
@@ -124,6 +130,7 @@ static JSONObject ParseValue(const std::string& json, u32& data_idx) {
         object = ParseLiteral(json, startValueIdx, endValueIdx);
     }
 
+    // Check if there is a trailint comma to denote the next data name & value
     if(json[data_idx] == ',')
         data_idx++;
 
@@ -136,6 +143,7 @@ static JSONObject ParseJsonObject(const std::string& json, u32& start_curly_brac
     if(json[start_curly_brace_idx] == '{')
         dataIdx++;
 
+    // Create new node of JSON object
     std::map<std::string, JSONObject>* map = new std::map<std::string, JSONObject>;
 
     std::string key;
@@ -144,7 +152,7 @@ static JSONObject ParseJsonObject(const std::string& json, u32& start_curly_brac
     do {
         // Parse data between curly braces, defining a single JSON object
         key = ParseKey(json, dataIdx);
-        value = ParseValue(json, dataIdx);
+        value = ParseValue(json, dataIdx);  // Could be a literal, or another JSONObject with a pointer to a new node constructed in another ParseJsonObject call
         (*map)[key] = value;
 
         while(json[dataIdx] == ' ' || json[dataIdx] == '\n' || json[dataIdx] == '\t')
@@ -152,6 +160,7 @@ static JSONObject ParseJsonObject(const std::string& json, u32& start_curly_brac
 
     } while(json[dataIdx] != '}');
 
+    // Return a JSONObject constructed with a pointer to the new node
     value.json = map;
     return value; 
 }
@@ -171,6 +180,7 @@ void SaveManager::ReadFromFile() {
 
     std::ifstream fileStream;
 
+    // Choose the save which was most recently written to
     if(autoSaveExists && !manualSaveExists) {
         fileStream.open(autoSavePath);
     }
@@ -187,12 +197,15 @@ void SaveManager::ReadFromFile() {
     std::string json;
     std::string currentLine;
 
+    // Read json file from disk
     while(std::getline(fileStream, currentLine))
         json.append(currentLine);
 
+    // Parse json file
     u32 firstCurlyIdx = 0;
     saveData = ParseJsonObject(json, firstCurlyIdx);
 
+    // Obtain relevant data from json file and modify their respective data in the static gamestates
     JSONObject player = saveData.json->at("Player");
     PlayerManager::SetPlayerHealth(player.json->at("Health").i);
 

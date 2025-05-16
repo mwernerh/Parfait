@@ -3,6 +3,15 @@
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "Literals.h"
 
+/**
+ * @author Mar Werner Hernandez 
+ * 
+ */
+
+/**
+ * @brief Interface to work with the parallax background
+ * 
+ */
 class MapManager : public StaticInitializableGamestateOperator<MapManager>, public StaticUpdatableGamestateOperator<MapManager>, public StaticDrawableGamestateOperator<MapManager> {
     
     struct ParallaxBackground {
@@ -24,6 +33,10 @@ class MapManager : public StaticInitializableGamestateOperator<MapManager>, publ
     public:
     enum class Maps : u8 {CITY, PARK, PLAINS, NUM_MAPS};
 
+    /**
+     * @brief Sets the map to a default (the city)
+     * 
+     */
     static void Initialize(void);
     
     /**

@@ -4,6 +4,16 @@
 #include "Player.h"
 #include "NPC.h"
 
+/**
+ * @author Mar Werner Hernandez
+ * @author Izzy Carlson
+ * 
+ */
+
+/**
+ * @brief Gamestate operator that handles updating and drawing the ineractables (actors -- namely NPC and player)
+ * 
+ */
 class TitleScreenActorOperator : public InstancedDrawableGamestateOperator, public InstancedUpdatableGamestateOperator {
     Player player;
     NPC npc; // TODO: Add NPC instance

@@ -3,13 +3,13 @@
 #include "Literals.h"
 #include "Hitboxes.h"
 
+class Player;
+
 /**
  * @author Mar Werner Hernandez 
  * @brief System used to manage collisions between hitboxes
  * 
  */
-class Player;
-
 class HitboxManager : public StaticUpdatableGamestateOperator<HitboxManager> {
     static inline constexpr f32 ENEMY_APPROACH_SFX_TIMER_MAX = 1.0f;
 

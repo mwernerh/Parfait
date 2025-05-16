@@ -2,6 +2,11 @@
 #include "Framework_Managers/FontManager.h"
 #include <SFML/Window/Keyboard.hpp>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
 PauseMenuOperator::PauseMenuOperator() : pauseText("Press Spacebar to unpause\nPress K to save", FontManager::GetFont("Outspace Fighter")) {
     pauseText.setCharacterSize(32);
     pauseText.setFillColor(sf::Color::White);

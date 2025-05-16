@@ -2,6 +2,11 @@
 #include "Framework_Managers/InputManager.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
 EndingCutsceneActorOperator::EndingCutsceneActorOperator() {
     cat.setOrigin(cat.getGlobalBounds().width / 2.0f, cat.getGlobalBounds().height / 2.0f);
     cat.setPosition(-200.0f, 600.0f);

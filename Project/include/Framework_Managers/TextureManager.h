@@ -3,6 +3,15 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <iostream>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
+/**
+ * @brief Interface to load textures into memory, minimizing reads from disk
+ * 
+ */
 class TextureManager {
     static constexpr u32 MAX_TEXTURES = 50;
 
@@ -30,9 +39,29 @@ class TextureManager {
         } leastRecentlyUsedQueue;
     };
 
+    /**
+     * @brief Get the Texture Manager Wrapper singleton
+     * 
+     * @return TextureManagerWrapper& 
+     */
     static TextureManagerWrapper& GetTextureManagerWrapper(void);
+
+    /**
+     * @brief Reads a .png file from the texture directory and stores its data in the texture array
+     * 
+     * @param texture_dir The directory to the texture, starting implicitly from the txr/ folder of assets. DO NOT INCLUDE .png file extension!
+     * @return const sf::Texture& 
+     */
     static const sf::Texture& LoadTexture(const std::string& texture_dir);
 
+    /**
+     * @brief Reads multiple .png files present in the same directory and stores its data in the texture array
+     * 
+     * @tparam NUM_TEXTURES 
+     * @param directory The directory in which the textures reside, exlcuding the implicit txr/ directory 
+     * @param texture_names The names of the desired textures, without file extensions
+     * @return const std::array<const sf::Texture*, NUM_TEXTURES> 
+     */
     template <const u32 NUM_TEXTURES>
     static const std::array<const sf::Texture*, NUM_TEXTURES> LoadTextures(const std::string& directory, const std::array<const std::string, NUM_TEXTURES>& texture_names) {
         TextureManagerWrapper& tM = GetTextureManagerWrapper();
@@ -47,6 +76,7 @@ class TextureManager {
                 ret[i] = nullptr;
             }
             else [[likely]] {
+                // Texture successfully loaded into the textures array -- prepare a pointer to this texture for the return
                 ret[i] = &tM.textures[currentIdx];
                 tM.textureHashes[currentIdx] = CalculateTextureHash(directory) + CalculateTextureHash(texture_names[i]) + CalculateTextureHash(std::string(".png"));
             }
@@ -56,13 +86,60 @@ class TextureManager {
     }
 
     public:
+    /**
+     * @brief Setup the LRU queue to the expected conditions
+     * 
+     */
     static void Initialize(void);
+
+    /**
+     * @brief Obtains the desired texture has already been loaded into memory -- otherwise, it first laods it into memory
+     * 
+     * @param texture_dir 
+     * @return const sf::Texture& 
+     */
     static const sf::Texture& GetTexture(const std::string& texture_dir);
+
+    /**
+     * @brief Hashes a texture, taking into account its directory via a weighted hash
+     * 
+     * @param texture_dir 
+     * @return u32 
+     */
     static u32 CalculateTextureHash(const std::string& texture_dir);
+
+    /**
+     * @brief Calculates the desired texture's hash from its name. Returns 0xFFFFFFFF if the texture isn't already loaded in memory
+     * 
+     * @param texture_dir 
+     * @return u32 
+     */
     static u32 FindTextureHash(const std::string& texture_dir);
+
+    /**
+     * @brief Assumes the texture to be present in the texture array, and returns its stored hash
+     * 
+     * @param texture 
+     * @return const u32& 
+     */
     static const u32& FindTextureHash(const sf::Texture& texture);
+
+    /**
+     * @brief Assumes the texture to be present in the texture array, and returns its stored hash
+     * 
+     * @param texture 
+     * @return const u32& 
+     */
     static const u32& FindTextureHash(const sf::Texture* const texture);
 
+    /**
+     * @brief Obtains the desired textures if thet have already been loaded into memory -- otherwise, it first laods those missing into memory
+     * 
+     * @tparam NUM_TEXTURES 
+     * @param directory 
+     * @param texture_names 
+     * @return const std::array<const sf::Texture* const, NUM_TEXTURES> 
+     */
     template <const u32 NUM_TEXTURES>
     static const std::array<const sf::Texture* const, NUM_TEXTURES> GetTextures(const std::string& directory, const std::array<const std::string, NUM_TEXTURES>& texture_names) {
         TextureManagerWrapper& tM = GetTextureManagerWrapper();
@@ -84,11 +161,12 @@ class TextureManager {
             }
         }
 
-
         if(numUnloaded == NUM_TEXTURES) {
+            // None of the textures have been loaded -- we can batch their loading together
             ret = LoadTextures<NUM_TEXTURES>(directory, texture_names);
         }
         else if(numUnloaded > 0) {
+            // Some textures are loaded and others aren't -- need to do on a case-by-case basis
             for(u32 j = 0; j < NUM_TEXTURES; j++) {
                 if(!ret[j])
                     ret[j] = &LoadTexture(directory + texture_names[j]);

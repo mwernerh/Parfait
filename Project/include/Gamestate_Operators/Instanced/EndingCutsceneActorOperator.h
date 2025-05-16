@@ -3,6 +3,15 @@
 #include "Gamestate_Operators/BaseGameStateOperators.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
+/**
+ * @brief Operator that plays a cutscene using the player character's sprite
+ * 
+ */
 class EndingCutsceneActorOperator : public InstancedDrawableGamestateOperator, public InstancedUpdatableGamestateOperator {
     AnimatedCatSprite2 cat;
     f32 stateTimer;

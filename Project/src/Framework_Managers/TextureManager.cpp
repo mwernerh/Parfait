@@ -2,6 +2,11 @@
 #include <cstdint>
 #include <iostream>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
 namespace {
     /**
      * @brief Hashes the relative path to the desired texture file

@@ -8,11 +8,18 @@
 #include "Framework_Managers/SaveManager.h"
 #include <SFML/Window/Keyboard.hpp>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
 void GameOverGameState::Update(void) {
-    // Check if player wants to unpause
+    // Player wants to start from latest save
     if(InputManager::IsKeyPressed(sf::Keyboard::Scan::Space)) {
         GamestateManager::SwitchToStaticGamestate<PlayMainGameState>();
         SaveManager::ReadFromFile();
+
+        // If player health is low, give them more so that they have a better chance of progressing through the game
         if(PlayerManager::GetPlayer().getHealth() < 50) {
             PlayerManager::SetPlayerHealth(50);
         }

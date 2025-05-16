@@ -8,6 +8,15 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Audio/Listener.hpp>
 
+/**
+ * @author Mar Werner Hernandez
+ * 
+ */
+
+/**
+ * @brief Main gamestate that handles the majority of gameplay logic (player movement, enemies, hitboxes, etc.)
+ * 
+ */
 struct PlayMainGameState : public StaticGameState<PlayMainGameState, PlayerManager, HitboxManager, MapManager, LevelManager, ScoreManager> {
     static void Initialize(void);
     static void Update(void);
