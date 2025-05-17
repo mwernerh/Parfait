@@ -78,6 +78,7 @@ class TextureManager {
             else [[likely]] {
                 // Texture successfully loaded into the textures array -- prepare a pointer to this texture for the return
                 ret[i] = &tM.textures[currentIdx];
+                std::cout << "Got texture " << directory + texture_names[i] + ".png" << " from disk!\n";
                 tM.textureHashes[currentIdx] = CalculateTextureHash(directory) + CalculateTextureHash(texture_names[i]) + CalculateTextureHash(std::string(".png"));
             }
     }
@@ -150,12 +151,13 @@ class TextureManager {
         u32 numUnloaded = NUM_TEXTURES;
         
         for(u32 j = 0; j < NUM_TEXTURES; j++)
-            hashes[j] = directoryHash + CalculateTextureHash(texture_names[j]);
+            hashes[j] = directoryHash + CalculateTextureHash(texture_names[j]) + CalculateTextureHash(".png");
         
         for(u32 i = 0; i < MAX_TEXTURES; i++) {
             for(u32 j = 0; j < NUM_TEXTURES; j++) {
                 if(tM.textureHashes[i] == hashes[j]) {
                     ret[j] = &tM.textures[i];
+                    tM.leastRecentlyUsedQueue.Enqueue(i);
                     numUnloaded -= 1;
                 }
             }

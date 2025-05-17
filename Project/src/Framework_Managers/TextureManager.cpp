@@ -84,6 +84,8 @@ const sf::Texture& TextureManager::LoadTexture(const std::string& texture_dir) {
         return tM.textures[0];
     }
 
+    std::cout << "Got texture " << texture_dir << " from disk!\n";
+
     tM.textureHashes[idx] = GetHash(texture_dir);
     return tM.textures[idx];
 }
